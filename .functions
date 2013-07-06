@@ -1,0 +1,185 @@
+#!/bin/bash
+
+# Create a new directory and enter it
+function md() {
+    mkdir -p "$@" && cd "$@"
+}
+
+# Always list after cd
+function cx() {
+  cd "$1";
+  la
+}
+
+# find shorthand
+function f() {
+    find . -name "$1"
+}
+
+# cd into whatever is the forefront Finder window.
+function cdf() {  # short for cdfinder
+  cd "`osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)'`"
+}
+
+# Start an HTTP server from a directory, optionally specifying the port
+function server() {
+    local port="${1:-8000}"
+    open "http://localhost:${port}/"
+    # Set the default Content-Type to `text/plain` instead of `application/octet-stream`
+    # And serve everything as UTF-8 (although not technically correct, this doesn’t break anything for binary files)
+    python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port"
+}
+
+# git log with per-commit cmd-clickable GitHub URLs (iTerm)
+function gl() {
+  local remote="$(git remote -v | awk '/^origin.*\(push\)$/ {print $2}')"
+  [[ "$remote" ]] || return
+  local user_repo="$(echo "$remote" | perl -pe 's/.*://;s/\.git$//')"
+  git log $* --name-status --color | awk "$(cat <<AWK
+    /^.*commit [0-9a-f]{40}/ {sha=substr(\$2,1,7)}
+    /^[MA]\t/ {printf "%s\thttps://github.com/$user_repo/blob/%s/%s\n", \$1, sha, \$2; next}
+    /.*/ {print \$0}
+AWK
+  )" | less -F
+}
+
+# Copy w/ progress
+function cp_p() {
+  rsync -WavP --human-readable --progress $1 $2
+}
+
+# Copy file path to clipboard
+function __() {
+  echo "$PWD/$*" | pbcopy
+} 
+
+# Test if HTTP compression (RFC 2616 + SDCH) is enabled for a given URL.
+# Send a fake UA string for sites that sniff it instead of using the Accept-Encoding header. (Looking at you, ajax.googleapis.com!)
+function httpcomp() {
+  encoding="$(curl -LIs -H 'User-Agent: Mozilla/5 Gecko' -H 'Accept-Encoding: gzip,deflate,compress,sdch' "$1" | grep '^Content-Encoding:')" && echo "$1 is encoded using ${encoding#* }" || echo "$1 is not using any encoding"
+}
+
+# Syntax-highlight JSON strings or files
+function json() {
+  if [ -p /dev/stdin ]; then
+    # piping, e.g. `echo '{"foo":42}' | json`
+    python -mjson.tool | pygmentize -l javascript
+  else
+    # e.g. `json '{"foo":42}'`
+    python -mjson.tool <<< "$*" | pygmentize -l javascript
+  fi
+}
+
+# get gzipped size
+function gz() {
+  local origsize=$(wc -c < "$1")
+  local gzipsize=$(gzip -c "$1" | wc -c)
+  local ratio=$(echo "$gzipsize * 100/ $origsize" | bc -l)
+  printf "orig: %d bytes\n" "$origsize"
+  printf "gzip: %d bytes (%2.2f%%)\n" "$gzipsize" "$ratio"
+}
+
+# Escape UTF-8 characters into their 3-byte format
+function escape() {
+  printf "\\\x%s" $(printf "$@" | xxd -p -c1 -u)
+  echo # newline
+}
+
+# Decode \x{ABCD}-style Unicode escape sequences
+function unidecode() {
+  perl -e "binmode(STDOUT, ':utf8'); print \"$@\""
+  echo # newline
+}
+
+# Extract archives - use: extract <file>
+# Credits to http://dotfiles.org/~pseup/.bashrc
+function xt() {
+    if [ -f $1 ] ; then
+        case $1 in
+            *.tar.bz2) tar xjf $1 ;;
+            *.tar.gz) tar xzf $1 ;;
+            *.bz2) bunzip2 $1 ;;
+            *.rar) rar x $1 ;;
+            *.gz) gunzip $1 ;;
+            *.tar) tar xf $1 ;;
+            *.tbz2) tar xjf $1 ;;
+            *.tgz) tar xzf $1 ;;
+            *.zip) unzip $1 ;;
+            *.Z) uncompress $1 ;;
+            *.7z) 7z x $1 ;;
+            *) echo "'$1' cannot be extracted via extract()" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
+
+# Simple calculator
+function calc() {
+  local result=""
+  result="$(printf "scale=10;$*\n" | bc --mathlib | tr -d '\\\n')"
+  #                       └─ default (when `--mathlib` is used) is 20
+  #
+  if [[ "$result" == *.* ]]; then
+    # improve the output for decimal numbers
+    printf "$result" |
+    sed -e 's/^\./0./'        `# add "0" for cases like ".5"` \
+        -e 's/^-\./-0./'      `# add "0" for cases like "-.5"`\
+        -e 's/0*$//;s/\.$//'   # remove trailing zeros
+  else
+    printf "$result"
+  fi
+  printf "\n"
+}
+
+# Find out the previous and the nextcoming value of number according to golden ratio
+function phind() {
+  local lower=""
+  local higher=""
+  local even_lower=""
+  local even_higher=""
+  higher="$(echo $1*phi | bc -l $HOME/.bc | tr -d '\\\n' | xargs printf '%.4f')"
+  lower="$(echo $1/phi | bc -l $HOME/.bc | tr -d '\\\n' | xargs printf '%.4f')"
+  even_higher="$(echo $higher*phi | bc -l $HOME/.bc | tr -d '\\\n' | xargs printf '%.4f')"
+  even_lower="$(echo $lower/phi | bc -l $HOME/.bc | tr -d '\\\n' | xargs printf '%.4f')"
+
+  printf "$even_lower  $lower  [$1]  $higher  $even_higher\n"
+}
+
+# Determine size of a file or total size of a directory
+function fs() {
+  if du -b /dev/null > /dev/null 2>&1; then
+    local arg=-sbh
+  else
+    local arg=-sh
+  fi
+  if [[ -n "$@" ]]; then
+    du $arg -- "$@"
+  else
+    du $arg .[^.]* *
+  fi
+}
+
+# Grep shorthand 
+function gr() {
+  grep -nRHIi "$1" .
+}
+
+# Check a url every 10 seconds until it returns 200 OK
+function ask(){
+  until curl -s --head $1 | grep "200 OK" > /dev/null; do
+      printf "."
+      sleep 10
+  done
+  printf "\nURL $1 returned a 200 OK on `date`\n"
+}
+
+# Shortcut to time tracker
+# http://tim.thechases.com/bvi/tt.py
+function t(){
+  if [[ $1 == 'fullhelp' ]]; then
+    cat ~/bin/tt/fullhelp.txt | more
+  else
+    python ~/bin/tt/tt.py "$@"
+  fi
+}

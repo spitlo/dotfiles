@@ -1,0 +1,49 @@
+if [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
+    export TERM=gnome-256color
+elif infocmp xterm-256color >/dev/null 2>&1; then
+    export TERM=xterm-256color
+fi
+
+if tput setaf 1 &> /dev/null; then
+    tput sgr0
+    if [[ $(tput colors) -ge 256 ]] 2>/dev/null; then
+        export MAGENTA=$(tput setaf 125)
+        export ORANGE=$(tput setaf 166)
+        export LIGHTGREEN=$(tput setaf 118)
+        export GREEN=$(tput setaf 64)
+        export PURPLE=$(tput setaf 61)
+        export WHITE=$(tput setaf 254)
+        export YELLOW=$(tput setaf 184)
+    else
+        export MAGENTA=$(tput setaf 5)
+        export ORANGE=$(tput setaf 4)
+        export LIGHTGREEN=$(tput setaf 2)
+        export GREEN=$(tput setaf 2)
+        export PURPLE=$(tput setaf 1)
+        export WHITE=$(tput setaf 7)
+        export YELLOW=$(tput setaf 3)
+    fi
+    export BOLD=$(tput bold)
+    export RESET=$(tput sgr0)
+    export BLINK=$(tput blink)
+    export REVERSE=$(tput smso)
+    export UNDERLINE=$(tput smul)
+else
+    export MAGENTA="\033[1;31m"
+    export ORANGE="\033[1;33m"
+    export LIGHTGREEN="\033[1;32m"
+    export GREEN="\033[1;32m"
+    export PURPLE="\033[1;35m"
+    export WHITE="\033[1;37m"
+    export YELLOW="\033[1;37m"
+    export BOLD=""
+    export RESET="\033[00m"
+    export BLINK=""
+    export REVERSE=""
+    export UNDERLINE=""
+fi
+
+# Print colors for reference
+function colors() {
+    ( x=`tput op` y=`printf %$((${COLUMNS}-6))s`;for i in {0..256};do o=00$i;echo -e ${o:${#o}-3:3} `tput setaf $i;tput setab $i`${y// /=}$x;done; )
+}

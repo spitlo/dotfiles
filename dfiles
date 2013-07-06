@@ -1,0 +1,92 @@
+#!/bin/bash
+
+function _help() {
+  shopt -s extglob
+  # Set some variables
+  tab=$(echo -e '\t')
+  nl=$(echo -e ' \n')
+  dotfiles_dir="$(dirname "${BASH_SOURCE}")"
+
+  while IFS= read -r line
+  do
+    IFS='°'; read -ra arr <<< "$line"
+    cmnd=${arr[0]}
+    cmnd="${cmnd%%*( )}"
+    fcmnd=$(printf "%-12s" $cmnd | sed -e "s/\([\/\(\)]\)/${GREEN}\1${MAGENTA}/g");
+    desc=${arr[1]}
+    fdesc=$(echo $desc | sed -e "s/\([\'\`\/\+\<\>\(\)]\)/${GREEN}\1${YELLOW}/g");
+    if [[ "$cmnd" ]]; then
+      printf "${MAGENTA}%s${RESET} ${LIGHTGREEN}-${RESET} ${YELLOW}%s\n" $fcmnd $fdesc 
+    else
+      echo $nl
+    fi
+  done < "${dotfiles_dir}/.help"
+
+  # Clean up
+  shopt -u extglob
+  echo "${RESET}${nl}"
+}
+
+function _link() {
+  echo "Creating symlinks to directory ~."
+  for file in ./.[a-z0-9]*; do
+    #ln -sf ./$file ~/$file
+    echo $file
+  done
+  #mkdir -p ~/bin
+  echo "Creating symlinks to directory ~/bin."
+  for file in ./bin/*; do
+  #  #ln -sf ./$file ~/$file
+    echo $file
+  done
+}
+
+# https://github.com/mathiasbynens/dotfiles/blob/master/bootstrap.sh
+function _sync() {
+  rsync --exclude ".git/" --exclude ".DS_Store" --exclude "dfiles" \
+    --exclude "help.*" \
+    --exclude "README.md" --exclude "LICENSE-MIT.txt" -av --no-perms . ~
+}
+
+cd "$dotfiles_dir"
+
+case "$1" in
+  sync)
+    #git pull origin master
+    if [ "$2" == "--force" -o "$2" == "-f" ]; then
+      _sync
+    else
+      read -p "This may overwrite existing files in your home directory. Are you sure? (y/n) " -n 1
+      echo
+      if [[ $REPLY =~ ^[Yy]$ ]]; then
+        _sync
+        echo "Reloading profile..."
+        . $HOME/.bash_profile
+        echo "Done."
+      fi
+    fi
+  ;;
+  
+  copy)
+    read -p "This may overwrite existing files in your home directory. Are you sure? (y/n) " -n 1
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      _sync
+      echo "Reloading profile..."
+      . $HOME/.bash_profile
+      echo "Done."
+    fi
+  ;;
+
+  help)
+    _help
+  ;;
+  *)
+    echo -e $"USAGE: dfiles [ sync | copy | help | reset ]"
+    echo -e "\t${UNDERLINE}sync${RESET} pulls from git and copies the files."
+    echo -e "\t${UNDERLINE}copy${RESET} only copies the files."
+    echo -e "\t${UNDERLINE}help${RESET} prints a partial list of commands."
+    echo -e "\t${UNDERLINE}init${RESET} (coming) will do a hard reset from repo."
+esac
+
+unset _sync && unset _link && unset _help

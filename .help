@@ -1,0 +1,50 @@
+l           °List all files, colorized, in long format
+la          °List all files, colorized, in long format, including dot files
+ld          °List only dot files, colorized, in long format
+lsd         °List only directories
+
+..(...)     °Move up the directory structure
+-           °Go to latest working directory
+_/__        °Print current working directory/copies it to clipboard
+
+bu/bs/bi    °Brew update, search, install 
+nu/ns/ni    °Npm update, search, install 
+
+dl/pj/ht    °Go to Downloads/Projects/htdocs folder and list
+
+md          °Make directory and enter it
+cx			°Extended cd, enter directory and list all 
+cdf         °Go to folder in forefront Finder window
+cdp         °Go to and workon <argument> project folder (virtualenvwrapper)
+z           °Go to most frecent dir matching <argument>
+f           °Find shorthand
+gr          °Grep shorthand (Recursive, print filename + line number, case-insensitive)
+o           °Open current directory in Finder
+g/v/s       °Git, Vim, Sublime
+r           °Refresh .bash_profile
+fs          °Get size of file or folder
+gz          °Get gzipped size
+c           °`cat` with syntax highlighting
+cp_p        °Copy with progress
+
+hd/m5/tnl   °Things to pipe to. Hexdump, md5 & trim newlines (tnl also copies to c/b)
+etrash      °Empty the Trash on all mounted volumes and the main HDD
+clup        °Recursively delete `.DS_Store` files
+xt	        °Extract most archives
+gl          °Git log with per-commit cmd-clickable GitHub URLs
+calc        °Simple calculator
+phind       °Given a value, shows values before and after according to the golden ratio
+week        °Show week number
+colors      °Print out all 256 colors using tput
+
+httpcomp    °Test if HTTP compression (RFC 2616 + SDCH) is enabled for a given URL
+httpdump    °View HTTP traffic
+sniff       °View HTTP traffic
+server      °Start an HTTP server from a directory, optionally specifying the port (else 8000)
+gurl        °Gzip-enabled `curl`
+hosts       °Edit hosts file
+undopush    °Undo a `git push`
+ip/locip    °IP and local IP
+whi         °Enhanced WHOIS lookups
+urlenc      °URL-encode strings
+ieXX        °Run IE 6-10 in VirtualBox (Based on ievms)

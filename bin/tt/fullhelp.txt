@@ -1,0 +1,106 @@
+After playing with the other projects, I tossed together a command-line time-tracker with a little Python code in a couple hours. It doesn't have a fancy installer, but it's just the one python file. The only dependencies are Python and sqlite3. Python 2.5 comes with sqlite3, so that's an easy way to go. It should also work in Python 2.4 as long as you've taken the extra step to get sqlite installed.
+
+You can snag it at
+
+  http://tim.thechases.com/bvi/tt.py
+
+The "tt" stands for time-tracker. To make it easy, you may want to put a link to it in your path. Assuming /usr/local/bin is in your path, you can do the following as root:
+
+  bash# cd /usr/local/bin
+  bash# wget http://tim.thechases.com/bvi/tt.py
+  bash# chmod ugo+x tt.py
+  bash# ln -s tt.py tt
+
+It has a feel much like CVS/Subversion/Mercurial/etc. All the commands or of the form
+
+  tt [options] ACTION [parameters]
+
+You can have multiple projects, each of which have a variety of blocks of time associated with them (a block of time has a start-time, an optional end-time, and an optional description--if you're working on it, the end-time isn't set)
+
+You start it up by using the INIT action:
+
+  bash$ tt init
+
+This will create ~/.timetracker/[username].db
+
+This is just a sqlite3 DB, so you can use any SQL-aware tools for querying this that you want. It also creates a default project, boringly called "Default". If you want to specify the project name, you can do so on the command line:
+
+  bash$ tt init "Spanish Inquisition"
+
+It will automatically start the timer for your first task. This task doesn't have any note associated with it, but you can include that too
+
+  bash$ tt init "Spanish Inquisition" "Putting in comfy chair"
+
+When you're done with a task, you can either move on to another task which will automatically stop the previous task:
+
+  bash$ tt start "Poking with soft cushions"
+
+Or you can explicitly stop whatever you're working on and start a new task later:
+
+  bash$ tt stop
+
+To add further projects, use the ADD command:
+
+  bash$ tt add "Finding the Holy Grail"
+
+You can list your available projects:
+
+  bash$ tt ls
+  1: Spanish Inquisition
+  2: Finding the Holy Grail (current)
+
+and you can list the tasks and the times taken for a given project
+
+  bash$ tt ls 1
+  [output follows]
+
+The current project (the one to which START adds the next block of time) is shown in the output of the "ls" command. If you want to start a task for the non-current project, you can just include the project # as the first argument:
+
+  bash$ tt ls
+  1: Spanish Inquisition
+  2: Finding the Holy Grail (current)
+  bash$ tt start 1 "Maniacal laughter"
+  bash$ tt ls
+  1: Spanish Inquisition (current)
+  2: Finding the Holy Grail
+
+When you're done with a project, you can mark it as deleted:
+
+  bash$ tt del 1
+  Deleted
+  bash$ tt ls
+  2: Finding the Holy Grail (current)
+
+If you delete the current project, the most recently added project is made current, or it notifies you that you have no projects. If you have no current project and attempt to START a task, it will notify you.
+
+To show all projects, including deleted projects, use the "-a" or "--all" parameter:
+
+  bash$  tt ls -a
+  1: Spanish Inquistion (deleted)
+  2: Finding the Holy Grail (current)
+
+If you accidentally delete a project, you can undelete it:
+
+  bash$ tt undelete 1
+  bash$ tt ls
+  1: Spanish Inquisition
+  2: Finding the Holy Grail (current)
+
+It also offers meager help, listing available actions:
+
+  bash$ tt help
+
+or you can ask for help on a particular item:
+
+  bash$ tt help start
+
+Most commands have alternatives as listed in the detailed help so "remove", "rm", "del", and "delete" all behave the same. Case doesn't matter.
+
+There are a couple other options to control date formatting, to override the database file, or to change the verbosity. You can also force a database init, which will delete your existing database of tasks, and start afresh.
+
+It's all pretty simple Python code, so if you want to tweak it, feel free. Consider it in the public domain. The code isn't overly elegant, as it issues direct SQL queries instead of using some abstraction/ORM layer, but none of the queries are anything too complex. I threw it together in a couple hours.
+
+Hope you find it helpful. If you have questions, I'll try my best to answer them.
+
+-tim
+

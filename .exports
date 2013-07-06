@@ -1,0 +1,19 @@
+# Add stuff to path
+export PATH="$HOME/bin:/Applications/AndroidSDK/sdk/platform-tools:/opt/node/0.10.0/lib/node_modules/jsbin/bin:$PATH"
+
+# Set default editor to nano
+export EDITOR="/usr/bin/nano"
+
+# Highlight section titles in manual pages
+export LESS_TERMCAP_md="$ORANGE"
+
+# Don’t clear the screen after quitting a manual page
+export MANPAGER="less -X"
+
+export LC_ALL="en_US.UTF-8"
+export LC_NUMERIC="en_US.UTF-8"
+
+export N_PREFIX="/opt/bin"
+
+export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python
+export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
