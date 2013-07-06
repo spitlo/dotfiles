@@ -8,10 +8,10 @@ alias ~="cd ~" # `cd` is probably faster to type though
 alias -- -="cd -"
 alias _="pwd"
 
-# also/or do this:
+# Sublime Text 2
 ln -sf "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl" ~/bin/subl
 
-# be nice
+# Easy hosts edit
 alias hosts='sudo $EDITOR /etc/hosts'   # yes I occasionally 127.0.0.1 twitter.com ;)
 
 # Enable aliases to be sudo’ed
