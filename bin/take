@@ -1,8 +1,0 @@
-#!/bin/bash 
-echo Downloading url \'$2\' to folder \'$1\'
-#wget --mirror -p --convert-links -P ./ http://borisopacic.com/new/
-#mkdir ./$1 && cd ./$1
-# Good to know:
-# http://www.ibm.com/developerworks/linux/library/l-bash2/index.html
-
-wget --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.43 Safari/537.31" --mirror -p --convert-links -P ./$1 $2

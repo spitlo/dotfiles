@@ -167,9 +167,16 @@ function gr() {
 
 # Check a url every 10 seconds until it returns 200 OK
 function ask(){
+  if ! [[ "$2" =~ ^[0-9]+$ ]]; then
+    delay=10
+  else
+    delay="$2"
+  fi
+  printf "\n%s ${ORANGE}%s${RESET} every ${YELLOW}%s${RESET} seconds\n" "Querying" $1 $delay
+  printf "Quit with ${BOLD}${GREEN}CTRL+C${RESET}\n"
   until curl -s --head $1 | grep "200 OK" > /dev/null; do
-      printf "."
-      sleep 10
+      printf "${ORANGE}%s${RESET}" "."
+      sleep $delay
   done
   printf "\nURL $1 returned a 200 OK on `date`\n"
 }
@@ -182,4 +189,12 @@ function t(){
   else
     python ~/bin/tt/tt.py "$@"
   fi
+}
+
+# 
+function take() {
+  echo Downloading url \'$1\' to folder \'$2\'
+  # Good to know:
+  # http://www.ibm.com/developerworks/linux/library/l-bash2/index.html
+  wget --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.43 Safari/537.31" --mirror -p --convert-links -P ./$2 $1
 }

@@ -37,7 +37,8 @@ phind       °Given a value, shows values before and after according to the gold
 week        °Show week number
 colors      °Print out all 256 colors using tput
 
-take        °Download site <arg2> to folder <arg1>
+take        °Download site <arg1> to folder <arg2>
+ask         °Check url <arg1> every <arg2>/10 seconds until it returns 200 OK
 httpcomp    °Test if HTTP compression (RFC 2616 + SDCH) is enabled for a given URL
 httpdump    °View HTTP traffic
 sniff       °View HTTP traffic
