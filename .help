@@ -13,7 +13,7 @@ nu/ns/ni    °Npm update, search, install
 dl/pj/ht    °Go to Downloads/Projects/htdocs folder and list
 
 md          °Make directory and enter it
-cx			°Extended cd, enter directory and list all 
+cx          °Extended cd, enter directory and list all 
 cdf         °Go to folder in forefront Finder window
 cdp         °Go to and workon <argument> project folder (virtualenvwrapper)
 z           °Go to most frecent dir matching <argument>
@@ -30,7 +30,7 @@ cp_p        °Copy with progress
 hd/m5/tnl   °Things to pipe to. Hexdump, md5 & trim newlines (tnl also copies to c/b)
 etrash      °Empty the Trash on all mounted volumes and the main HDD
 clup        °Recursively delete `.DS_Store` files
-xt	        °Extract most archives
+xt          °Extract most archives
 gl          °Git log with per-commit cmd-clickable GitHub URLs
 calc        °Simple calculator
 phind       °Given a value, shows values before and after according to the golden ratio
