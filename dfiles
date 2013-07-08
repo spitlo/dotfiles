@@ -36,8 +36,8 @@ function _link() {
   #mkdir -p ~/bin
   echo "Creating symlinks to directory ~/bin."
   for file in ./bin/*; do
-  #  #ln -sf ./$file ~/$file
-    echo $file
+    #ln -sf ./$file ~/$file
+    echo $file   
   done
 }
 
