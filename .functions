@@ -199,9 +199,8 @@ function take() {
   wget --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.43 Safari/537.31" --mirror -p --convert-links -P ./$2 $1
 }
 
-# Kill applications listening on port $1
-portkill () {
-  if ! [[ "$1" =~ ^[0-9]+$ ]]; then
-    lsof -P | grep ":$1" | awk '{print $2}' | xargs kill -9
-  fi
-} 
+# Kill all processes listening on specified port (Beware this will also kill browsers etc)
+function killport() {
+  local port="${1:-8000}"
+  lsof -i tcp:${port} | awk 'NR!=1 {print $2}' | xargs kill 
+}

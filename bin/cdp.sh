@@ -4,6 +4,7 @@
 path1=~/Projects/$1/src/$1
 path2=~/Projects/$1/$1
 path3=~/Projects/$1
+path4=$PROJECT_FOLDER/$1
 
 if [ -d $path1 ]; then
      cd $path1
@@ -13,6 +14,9 @@ elif [ -d $path2 ]; then
     pwd
 elif [ -d $path3 ]; then
     cd $path3
+    pwd
+elif [ -d $path4 ]; then
+    cd $path4
     pwd
 fi
 

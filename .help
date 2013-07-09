@@ -43,6 +43,7 @@ httpcomp    °Test if HTTP compression (RFC 2616 + SDCH) is enabled for a given 
 httpdump    °View HTTP traffic
 sniff       °View HTTP traffic
 server      °Start an HTTP server from a directory, optionally specifying the port (else 8000)
+killport    °Kill applications listening to port <arg> (defaults to port 8000)
 gurl        °Gzip-enabled `curl`
 hosts       °Edit hosts file
 undopush    °Undo a `git push`

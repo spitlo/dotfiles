@@ -42,7 +42,7 @@ function _link() {
 }
 
 function _sync() {
-  if [ "$2" == "--force" -o "$2" == "-f" ]; then
+  if [ "$1" == "--force" -o "$1" == "-f" ]; then
     doIt
   else
     read -p "This may overwrite existing files in your home directory. Are you sure? (y/n) " -n 1
@@ -55,10 +55,11 @@ function _sync() {
     fi
   fi
 }
+
 # https://github.com/mathiasbynens/dotfiles/blob/master/bootstrap.sh
 function doIt() {
   rsync --exclude ".git/" --exclude ".DS_Store" --exclude "dfiles" \
-    --exclude "help.*" \
+    --exclude "help.*" --exclude ".gitignore" \
     --exclude "README.md" --exclude "LICENSE-MIT.txt" -av --no-perms . ~
 }
 
@@ -66,11 +67,11 @@ cd "$dotfiles_dir"
 
 case "$1" in
   sync)
-    git pull origin master && _sync
+    git pull origin master && _sync $2
   ;;
   
   copy)
-    _sync
+    _sync $2
   ;;
 
   help)
