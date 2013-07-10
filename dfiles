@@ -67,22 +67,26 @@ cd "$dotfiles_dir"
 
 case "$1" in
   sync)
-    git pull origin master && _sync $2
+    git pull origin master && _sync $2 && . ~/.bash_profile
   ;;
   
   copy)
-    _sync $2
+    _sync $2 && . ~/.bash_profile
+  ;;
+
+  reset)
+    git fetch --all && git reset --hard origin/master && _sync $2 && . ~/.bash_profile
   ;;
 
   help)
     _help
   ;;
   *)
-    echo -e $"USAGE: dfiles [ sync | copy | help | reset ]"
-    echo -e "\t${UNDERLINE}sync${RESET} pulls from git and copies the files."
-    echo -e "\t${UNDERLINE}copy${RESET} only copies the files."
-    echo -e "\t${UNDERLINE}help${RESET} prints a partial list of commands."
-    echo -e "\t${UNDERLINE}init${RESET} (coming) will do a hard reset from repo."
+    echo -e $"USAGE: dfiles [ sync | copy | reset | help ]"
+    echo -e "\t${UNDERLINE}'sync'${RESET} pulls from git and copies the files."
+    echo -e "\t${UNDERLINE}'copy'${RESET} only copies the files."
+    echo -e "\t${UNDERLINE}'reset'${RESET} will do a hard reset from repo. Warning! Will overwrite all local files."
+    echo -e "\t${UNDERLINE}'help'${RESET} prints a partial list of commands."
 esac
 
 unset _sync && unset _link && unset _help && unset doIt
