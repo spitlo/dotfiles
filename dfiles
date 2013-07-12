@@ -18,27 +18,29 @@ function _help() {
     if [[ "$cmnd" ]]; then
       printf "${MAGENTA}%s${RESET} ${LIGHTGREEN}-${RESET} ${YELLOW}%s\n" $fcmnd $fdesc 
     else
-      echo $nl
+      echo "$nl"
     fi
-  done < "${dotfiles_dir}/.help"
+  done < "$dotfiles_dir/.help"
 
   # Clean up
   shopt -u extglob
-  echo "${RESET}${nl}"
+  echo "$RESET$nl"
 }
 
-function _link() {
-  echo "Creating symlinks to directory ~."
-  for file in ./.[a-z0-9]*; do
-    #ln -sf ./$file ~/$file
-    echo $file
+function _backup() {
+  backupdir="$HOME/dotfiles/bak/$(date -I)";
+  echo "Backing up dotfiles to $backupdir."
+  mkdir -p "$backupdir"
+  for file in "$HOME"/.[a-z0-9]*; do
+    if [ -f "${file}" ]; then
+      rsync -avq --delete "$file" "$backupdir"
+      printf "."
+    fi
   done
-  #mkdir -p ~/bin
-  echo "Creating symlinks to directory ~/bin."
-  for file in ./bin/*; do
-    #ln -sf ./$file ~/$file
-    echo $file   
-  done
+  echo -e "\nBacking up ~/bin folder."
+  cp -r "$HOME/bin" "$backupdir"
+  cd "$dotfiles_dir"
+  echo -e "\nBack up done!"
 }
 
 function _sync() {
@@ -79,24 +81,13 @@ case "$1" in
   ;;
 
   backup)
-    backupdir="$HOME/dotfiles/bak/$(date -I)";
-    echo "Backing up dotfiles to $backupdir."
-    mkdir -p "$backupdir"
-    for file in "$HOME"/.[a-z0-9]*; do
-      if [ -f "${file}" ]; then
-        rsync -avq --delete "$file" "$backupdir"
-        printf "."
-      fi
-    done
-    echo -e "\nBacking up ~/bin folder."
-    cp -r "$HOME/bin" "$backupdir"
-    cd "$dotfiles_dir"
-    echo -e "\nBack up done!"
+    _backup
   ;;
 
   help)
     _help
   ;;
+  
   *)
     echo -e "USAGE: dfiles [ sync | copy | reset | backup | help ]"
     echo -e "\t${UNDERLINE}sync${RESET} pulls from git and copies the files."
@@ -106,4 +97,4 @@ case "$1" in
     echo -e "\t${UNDERLINE}help${RESET} prints a partial list of commands."
 esac
 
-unset _sync && unset _link && unset _help && unset doIt
+unset _sync && unset _backup && unset _help && unset doIt
