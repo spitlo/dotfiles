@@ -58,7 +58,7 @@ function _sync() {
 
 # https://github.com/mathiasbynens/dotfiles/blob/master/bootstrap.sh
 function doIt() {
-  rsync --exclude ".git/" --exclude ".DS_Store" --exclude "dfiles" \
+  rsync --exclude ".git/" --exclude "bak/" --exclude ".DS_Store" --exclude "dfiles" \
     --exclude "help.*" --exclude ".gitignore" \
     --exclude "README.md" --exclude "LICENSE-MIT.txt" -av --no-perms . ~
 }
@@ -78,15 +78,32 @@ case "$1" in
     git fetch --all && git reset --hard origin/master && _sync $2 && . ~/.bash_profile
   ;;
 
+  backup)
+    backupdir="$HOME/dotfiles/bak/$(date -I)";
+    echo "Backing up dotfiles to $backupdir."
+    mkdir -p "$backupdir"
+    for file in "$HOME"/.[a-z0-9]*; do
+      if [ -f "${file}" ]; then
+        rsync -avq --delete "$file" "$backupdir"
+        printf "."
+      fi
+    done
+    echo -e "\nBacking up ~/bin folder."
+    cp -r "$HOME/bin" "$backupdir"
+    cd "$dotfiles_dir"
+    echo -e "\nBack up done!"
+  ;;
+
   help)
     _help
   ;;
   *)
-    echo -e $"USAGE: dfiles [ sync | copy | reset | help ]"
-    echo -e "\t${UNDERLINE}'sync'${RESET} pulls from git and copies the files."
-    echo -e "\t${UNDERLINE}'copy'${RESET} only copies the files."
-    echo -e "\t${UNDERLINE}'reset'${RESET} will do a hard reset from repo. Warning! Will overwrite all local files."
-    echo -e "\t${UNDERLINE}'help'${RESET} prints a partial list of commands."
+    echo -e "USAGE: dfiles [ sync | copy | reset | backup | help ]"
+    echo -e "\t${UNDERLINE}sync${RESET} pulls from git and copies the files."
+    echo -e "\t${UNDERLINE}copy${RESET} only copies the files."
+    echo -e "\t${UNDERLINE}reset${RESET} will do a hard reset from repo. Warning! Will overwrite all local files."
+    echo -e "\t${UNDERLINE}backup${RESET} saves all .files from  to ~ to ~/dotfiles/bak."
+    echo -e "\t${UNDERLINE}help${RESET} prints a partial list of commands."
 esac
 
 unset _sync && unset _link && unset _help && unset doIt
