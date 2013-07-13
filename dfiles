@@ -24,7 +24,7 @@ function _help() {
 
   # Clean up
   shopt -u extglob
-  echo "$RESET$nl"
+  echo "${RESET}${nl}"
 }
 
 function _backup() {
