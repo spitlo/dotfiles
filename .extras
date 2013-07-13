@@ -1,0 +1,12 @@
+# If possible, add tab completion for many more commands
+# System specific
+# [ -f /etc/bash_completion ] && source /etc/bash_completion
+
+# Set project folder for this particular user/system
+export PROJECT_FOLDER=
+
+# Set Downloads folder for this particular user/system
+export DOWNLOADS_FOLDER=
+
+# Set htdocs folder for this particular user/system
+#export HTDOCS_FOLDER=
