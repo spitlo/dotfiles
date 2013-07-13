@@ -8,7 +8,11 @@ for file in ~/.{exports,colors,aliases,bash_prompt,functions,extras}; do
 done
 unset file
 
-. ~/bin/z/z.sh 2>&1 /dev/null
-if [ -f /usr/local/bin/virtualenvwrapper.sh ]; then
-  . /usr/local/bin/virtualenvwrapper.sh
-fi
+# Load z
+[[ -s ~/bin/z/z.sh ]] && . ~/bin/z/z.sh
+
+# Load virtualenvwrapper
+[[ -s /usr/local/bin/virtualenvwrapper.sh ]] && . /usr/local/bin/virtualenvwrapper.sh
+
+# Load NVM
+[[ -s /home/spitlo/.nvm/nvm.sh ]] && . /home/spitlo/.nvm/nvm.sh # This loads NVM
