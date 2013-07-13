@@ -44,6 +44,7 @@ function _backup() {
 }
 
 function _sync() {
+  #shopt -s expand_aliases
   if [ "$1" == "--force" -o "$1" == "-f" ]; then
     doIt
   else
@@ -51,11 +52,12 @@ function _sync() {
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
       doIt
-      echo "Reloading profile..."
-      . $HOME/.bash_profile
-      echo "Done."
+    else 
+      echo "Aborted."
+      return
     fi
   fi
+  echo -e "\nFiles copied. Run ${BOLD}${YELLOW}source $HOME/.bash_profile${RESET} to reload."
 }
 
 # https://github.com/mathiasbynens/dotfiles/blob/master/bootstrap.sh
@@ -69,15 +71,15 @@ cd "$dotfiles_dir"
 
 case "$1" in
   sync)
-    git pull origin master && _sync $2 && . ~/.bash_profile
+    git pull origin master && _sync $2
   ;;
   
   copy)
-    _sync $2 && . ~/.bash_profile
+    _sync $2
   ;;
 
   reset)
-    git fetch --all && git reset --hard origin/master && _sync $2 && . ~/.bash_profile
+    git fetch --all && git reset --hard origin/master && _sync $2
   ;;
 
   backup)

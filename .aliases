@@ -83,7 +83,7 @@ alias tnl="tr -d '\n' | pbcopy"
 # Shortcuts
 alias dl="cd ~/Downloads && l"
 alias pj="cd $PROJECT_FOLDER && lsd"
-alias ht="cd /Applications/MAMP/htdocs && l"
+alias ht="cd /Applications/MAMP/htdocs && lsd"
 alias bu="brew update"
 alias bs="brew search"
 alias bi="brew install"
@@ -97,7 +97,6 @@ alias cdp='. ~/bin/cdp.sh $1'
 alias n='. ~/bin/n/n'
 alias o="open ."
 alias h="~/dotfiles/dfiles help"
-alias r=". ~/.bash_profile"
 alias cls="clear"
 
 # Spotify

@@ -21,6 +21,12 @@ function cdf() {  # short for cdfinder
   cd "`osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)'`"
 }
 
+# List recursively from pwd using less. Don't use in ~
+# http://stackoverflow.com/a/1767559
+function lr() {
+  ls -R `pwd` | awk '/:$/&&f{s=$0;f=0}/:$/&&!f{sub(/:$/,"");s=$0;f=1;next}NF&&f{ print s"/"$0 }' | more
+}
+
 # Start an HTTP server from a directory, optionally specifying the port
 function server() {
     local port="${1:-8000}"
@@ -144,6 +150,13 @@ function phind() {
   even_lower="$(echo $lower/phi | bc -l $HOME/.bc | tr -d '\\\n' | xargs printf '%.4f')"
 
   printf "$even_lower  $lower  [$1]  $higher  $even_higher\n"
+}
+
+# Refresh bash profile
+function r() {
+  echo "Reloading profile..."
+  source "$HOME/.bash_profile"
+  echo "Done."
 }
 
 # Determine size of a file or total size of a directory
