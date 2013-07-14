@@ -14,8 +14,3 @@ export LC_ALL="en_US.UTF-8"
 export LC_NUMERIC="en_US.UTF-8"
 
 export N_PREFIX="/opt/bin"
-
-# This belongs in .extras
-#export VIRTUALENVWRAPPER_PYTHON=/usr/local/bin/python
-#export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
-VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2.6

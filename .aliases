@@ -4,15 +4,20 @@ alias cd..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
-alias ~="cd ~" # `cd` is probably faster to type though
 alias -- -="cd -"
 alias _="pwd"
 
 # Sublime Text 3
-ln -sf "/Applications/Sublime Text 3.app/Contents/SharedSupport/bin/subl" ~/bin/subl
+if [[ -x "/Applications/Sublime Text 3.app/Contents/SharedSupport/bin/subl" ]]; then
+  ln -sf "/Applications/Sublime Text 3.app/Contents/SharedSupport/bin/subl" ~/bin/subl
+else
+	if [[ -x "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl" ]]; then
+	  ln -sf "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl" ~/bin/subl
+	fi
+fi
 
 # Easy hosts edit
-alias hosts='sudo $EDITOR /etc/hosts'   # yes I occasionally 127.0.0.1 twitter.com ;)
+alias hosts='sudo $EDITOR /etc/hosts'
 
 # Enable aliases to be sudo’ed
 alias sudo='sudo '
@@ -81,7 +86,7 @@ alias m5="md5sum" # Lazy
 alias tnl="tr -d '\n' | pbcopy"
 
 # Shortcuts
-alias dl="cd $DOWNLOADS_FOLDER  && l"
+alias dl="cd $DOWNLOADS_FOLDER"
 alias pj="cd $PROJECT_FOLDER && lsd"
 alias ht="cd $HTDOCS_FOLDER && lsd"
 alias bu="brew update"

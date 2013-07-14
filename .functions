@@ -217,3 +217,7 @@ function killport() {
   local port="${1:-8000}"
   lsof -i tcp:${port} | awk 'NR!=1 {print $2}' | xargs kill 
 }
+
+function mgnt() {
+  aria2c --dir=$DOWNLOADS_FOLDER --quiet=true --on-bt-download-complete=$HOME/.aria_done "$1" &
+}

@@ -10,7 +10,7 @@ _/__        °Print current working directory/copies it to clipboard
 bu/bs/bi    °Brew update, search, install 
 nu/ns/ni    °Npm update, search, install 
 
-dl/pj/ht    °Go to Downloads/Projects/htdocs folder and list
+dl/pj/ht    °Go to Downloads/Projects/htdocs folder (and list folders for pj & ht)
 
 md          °Make directory and enter it
 cx          °Extended cd, enter directory and list all 
@@ -39,6 +39,7 @@ colors      °Print out all 256 colors using tput
 
 take        °Download site <arg1> to folder <arg2>
 ask         °Check url <arg1> every <arg2>/10 seconds until it returns 200 OK
+mgnt        °Download a magnet link in the background using aria2. Echoes to screen when download finished.
 httpcomp    °Test if HTTP compression (RFC 2616 + SDCH) is enabled for a given URL
 httpdump    °View HTTP traffic
 sniff       °View HTTP traffic

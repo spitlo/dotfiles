@@ -1,11 +1,12 @@
 #!/bin/bash
 
+# Set some variables
+tab=$(echo -e '\t')
+nl=$(echo -e ' \n')
+dotfiles_dir="$(dirname "${BASH_SOURCE}")"
+
 function _help() {
   shopt -s extglob
-  # Set some variables
-  tab=$(echo -e '\t')
-  nl=$(echo -e ' \n')
-  dotfiles_dir="$(dirname "${BASH_SOURCE}")"
 
   while IFS= read -r line
   do
@@ -28,8 +29,8 @@ function _help() {
 }
 
 function _backup() {
-  backupdir="$HOME/dotfiles/bak/$(date -I)";
-  echo "Backing up dotfiles to $backupdir."
+  backupdir="$dotfiles_dir/bak/$(date -I)";
+  echo "Backing up ALL dotfiles to $backupdir."
   mkdir -p "$backupdir"
   for file in "$HOME"/.[a-z0-9]*; do
     if [ -f "${file}" ]; then
@@ -94,7 +95,7 @@ case "$1" in
   ;;
   
   *)
-    echo -e "USAGE: ${BOLD}. do${RESET} [ sync | copy | reset | backup | help ]"
+    echo -e "${BOLD}USAGE${RESET}: ${YELLOW}. does${RESET} [ sync | copy | reset | backup | help ]"
     echo -e "\t${UNDERLINE}sync${RESET} pulls from git and copies the files."
     echo -e "\t${UNDERLINE}copy${RESET} only copies the files."
     echo -e "\t${UNDERLINE}reset${RESET} will do a hard reset from repo. Warning! Will overwrite all local files."

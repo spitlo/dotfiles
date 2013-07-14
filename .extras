@@ -1,6 +1,11 @@
 # If possible, add tab completion for many more commands
 # System specific
+# try this
 # [ -f /etc/bash_completion ] && source /etc/bash_completion
+# or on a mac
+#if [ -f $(brew --prefix)/etc/bash_completion ]; then
+#  . $(brew --prefix)/etc/bash_completion
+#fi
 
 # Set project folder for this particular user/system
 export PROJECT_FOLDER=
@@ -9,4 +14,11 @@ export PROJECT_FOLDER=
 export DOWNLOADS_FOLDER=
 
 # Set htdocs folder for this particular user/system
-#export HTDOCS_FOLDER=
+export HTDOCS_FOLDER=
+
+# Set default username
+export DEFAULT_USERNAME=
+
+# Virtualenwrapper constants
+export VIRTUALENVWRAPPER_PYTHON=
+export VIRTUALENVWRAPPER_VIRTUALENV=
