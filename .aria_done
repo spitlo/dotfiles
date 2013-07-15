@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo -e "Aria finished downloading ${YELLOW}$3${RESET} with GID $1. Now seeding."
