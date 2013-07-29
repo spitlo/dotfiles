@@ -27,6 +27,12 @@ function lr() {
   ls -R `pwd` | awk '/:$/&&f{s=$0;f=0}/:$/&&!f{sub(/:$/,"");s=$0;f=1;next}NF&&f{ print s"/"$0 }' | more
 }
 
+# Display a file tree from current directory
+# From http://www.bashoneliners.com/main/oneliner/157/
+function lst() {
+  ls -Ra | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+}
+
 # Start an HTTP server from a directory, optionally specifying the port
 function server() {
     local port="${1:-8000}"
@@ -220,4 +226,18 @@ function killport() {
 
 function mgnt() {
   aria2c --dir=$DOWNLOADS_FOLDER --quiet=true --on-bt-download-complete=$HOME/.aria_done "$1" &
+}
+
+# Replace word $1 with word $2 in files with names 
+# matching "*.$3" in current folder
+function snr() {
+  # $1 find this
+  # $2 replace with this
+  # $3 file extension
+  if [ "$1" == "--help" -o "$1" == "-h" ]; then
+    echo "Help:"
+  else
+    echo "Replacing '$1' with '$2' in all files matching '*.$3' in current folder."     
+    find . -name "*.$3" -type f -exec sed -i '' "s/$(echo $1 | sed -e 's/[\/&]/\\&/g')/$(echo $2 | sed -e 's/[\/&]/\\&/g')/g" {} +
+  fi
 }
