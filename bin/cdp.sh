@@ -26,4 +26,7 @@ else
         source /usr/local/bin/virtualenvwrapper.sh
         deactivate
     fi
+
+    . $HOME/.bash_profile && cls
+    echo -e "Project ${YELLOW}$1${RESET} activated."
 fi
