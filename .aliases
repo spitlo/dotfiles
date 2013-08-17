@@ -86,9 +86,9 @@ alias m5="md5sum" # Lazy
 alias tnl="tr -d '\n' | pbcopy"
 
 # Shortcuts
-alias dl="cd $DOWNLOADS_FOLDER"
-alias pj="cd $PROJECT_FOLDER && lsd"
-alias ht="cd $HTDOCS_FOLDER && lsd"
+alias dl='cd "$DOWNLOADS_FOLDER"'
+alias pj='cd "$PROJECT_FOLDER" && lsd'
+alias ht='cd "$HTDOCS_FOLDER" && lsd'
 alias bu="brew update"
 alias bs="brew search"
 alias bi="brew install"
