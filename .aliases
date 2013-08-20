@@ -104,6 +104,8 @@ alias o="open ."
 alias h="~/dotfiles/dfiles help"
 alias cls="clear"
 
+alias asci="asciiart -w $((COLUMNS-2)) -c $1"
+
 # Spotify
 alias spfy=". ~/bin/spotify/spotify.sh $1"
 alias sy=spfy
