@@ -9,10 +9,13 @@ done
 unset file
 
 # Load z
-[ -s "$HOME/bin/z/z.sh" ] && . $HOME/bin/z/z.sh
+[ -s "$HOME/bin/z/z.sh" ] && . "$HOME/bin/z/z.sh"
+
+# Load RVM
+[ -s "$HOME/.rvm/scripts/rvm" ] && . "$HOME/.rvm/scripts/rvm"
 
 # Load virtualenvwrapper
-[ -s "/usr/local/bin/virtualenvwrapper.sh" ] && . /usr/local/bin/virtualenvwrapper.sh
+[ -s "/usr/local/bin/virtualenvwrapper.sh" ] && . "/usr/local/bin/virtualenvwrapper.sh"
 
 # Load NVM
-[ -s "$HOME/.nvm/nvm.sh" ] && . $HOME/.nvm/nvm.sh
+[ -s "$HOME/.nvm/nvm.sh" ] && . "$HOME/.nvm/nvm.sh"
