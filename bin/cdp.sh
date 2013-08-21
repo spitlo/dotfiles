@@ -18,15 +18,14 @@ else
         pwd
     fi
 
-
     if [ -e ~/.virtualenvs/$1/bin/activate ]; then
-        source /usr/local/bin/virtualenvwrapper.sh
+        #source /usr/local/bin/virtualenvwrapper.sh
         workon $1
+        . $HOME/.bash_profile && clear
+        echo -e "Project ${YELLOW}$1${RESET} activated."
+
     elif [ "$VIRTUAL_ENV" != "" ]; then
-        source /usr/local/bin/virtualenvwrapper.sh
+        #source /usr/local/bin/virtualenvwrapper.sh
         deactivate
     fi
-
-    . $HOME/.bash_profile && cls
-    echo -e "Project ${YELLOW}$1${RESET} activated."
 fi
