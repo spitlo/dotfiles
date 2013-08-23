@@ -1,5 +1,5 @@
 # Add stuff to path
-export PATH="$HOME/bin:/Applications/AndroidSDK/sdk/platform-tools:/opt/node/0.10.0/lib/node_modules/jsbin/bin:$PATH"
+export PATH="$HOME/bin:/usr/local/share/npm/bin:$PATH"
 
 # Set default editor to nano
 export EDITOR="/usr/bin/nano"
