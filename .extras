@@ -22,3 +22,7 @@ export DEFAULT_USERNAME=
 # Virtualenwrapper constants
 export VIRTUALENVWRAPPER_PYTHON=
 export VIRTUALENVWRAPPER_VIRTUALENV=
+
+# Your app token and user name on Pushover for Aria notifications
+export PO_APP_TOKEN=
+export PO_USER_KEY=
