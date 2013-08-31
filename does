@@ -87,7 +87,9 @@ case "$1" in
   ;;
 
   install)
-    #git clone https://github.com/spitlo/dotfiles.git && _sync $2
+    if [ -f "~/.bashrc" ]; then
+      echo '[ -n "$PS1" ] && source ~/.bash_profile' >> ~/.bashrc
+    fi
     cp -i ./.extras ~ && nano ~/.extras && _sync --force && _help && echo -e "Install done."
   ;;
 
