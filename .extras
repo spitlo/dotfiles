@@ -1,3 +1,7 @@
+###################################
+##  L O C A L   S E T T I N G S  ##
+###################################
+
 # If possible, add tab completion for many more commands
 # System specific
 # try this
@@ -20,9 +24,17 @@ export HTDOCS_FOLDER=
 export DEFAULT_USERNAME=
 
 # Virtualenwrapper constants
+export WORKON_HOME=
 export VIRTUALENVWRAPPER_PYTHON=
 export VIRTUALENVWRAPPER_VIRTUALENV=
 
 # Your app token and user name on Pushover for Aria notifications
-export PO_APP_TOKEN=
-export PO_USER_KEY=
+export PO_APP_TOKEN=""
+export PO_USER_KEY=""
+
+# Path to Growl by TJ Holowaychuk
+export GROWL_PATH=
+
+# Alias adb if it's not installed globally 
+# (f.ex if it's installed through the Chrome extension)
+alias adb=""

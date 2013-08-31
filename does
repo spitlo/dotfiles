@@ -57,7 +57,7 @@ function _sync() {
       return
     fi
   fi
-  declare -f -F r > /dev/null && r || echo -e "Could not reload profile. Run ${BOLD}${YELLOW}source $HOME/.bash_profile${RESET} manually."
+  declare -f -F r > /dev/null && r || source $HOME/.bash_profile || echo -e "Could not reload profile. Run ${BOLD}${YELLOW}source $HOME/.bash_profile${RESET} manually."
 }
 
 # https://github.com/mathiasbynens/dotfiles/blob/master/bootstrap.sh
@@ -79,7 +79,7 @@ case "$1" in
   ;;
 
   reset)
-    git fetch --all && git reset --hard origin/master && _sync $2
+    git fetch --all && git reset --hard origin/master && _sync --force
   ;;
 
   backup)
@@ -87,7 +87,8 @@ case "$1" in
   ;;
 
   install)
-    git clone https://github.com/spitlo/dotfiles.git && _sync $2
+    #git clone https://github.com/spitlo/dotfiles.git && _sync $2
+    cp -i ./.extras ~ && nano ~/.extras && _sync --force && _help && echo -e "Install done."
   ;;
 
   help)
@@ -100,7 +101,7 @@ case "$1" in
     echo -e "\t${UNDERLINE}copy${RESET} only copies the files."
     echo -e "\t${UNDERLINE}reset${RESET} will do a hard reset from repo. Warning! Will overwrite all local files."
     echo -e "\t${UNDERLINE}backup${RESET} saves all .files from  to ~ to ~/dotfiles/bak."
-    echo -e "\t${UNDERLINE}install${RESET} clones my dotfiles repo from GitHub and copies the files."
+    echo -e "\t${UNDERLINE}install${RESET} Creates and let's you edit the .extras file before copying the files."
     echo -e "\t${UNDERLINE}help${RESET} prints a partial list of commands."
 esac
 
