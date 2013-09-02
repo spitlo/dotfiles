@@ -123,12 +123,12 @@
   alias ie10="VBoxManage startvm \"IE10 - Win8\""
 
   # Sublime Text 3
-  if [[ -x "/Applications/Sublime Text 3.app/Contents/SharedSupport/bin/subl" ]]; then
+  if [[ -x "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" ]]; then
+    ln -sf "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" ~/bin/subl
+  elif [[ -x "/Applications/Sublime Text 3.app/Contents/SharedSupport/bin/subl" ]]; then
     ln -sf "/Applications/Sublime Text 3.app/Contents/SharedSupport/bin/subl" ~/bin/subl
-  else
-    if [[ -x "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl" ]]; then
+  elif [[ -x "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl" ]]; then
       ln -sf "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl" ~/bin/subl
-    fi
   fi
 
   # Undo a `git push`
