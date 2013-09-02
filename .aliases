@@ -105,7 +105,7 @@
   alias cdp='. ~/bin/cdp.sh $1'
   alias n='. ~/bin/n/n'
   alias o="open ."
-  alias h="~/dotfiles/. does help"
+  alias h=". ~/dotfiles/does help"
   alias cls="clear"
   alias asci="asciiart -w $((COLUMNS-2)) -c -i"
 
