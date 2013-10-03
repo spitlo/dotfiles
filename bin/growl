@@ -29,7 +29,7 @@ if ( typeof process.env.GROWL_PATH == 'undefined' ) {
 				o.headers = {
 					'Content-Length': req_string.length
 				};
-				console.log( 'o: ', o ); 
+				//console.log( 'o: ', o ); 
 				var req = https.request( o, function( res ) {
 					var err,
 						data = '';
