@@ -265,7 +265,6 @@ function snr() {
   fi
 }
 
-
 # Shortcut to time tracker
 # http://tim.thechases.com/bvi/tt.py
 function t(){
@@ -273,5 +272,50 @@ function t(){
     cat ~/bin/tt/fullhelp.txt | more
   else
     python ~/bin/tt/tt.py "$@"
+  fi
+}
+
+# Print out images in console as ascii
+function primg() {
+  width=$((COLUMNS-2))
+  if exists asciiart; then
+    asciiart -w $width -c -i $1
+  else
+    # We don't have asciiart, check for jp2a
+    if exists jp2a; then
+      # Success! Set some common options. If you use a light background, change --background appropriately
+      opts="--width=$width --background=dark --colors"
+      # Since jp2a only takes jpgs as input, we need to pipe through ImageMagick's convert
+      if exists convert; then
+        pipe_through="convert -resize ${width}x -contrast -contrast -quiet $1 jpg:-"
+      else
+        # A little hackish, but seems to work. 
+        # This will return function before reaching the pipe to jp2a.
+        pipe_through="return 1"
+        echo "Couldn't convert image, exiting."; return 1
+      fi
+      # Check file format. In the future, check for --force and pipe whatever if present?
+      if [ -f $1 ]; then
+        case $1 in
+          *.jpg)
+            command jp2a $opts $1
+            ;;
+          *.gif|*.png|*.bmp|*.ico|*.pdf|*.svg|*.ai|*.tiff)
+            command $pipe_through | jp2a $opts - $1 2>/dev/null
+            ;;
+          *)
+            # Not one of the extensions listed above, but probably supported by IM still.
+            # Maybe we should just pipe anything and leave it up to the user
+            # Or rather just introduce a --force option.
+            echo "Couldn't print image, '$1', unsupported image file."
+            ;;
+        esac
+      else
+        echo "Couldn't print image, '$1' is not a valid file"
+      fi
+    else
+      # Sorry, couldn't find the right software
+      echo "Couldn't print image, no conversion software found. Try installing 'asciiart' or 'jp2a'."; return 1
+    fi
   fi
 }
