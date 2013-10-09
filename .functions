@@ -1,11 +1,33 @@
 #!/bin/bash
 
-# Create a new directory and enter it
-function md() {
-    mkdir -p "$@" && cd "$@"
+# Utility function to check if $1 command exists
+# Use example: if exists ls; then echo "Command exists!"; else echo "Command does not exist."; fi
+function exists() {
+  command -v $1 >/dev/null 2>&1 && { return 0; } || { return 1; }
 }
 
-# Always list after cd
+# Try to make clipboard available
+if ! [[ "$OSTYPE" =~ ^darwin ]]; then
+  # Not on a Mac. If available, use xclip or xsel instead of pbcopy/pbpaste
+  if exists xsel; then 
+    alias pbcopy='xsel --clipboard --input'
+    alias pbpaste='xsel --clipboard --output'
+  else 
+    if exists xclip; then
+      alias pbcopy='xclip -selection clipboard'
+      alias pbpaste='xclip -selection clipboard -o'
+    else 
+      echo "Could not find a viable alternative to pbcopy/pbpaste.";
+    fi
+  fi
+fi
+
+# Create a new directory and enter it
+function md() {
+  mkdir -p "$@" && cd "$@"
+}
+
+# List after cd
 function cx() {
   cd "$1";
   la
@@ -13,15 +35,15 @@ function cx() {
 
 # find shorthand
 function f() {
-    find . -name "$1"
+  find . -name "$1"
 }
 
-# cd into whatever is the forefront Finder window.
+# On Mac, cd into whatever is the forefront Finder window.
 function cdf() {  # short for cdfinder
   cd "`osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)'`"
 }
 
-# List recursively from pwd using less. Don't use in ~
+# List recursively from working directory using less. Don't use in ~
 # http://stackoverflow.com/a/1767559
 function lr() {
   ls -R `pwd` | awk '/:$/&&f{s=$0;f=0}/:$/&&!f{sub(/:$/,"");s=$0;f=1;next}NF&&f{ print s"/"$0 }' | more
@@ -35,11 +57,11 @@ function lst() {
 
 # Start an HTTP server from a directory, optionally specifying the port
 function server() {
-    local port="${1:-8000}"
-    open "http://localhost:${port}/"
-    # Set the default Content-Type to `text/plain` instead of `application/octet-stream`
-    # And serve everything as UTF-8 (although not technically correct, this doesn’t break anything for binary files)
-    python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port"
+  local port="${1:-8000}"
+  open "http://localhost:${port}/"
+  # Set the default Content-Type to `text/plain` instead of `application/octet-stream`
+  # And serve everything as UTF-8 (although not technically correct, this doesn’t break anything for binary files)
+  python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port"
 }
 
 # git log with per-commit cmd-clickable GitHub URLs (iTerm)
@@ -61,8 +83,10 @@ function cp_p() {
 }
 
 # Copy file path to clipboard
-function __() {
-  echo "$PWD/$*" | pbcopy
+# Includes argument if given
+function get_path() {
+  ##echo "$PWD/$*" | pbcopy
+  printf "%s/%s" $(printf "$PWD" | tr -d "\n") $(printf "${1}" | tr -d "\n") | pbcopy
 } 
 
 # Test if HTTP compression (RFC 2616 + SDCH) is enabled for a given URL.
@@ -106,24 +130,24 @@ function unidecode() {
 # Extract archives - use: extract <file>
 # Credits to http://dotfiles.org/~pseup/.bashrc
 function xt() {
-    if [ -f $1 ] ; then
-        case $1 in
-            *.tar.bz2) tar xjf $1 ;;
-            *.tar.gz) tar xzf $1 ;;
-            *.bz2) bunzip2 $1 ;;
-            *.rar) rar x $1 ;;
-            *.gz) gunzip $1 ;;
-            *.tar) tar xf $1 ;;
-            *.tbz2) tar xjf $1 ;;
-            *.tgz) tar xzf $1 ;;
-            *.zip) unzip $1 ;;
-            *.Z) uncompress $1 ;;
-            *.7z) 7z x $1 ;;
-            *) echo "'$1' cannot be extracted via extract()" ;;
-        esac
-    else
-        echo "'$1' is not a valid file"
-    fi
+  if [ -f $1 ] ; then
+    case $1 in
+      *.tar.bz2) tar xjf $1 ;;
+      *.tar.gz) tar xzf $1 ;;
+      *.bz2) bunzip2 $1 ;;
+      *.rar) rar x $1 ;;
+      *.gz) gunzip $1 ;;
+      *.tar) tar xf $1 ;;
+      *.tbz2) tar xjf $1 ;;
+      *.tgz) tar xzf $1 ;;
+      *.zip) unzip $1 ;;
+      *.Z) uncompress $1 ;;
+      *.7z) 7z x $1 ;;
+      *) echo "'$1' cannot be extracted via extract()" ;;
+    esac
+  else
+    echo "'$1' is not a valid file"
+  fi
 }
 
 # Simple calculator
@@ -200,16 +224,6 @@ function ask(){
   printf "\nURL $1 returned a 200 OK on `date`\n"
 }
 
-# Shortcut to time tracker
-# http://tim.thechases.com/bvi/tt.py
-function t(){
-  if [[ $1 == 'fullhelp' ]]; then
-    cat ~/bin/tt/fullhelp.txt | more
-  else
-    python ~/bin/tt/tt.py "$@"
-  fi
-}
-
 # Download website $1 to folder $2
 function take() {
   echo Downloading url \'$1\' to folder \'$2\'
@@ -248,5 +262,60 @@ function snr() {
   else
     echo "Replacing '$1' with '$2' in all files matching '*.$3' in current folder."     
     find . -name "*.$3" -type f -exec sed -i '' "s/$(echo $1 | sed -e 's/[\/&]/\\&/g')/$(echo $2 | sed -e 's/[\/&]/\\&/g')/g" {} +
+  fi
+}
+
+# Shortcut to time tracker
+# http://tim.thechases.com/bvi/tt.py
+function t(){
+  if [[ $1 == 'fullhelp' ]]; then
+    cat ~/bin/tt/fullhelp.txt | more
+  else
+    python ~/bin/tt/tt.py "$@"
+  fi
+}
+
+# Print out images in console as ascii
+function primg() {
+  width=$((COLUMNS-2))
+  if exists asciiart; then
+    asciiart -w $width -c -i $1
+  else
+    # We don't have asciiart, check for jp2a
+    if exists jp2a; then
+      # Success! Set some common options. If you use a light background, change --background appropriately
+      opts="--width=$width --background=dark --colors"
+      # Since jp2a only takes jpgs as input, we need to pipe through ImageMagick's convert
+      if exists convert; then
+        pipe_through="convert -resize ${width}x -contrast -contrast -quiet $1 jpg:-"
+      else
+        # A little hackish, but seems to work. 
+        # This will return function before reaching the pipe to jp2a.
+        pipe_through="return 1"
+        echo "Couldn't convert image, exiting."; return 1
+      fi
+      # Check file format. In the future, check for --force and pipe whatever if present?
+      if [ -f $1 ]; then
+        case $1 in
+          *.jpg)
+            command jp2a $opts $1
+            ;;
+          *.gif|*.png|*.bmp|*.ico|*.pdf|*.svg|*.ai|*.tiff)
+            command $pipe_through | jp2a $opts - $1 2>/dev/null
+            ;;
+          *)
+            # Not one of the extensions listed above, but probably supported by IM still.
+            # Maybe we should just pipe anything and leave it up to the user
+            # Or rather just introduce a --force option.
+            echo "Couldn't print image, '$1', unsupported image file."
+            ;;
+        esac
+      else
+        echo "Couldn't print image, '$1' is not a valid file"
+      fi
+    else
+      # Sorry, couldn't find the right software
+      echo "Couldn't print image, no conversion software found. Try installing 'asciiart' or 'jp2a'."; return 1
+    fi
   fi
 }
