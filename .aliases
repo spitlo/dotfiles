@@ -110,10 +110,9 @@
   alias asci="asciiart -w $((COLUMNS-2)) -c -i"
 
   # Spotify
-  alias spfy=". ~/bin/spotify/spotify.sh $1"
-  alias sy=spfy
-  alias '°'='spfy pause'
-  alias '§'='spfy play'
+  alias sy=". ~/bin/spotify/spotify.sh $1"
+  alias '°'='sy pause'
+  alias '§'='sy play'
 
   # VirtualBox shortcuts
   alias ie6="VBoxManage startvm \"IE6 - WinXP\""
