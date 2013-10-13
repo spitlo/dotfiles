@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Utility function to check if $1 command exists
-# Use example: if exists ls; then echo "Command exists!"; else echo "Command does not exist."; fi
+# Use example: if exists ls; then echo "Command exists."; else echo "Command does not exist."; fi
 function exists() {
   command -v $1 >/dev/null 2>&1 && { return 0; } || { return 1; }
 }
