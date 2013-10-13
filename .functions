@@ -298,18 +298,15 @@ function t(){
 # Print out images in console as ascii
 function primg() {
   if [ -z "$1" ]; then
-    printf "Usage:\n${BOLD}primg${RESET} <path/to/file/>\n"
+    printf "Usage:\n${BOLD}primg${RESET} <path/to/file/> [ <--force> ]\n"
     printf "Attempts to print out an image file as ascii using asciiart or jp2a (using ImageMagick's ${BOLD}convert${RESET}).\n"
+    echo -e "The optional --force option send any file through convert, might cause errors or unexpected behavior.\n"
     return 1
   fi
   width=$((COLUMNS-2))
-  # Check if force option is set
-  if [ "$1" == "--force" -o "$1" == "-f" ]; then
-    file=$2
-  else
-    file=$1
-  fi
-  if exists asciiart; then
+  file=$1
+
+  if exists asciiart && [ -z "$2" ]; then
     asciiart -w $width -c -i $file
   else
     # We don't have asciiart, check for jp2a
@@ -323,22 +320,27 @@ function primg() {
         # Exit unsuccesfully if convert doesn't exist
         echo "Couldn't convert image, exiting."; return 1
       fi
-      # Check file format. In the future, check for --force and pipe whatever if present?
+      # Check file format. If --force is set just send it through convert without caring about file types.
       if [ -f $file ]; then
-        case $file in
-          *.jpg)
-            command jp2a $opts $file
-            ;;
-          *.gif|*.png|*.bmp|*.ico|*.pdf|*.svg|*.ai|*.tiff)
-            command $pipe_through | jp2a $opts - $file 2>/dev/null
-            ;;
-          *)
-            # Not one of the extensions listed above, but probably supported by IM still.
-            # Maybe we should just pipe anything and leave it up to the user
-            # Or rather just introduce a --force option.
-            echo "Couldn't print image, '$file', unsupported image file."
-            ;;
-        esac
+        # Check if force option is set
+        if [ "$2" == "--force" ] || [ "$2" == "-f" ]; then
+          echo -e "Forcing convert.\n"
+          command $pipe_through | jp2a $opts - $file 2>/dev/null
+        else
+          case $file in
+            *.jpg)
+              command jp2a $opts $file
+              ;;
+            *.gif|*.png|*.bmp|*.ico|*.pdf|*.svg|*.ai|*.tiff)
+              command $pipe_through | jp2a $opts - $file 2>/dev/null
+              ;;
+            *)
+              # Not one of the extensions listed above, but probably supported by IM still.
+              # Advice user about the --force option
+              echo "Couldn't print image, '$file', unsupported image file."
+              ;;
+          esac
+        fi
       else
         echo "Couldn't print image, '$file' is not a valid file"
       fi
