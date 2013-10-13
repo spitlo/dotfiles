@@ -2,6 +2,7 @@ l           °List all files, colorized, in long format
 la          °List all files, colorized, in long format, including dot files
 ld          °List only dot files, colorized, in long format
 lsd         °List only directories
+lst         °List folder using a tree structure
 
 ..(...)     °Move up the directory structure
 -           °Go to latest working directory
@@ -37,7 +38,7 @@ phind       °Given a value, shows values before and after according to the gold
 week        °Show week number
 colors      °Print out all 256 colors using tput
 
-take        °Download site <arg1> to folder <arg2>
+mirror      °Download site <arg1> to folder <arg2>
 ask         °Check url <arg1> every <arg2>/10 seconds until it returns 200 OK
 mgnt        °Download a magnet link in the background using aria2. Echoes to screen when download finished.
 httpcomp    °Test if HTTP compression (RFC 2616 + SDCH) is enabled for a given URL
@@ -52,3 +53,8 @@ ip/locip    °IP and local IP
 whi         °Enhanced WHOIS lookups
 urlenc      °URL-encode strings
 ieXX        °Run IE 6-10 in VirtualBox (Based on ievms)
+
+mgnt        °Starts download from magnet link in the background using aria2. Runs ~/.aria_done on complete.
+growl       °Shows message <argument> on screen using Growl for Node by TJ Holowaychuk and/or Pushover.
+primg       °Outputs <argument> image to console as color ascii.
+snr         °Search and replace in files based on file extension

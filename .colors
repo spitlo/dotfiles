@@ -36,7 +36,7 @@ else
     export PURPLE="\033[1;35m"
     export WHITE="\033[1;37m"
     export YELLOW="\033[1;37m"
-    export BOLD=""
+    export BOLD="\033[1m"
     export RESET="\033[00m"
     export BLINK=""
     export REVERSE=""

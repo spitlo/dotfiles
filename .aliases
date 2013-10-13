@@ -40,13 +40,13 @@
   alias lsd='ls -l | grep "^d"'
 
   # `cat` with beautiful colors. 
-  alias c='pygmentize -O style=monokai -f console256 -g'
+  alias c='pygmentize -O style=monokai,linenos=1 -f console256 -g'
 
 ##-----------##
 ## NET STUFF ##
 #=//
   # IP addresses
-  alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+  alias gip="dig +short myip.opendns.com @resolver1.opendns.com"
   alias locip="ipconfig getifaddr en0"
   alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
 
@@ -105,7 +105,6 @@
   alias g="git"
   alias v="vim"
   alias s="subl"
-  alias cdp='. ~/bin/cdp.sh $1'
   alias n='. ~/bin/n/n'
   alias o="open ."
   alias h=". ~/dotfiles/does help"
@@ -113,10 +112,9 @@
   alias asci="asciiart -w $((COLUMNS-2)) -c -i"
 
   # Spotify
-  alias spfy=". ~/bin/spotify/spotify.sh $1"
-  alias sy=spfy
-  alias '°'='spfy pause'
-  alias '§'='spfy play'
+  alias sy=". ~/bin/spotify/spotify.sh $1"
+  alias '°'='sy pause'
+  alias '§'='sy play'
 
   # VirtualBox shortcuts
   alias ie6="VBoxManage startvm \"IE6 - WinXP\""
@@ -131,7 +129,7 @@
   elif [[ -x "/Applications/Sublime Text 3.app/Contents/SharedSupport/bin/subl" ]]; then
     ln -sf "/Applications/Sublime Text 3.app/Contents/SharedSupport/bin/subl" ~/bin/subl
   elif [[ -x "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl" ]]; then
-      ln -sf "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl" ~/bin/subl
+    ln -sf "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl" ~/bin/subl
   fi
 
   # Undo a `git push`

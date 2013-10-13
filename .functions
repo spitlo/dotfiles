@@ -210,6 +210,11 @@ function gr() {
 
 # Check a url every 10 seconds until it returns 200 OK
 function ask(){
+  if [ -z "$1" ]; then
+    printf "Usage:\n${BOLD}ask${RESET} <url> [ <interval in seconds> ]\n"
+    printf "Check url every 10 seconds until it returns 200 OK. Second parameter is optional and changes the interval.\n"
+    return 1
+  fi
   if ! [[ "$2" =~ ^[0-9]+$ ]]; then
     delay=10
   else
@@ -225,7 +230,12 @@ function ask(){
 }
 
 # Download website $1 to folder $2
-function take() {
+function mirror() {
+  if [ -z "$1" ]; then
+    printf "Usage:\n${BOLD}mirror${RESET} <url to download> <destination folder>\n"
+    printf "Tries to create a local mirror of a site and offers to serve it on complete.\n"
+    return 1
+  fi
   echo Downloading url \'$1\' to folder \'$2\'
   # Good to know:
   # http://www.ibm.com/developerworks/linux/library/l-bash2/index.html
@@ -248,27 +258,37 @@ function killport() {
 }
 
 function mgnt() {
+  if [ -z "$1" ]; then
+    printf "Usage:\n${BOLD}mgnt${RESET} <full magnet: link>\n"
+    printf "Starts download from magnet: link using aria2. Executes ${BOLD}~/.aria_done${RESET} on complete.\n"
+    return 1
+  fi
   aria2c --dir=$DOWNLOADS_FOLDER --quiet=true --on-bt-download-complete=$HOME/.aria_done "$1" &
 }
 
 # Replace word $1 with word $2 in files with names 
 # matching "*.$3" in current folder
 function snr() {
+  if [ -z "$1" ]; then
+    printf "Usage:\n${BOLD}snr${RESET} <word to find> <word to substitute> <file extension>\n"
+    return 1
+  fi
   # $1 find this
   # $2 replace with this
   # $3 file extension
-  if [ "$1" == "--help" -o "$1" == "-h" ]; then
-    echo "Help:"
-  else
-    echo "Replacing '$1' with '$2' in all files matching '*.$3' in current folder."     
-    find . -name "*.$3" -type f -exec sed -i '' "s/$(echo $1 | sed -e 's/[\/&]/\\&/g')/$(echo $2 | sed -e 's/[\/&]/\\&/g')/g" {} +
-  fi
+    echo -e "Replacing '$1' with '$2' in all files matching '*.$3' in current folder."
+    read -p "Continue? (y/n) "
+    if [[ "$REPLY" == "y" ]]; then
+      find . -name "*.$3" -type f -exec sed -i '' "s/$(echo $1 | sed -e 's/[\/&]/\\&/g')/$(echo $2 | sed -e 's/[\/&]/\\&/g')/g" {} +
+    else 
+      echo "Aborting."
+    fi
 }
 
 # Shortcut to time tracker
 # http://tim.thechases.com/bvi/tt.py
 function t(){
-  if [[ $1 == 'fullhelp' ]]; then
+  if [[ "$1" == "fullhelp" ]]; then
     cat ~/bin/tt/fullhelp.txt | more
   else
     python ~/bin/tt/tt.py "$@"
@@ -277,6 +297,11 @@ function t(){
 
 # Print out images in console as ascii
 function primg() {
+  if [ -z "$1" ]; then
+    printf "Usage:\n${BOLD}primg${RESET} <path/to/file/>\n"
+    printf "Attempts to print out an image file as ascii using asciiart or jp2a (using ImageMagick's ${BOLD}convert${RESET}).\n"
+    return 1
+  fi
   width=$((COLUMNS-2))
   # Check if force option is set
   if [ "$1" == "--force" -o "$1" == "-f" ]; then
@@ -320,6 +345,35 @@ function primg() {
     else
       # Sorry, couldn't find the right software
       echo "Couldn't print image, no conversion software found. Try installing 'asciiart' or 'jp2a'."; return 1
+    fi
+  fi
+}
+
+function cdp() {
+  if [[ -z "$1" ]]; then
+    if [ "$VIRTUAL_ENV" != "" ]; then
+      deactivate
+    fi
+    return
+  fi
+
+  if [[ -z "$PROJECT_FOLDER" ]]; then
+    echo "You have not set your project folder in .extras. Exiting."
+    return 1
+  else
+    for folder in $PROJECT_FOLDER/{"$1"/src/"$1","$1"/"$1","$1"}; do
+      if [[ -d "$folder" ]]; then
+        cd $folder
+        echo -e "Found project folder: $folder."
+        break
+      fi
+    done
+    unset folder
+
+    if [ -e ~/.virtualenvs/$1/bin/activate ]; then
+      workon $1
+      . $HOME/.bash_profile && clear
+      echo -e "Project ${YELLOW}$1${RESET} activated."
     fi
   fi
 }
