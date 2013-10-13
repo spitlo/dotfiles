@@ -1,55 +1,83 @@
 #!/usr/bin/env node
 var args = process.argv.splice(2),
 	msg = args[0],
-	growl;
+	growl,
+    po = false,
+    quiet = false;
 
+if ( args.length < 1 ) {
+    console.log('Usage: \033[1mgrowl\033[0m <message> [ <--push-over> <--quiet> ]')
+    console.log('Prints message on screen using Growl for Node by TJ Holowaychuk. Falls back to Pushover if app token is set in ~/.extras.')
+    console.log('--push-over forces Pushover. --quiet supresses console output.')
+    process.exit(1)
+}
+
+if ( args.indexOf('--push-over') > -1 ) {
+    po = true
+}
+
+if ( args.indexOf('--quiet') > -1 ) {
+    quiet = true
+}
+
+// Use Growl for Node
 if ( typeof process.env.GROWL_PATH == 'undefined' ) {
-  	console.log('You need to set the GROWL_PATH variable in ~/.extras to get OSD messages. Falling back to console.')
+  	if (!quiet) console.log('You need to set the GROWL_PATH variable in ~/.extras to get OSD messages. Trying Pushover instead.')
+    po = true
 } else {
 	try {
 		growl = require( process.env.GROWL_PATH )
 		growl( msg )
 	}
 	catch( e ) {
-		//if ( e.code === 'MODULE_NOT_FOUND' ) {
-			// Growl didn't work for some reason, trying Pushover instead
-			if ( typeof process.env.PO_APP_TOKEN != 'undefined') {
-				var https = require( 'https' ),
-					url = require( 'url' ),
-					qs = require( 'querystring' ),
-					req_string = {
-						token: process.env.PO_APP_TOKEN,
-						user: process.env.PO_USER_KEY,
-						message: msg
-					},
-					po_url = 'https://api.pushover.net/1/messages.json',
-					o = url.parse( po_url );
-				req_string = qs.stringify( req_string );
-				o.method = "POST";
-				o.headers = {
-					'Content-Length': req_string.length
-				};
-				//console.log( 'o: ', o ); 
-				var req = https.request( o, function( res ) {
-					var err,
-						data = '';
-					res.on( 'end', function() {
-			      		console.log( data )
-					});
-
-					res.on( 'data', function( chunk ) {
-						data += chunk;
-					});
-
-					res.on( 'error', function( e ) {
-						console.log( e )
-					});
-				});
-				req.write( req_string );
-				req.end();
-			}
-		//}
-	}
+		if ( e.code === 'MODULE_NOT_FOUND' ) {
+          if (!quiet) console.log('You need to install Growl for Node by TJ Holowaychuk to get OSD messages. Trying Pushover instead.')
+          po = true    
+        }
+    }
 }
+
+// Use Pushover
+if ( po ) {
+    if ( typeof process.env.PO_APP_TOKEN != 'undefined') {
+        var https = require( 'https' ),
+            url = require( 'url' ),
+            qs = require( 'querystring' ),
+            req_string = {
+                token: process.env.PO_APP_TOKEN,
+                user: process.env.PO_USER_KEY,
+                message: msg
+            },
+            po_url = 'https://api.pushover.net/1/messages.json',
+            o = url.parse( po_url );
+        req_string = qs.stringify( req_string );
+        o.method = "POST";
+        o.headers = {
+            'Content-Length': req_string.length
+        };
+
+        var req = https.request( o, function( res ) {
+            var err,
+                data = '';
+            res.on( 'end', function() {
+                if (!quiet) console.log( data )
+            });
+
+            res.on( 'data', function( chunk ) {
+                data += chunk;
+            });
+
+            res.on( 'error', function( e ) {
+                if (!quiet) console.log( e )
+            });
+        });
+        req.write( req_string );
+        req.end();
+    } else {
+        if (!quiet) console.log('You need to set the PO_APP_TOKEN and PO_USER_KEY variables in ~/.extras to use Pushover.')
+    }
+}
+
 // Always log to console for now, and with some pretty colors.
-console.log( '\033[1m\033[33mGrowl says:\033[0m ' + msg )
+// Unless user has explicitly set the --quiet option
+if (!quiet) console.log( '\033[1m\033[33mGrowl says:\033[0m ' + msg )
