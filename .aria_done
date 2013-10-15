@@ -3,4 +3,4 @@
 # Send notification using Growl for Node:
 # https://npmjs.org/package/growl
 # The --push-over option tells the wrapper function to send via Pushover as well
-growl "Aria finished downloading $3 with GID $1. Now seeding." --push-over 
+growl "Aria finished downloading $3 with GID $1. Now seeding." --push-over
