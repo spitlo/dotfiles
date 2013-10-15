@@ -300,7 +300,7 @@ function primg() {
   if [ -z "$1" ]; then
     printf "Usage:\n${BOLD}primg${RESET} <path/to/file/> [ <--force> ]\n"
     printf "Attempts to print out an image file as ascii using asciiart or jp2a (using ImageMagick's ${BOLD}convert${RESET}).\n"
-    echo -e "The optional --force option send any file through convert, might cause errors or unexpected behavior.\n"
+    echo -e "The optional --force option sends any file through convert and might cause errors or unexpected behavior.\n"
     return 1
   fi
   width=$((COLUMNS-2))
