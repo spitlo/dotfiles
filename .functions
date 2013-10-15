@@ -3,7 +3,8 @@
 # Utility function to check if $1 command exists
 # Use example: if exists ls; then echo "Command exists."; else echo "Command does not exist."; fi
 function exists() {
-  command -v $1 >/dev/null 2>&1 && { return 0; } || { return 1; }
+  cmnd=${1:?"Please supply a command to look for."}
+  command -v $cmnd >/dev/null 2>&1 && { return 0; } || { return 1; }
 }
 
 # Try to make clipboard available
@@ -350,6 +351,7 @@ function primg() {
     fi
   fi
 }
+
 
 function cdp() {
   if [[ -z "$1" ]]; then
