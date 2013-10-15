@@ -3,7 +3,8 @@
 # Utility function to check if $1 command exists
 # Use example: if exists ls; then echo "Command exists."; else echo "Command does not exist."; fi
 function exists() {
-  command -v $1 >/dev/null 2>&1 && { return 0; } || { return 1; }
+  cmnd=${1:?"Please supply a command to look for."}
+  command -v $cmnd >/dev/null 2>&1 && { return 0; } || { return 1; }
 }
 
 # Try to make clipboard available
@@ -300,7 +301,7 @@ function primg() {
   if [ -z "$1" ]; then
     printf "Usage:\n${BOLD}primg${RESET} <path/to/file/> [ <--force> ]\n"
     printf "Attempts to print out an image file as ascii using asciiart or jp2a (using ImageMagick's ${BOLD}convert${RESET}).\n"
-    echo -e "The optional --force option send any file through convert, might cause errors or unexpected behavior.\n"
+    echo -e "The optional --force option sends any file through convert and might cause errors or unexpected behavior.\n"
     return 1
   fi
   width=$((COLUMNS-2))
@@ -350,6 +351,7 @@ function primg() {
     fi
   fi
 }
+
 
 function cdp() {
   if [[ -z "$1" ]]; then

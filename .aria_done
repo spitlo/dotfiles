@@ -1,12 +1,6 @@
 #!/bin/bash
 
-#echo -e "Aria finished downloading ${YELLOW}$3${RESET} with GID $1. Now seeding."
-
-# Send a notification via Pushover as well.
-#curl -s \
-#  -F "token=$PO_APP_TOKEN" \
-#  -F "user=$PO_USER_KEY" \
-#  -F "message=Aria finished downloading $3 with GID $1. Now seeding." \
-#  https://api.pushover.net/1/messages.json > /dev/null 2>&1
-
+# Send notification using Growl for Node:
+# https://npmjs.org/package/growl
+# The --push-over option tells the wrapper function to send via Pushover as well
 growl "Aria finished downloading $3 with GID $1. Now seeding." --push-over
