@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Utility function to check if $1 command exists
-# Use example: if exists ls; then echo "Command exists!"; else echo "Command does not exist."; fi
+# Use example: if exists ls; then echo "Command exists."; else echo "Command does not exist."; fi
 function exists() {
   cmnd=${1:?"Please supply a command to look for."}
   command -v $cmnd >/dev/null 2>&1 && { return 0; } || { return 1; }
@@ -211,6 +211,11 @@ function gr() {
 
 # Check a url every 10 seconds until it returns 200 OK
 function ask(){
+  if [ -z "$1" ]; then
+    printf "Usage:\n${BOLD}ask${RESET} <url> [ <interval in seconds> ]\n"
+    printf "Check url every 10 seconds until it returns 200 OK. Second parameter is optional and changes the interval.\n"
+    return 1
+  fi
   if ! [[ "$2" =~ ^[0-9]+$ ]]; then
     delay=10
   else
@@ -226,7 +231,12 @@ function ask(){
 }
 
 # Download website $1 to folder $2
-function take() {
+function mirror() {
+  if [ -z "$1" ]; then
+    printf "Usage:\n${BOLD}mirror${RESET} <url to download> <destination folder>\n"
+    printf "Tries to create a local mirror of a site and offers to serve it on complete.\n"
+    return 1
+  fi
   echo Downloading url \'$1\' to folder \'$2\'
   # Good to know:
   # http://www.ibm.com/developerworks/linux/library/l-bash2/index.html
@@ -249,27 +259,37 @@ function killport() {
 }
 
 function mgnt() {
+  if [ -z "$1" ]; then
+    printf "Usage:\n${BOLD}mgnt${RESET} <full magnet: link>\n"
+    printf "Starts download from magnet: link using aria2. Executes ${BOLD}~/.aria_done${RESET} on complete.\n"
+    return 1
+  fi
   aria2c --dir=$DOWNLOADS_FOLDER --quiet=true --on-bt-download-complete=$HOME/.aria_done "$1" &
 }
 
 # Replace word $1 with word $2 in files with names 
 # matching "*.$3" in current folder
 function snr() {
+  if [ -z "$1" ]; then
+    printf "Usage:\n${BOLD}snr${RESET} <word to find> <word to substitute> <file extension>\n"
+    return 1
+  fi
   # $1 find this
   # $2 replace with this
   # $3 file extension
-  if [ "$1" == "--help" -o "$1" == "-h" ]; then
-    echo "Help:"
-  else
-    echo "Replacing '$1' with '$2' in all files matching '*.$3' in current folder."     
-    find . -name "*.$3" -type f -exec sed -i '' "s/$(echo $1 | sed -e 's/[\/&]/\\&/g')/$(echo $2 | sed -e 's/[\/&]/\\&/g')/g" {} +
-  fi
+    echo -e "Replacing '$1' with '$2' in all files matching '*.$3' in current folder."
+    read -p "Continue? (y/n) "
+    if [[ "$REPLY" == "y" ]]; then
+      find . -name "*.$3" -type f -exec sed -i '' "s/$(echo $1 | sed -e 's/[\/&]/\\&/g')/$(echo $2 | sed -e 's/[\/&]/\\&/g')/g" {} +
+    else 
+      echo "Aborting."
+    fi
 }
 
 # Shortcut to time tracker
 # http://tim.thechases.com/bvi/tt.py
 function t(){
-  if [[ $1 == 'fullhelp' ]]; then
+  if [[ "$1" == "fullhelp" ]]; then
     cat ~/bin/tt/fullhelp.txt | more
   else
     python ~/bin/tt/tt.py "$@"
@@ -278,9 +298,17 @@ function t(){
 
 # Print out images in console as ascii
 function primg() {
+  if [ -z "$1" ]; then
+    printf "Usage:\n${BOLD}primg${RESET} <path/to/file/> [ <--force> ]\n"
+    printf "Attempts to print out an image file as ascii using asciiart or jp2a (using ImageMagick's ${BOLD}convert${RESET}).\n"
+    echo -e "The optional --force option send any file through convert, might cause errors or unexpected behavior.\n"
+    return 1
+  fi
   width=$((COLUMNS-2))
-  if exists asciiart; then
-    asciiart -w $width -c -i $1
+  file=$1
+
+  if exists asciiart && [ -z "$2" ]; then
+    asciiart -w $width -c -i $file
   else
     # We don't have asciiart, check for jp2a
     if exists jp2a; then
@@ -288,35 +316,68 @@ function primg() {
       opts="--width=$width --background=dark --colors"
       # Since jp2a only takes jpgs as input, we need to pipe through ImageMagick's convert
       if exists convert; then
-        pipe_through="convert -resize ${width}x -contrast -contrast -quiet $1 jpg:-"
+        pipe_through="convert -resize ${width}x -contrast -contrast -quiet $file jpg:-"
       else
-        # A little hackish, but seems to work. 
-        # This will return function before reaching the pipe to jp2a.
-        pipe_through="return 1"
+        # Exit unsuccesfully if convert doesn't exist
         echo "Couldn't convert image, exiting."; return 1
       fi
-      # Check file format. In the future, check for --force and pipe whatever if present?
-      if [ -f $1 ]; then
-        case $1 in
-          *.jpg)
-            command jp2a $opts $1
-            ;;
-          *.gif|*.png|*.bmp|*.ico|*.pdf|*.svg|*.ai|*.tiff)
-            command $pipe_through | jp2a $opts - $1 2>/dev/null
-            ;;
-          *)
-            # Not one of the extensions listed above, but probably supported by IM still.
-            # Maybe we should just pipe anything and leave it up to the user
-            # Or rather just introduce a --force option.
-            echo "Couldn't print image, '$1', unsupported image file."
-            ;;
-        esac
+      # Check file format. If --force is set just send it through convert without caring about file types.
+      if [ -f $file ]; then
+        # Check if force option is set
+        if [ "$2" == "--force" ] || [ "$2" == "-f" ]; then
+          echo -e "Forcing convert.\n"
+          command $pipe_through | jp2a $opts - $file 2>/dev/null
+        else
+          case $file in
+            *.jpg)
+              command jp2a $opts $file
+              ;;
+            *.gif|*.png|*.bmp|*.ico|*.pdf|*.svg|*.ai|*.tiff)
+              command $pipe_through | jp2a $opts - $file 2>/dev/null
+              ;;
+            *)
+              # Not one of the extensions listed above, but probably supported by IM still.
+              # Advice user about the --force option
+              echo "Couldn't print image, '$file', unsupported image file."
+              ;;
+          esac
+        fi
       else
-        echo "Couldn't print image, '$1' is not a valid file"
+        echo "Couldn't print image, '$file' is not a valid file"
       fi
     else
       # Sorry, couldn't find the right software
       echo "Couldn't print image, no conversion software found. Try installing 'asciiart' or 'jp2a'."; return 1
+    fi
+  fi
+}
+
+
+function cdp() {
+  if [[ -z "$1" ]]; then
+    if [ "$VIRTUAL_ENV" != "" ]; then
+      deactivate
+    fi
+    return
+  fi
+
+  if [[ -z "$PROJECT_FOLDER" ]]; then
+    echo "You have not set your project folder in .extras. Exiting."
+    return 1
+  else
+    for folder in $PROJECT_FOLDER/{"$1"/src/"$1","$1"/"$1","$1"}; do
+      if [[ -d "$folder" ]]; then
+        cd $folder
+        echo -e "Found project folder: $folder."
+        break
+      fi
+    done
+    unset folder
+
+    if [ -e ~/.virtualenvs/$1/bin/activate ]; then
+      workon $1
+      . $HOME/.bash_profile && clear
+      echo -e "Project ${YELLOW}$1${RESET} activated."
     fi
   fi
 }
