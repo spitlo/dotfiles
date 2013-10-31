@@ -105,7 +105,6 @@
   alias g="git"
   alias v="vim"
   alias s="subl"
-  alias n='. ~/bin/n/n'
   alias o="open ."
   alias h=". ~/dotfiles/does help"
   alias cls="clear"
