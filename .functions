@@ -28,12 +28,6 @@ function md() {
   mkdir -p "$@" && cd "$@"
 }
 
-# List after cd
-function cx() {
-  cd "$1";
-  la
-}
-
 # find shorthand
 function f() {
   find . -name "$1"
@@ -297,7 +291,7 @@ function t(){
 # Print out images in console as ascii
 function primg() {
   if [ -z "$1" ]; then
-    printf "Usage:\n${BOLD}primg${RESET} <path/to/file/> [ <--force> ]\n"
+    printf "Usage:\n${BOLD}primg${RESET} <path/to/file/> [ --force ]\n"
     printf "Attempts to print out an image file as ascii using asciiart or jp2a (using ImageMagick's ${BOLD}convert${RESET}).\n"
     echo -e "The optional --force option sends any file through convert and might cause errors or unexpected behavior.\n"
     return 1
@@ -350,10 +344,13 @@ function primg() {
   fi
 }
 
-
+# Find project folder, enter it and activate the corresponding virtual env
 function cdp() {
   if [[ -z "$1" ]]; then
-    if [ "$VIRTUAL_ENV" != "" ]; then
+    if [ "$VIRTUAL_ENV" = "" ]; then
+      printf "Usage:\n${BOLD}cdp${RESET} <project_name>\n"
+      printf "Finds project folder, enters it and activates the corresponding ${BOLD}virtualenv${RESET}).\n"
+    else
       deactivate
     fi
     return
@@ -376,6 +373,25 @@ function cdp() {
       workon $1
       . $HOME/.bash_profile && clear
       echo -e "Project ${YELLOW}$1${RESET} activated."
+    fi
+  fi
+}
+
+# Send a markdown formatted file to lynx as html
+function mdx() {
+  if [[ -z "$1" ]]; then
+      printf "Usage:\n${BOLD}mdx${RESET} <path/to/file> [ --dump ]\n"
+      printf "Renders a markdown formatted file as HTML and pipes it to ${BOLD}lynx${RESET}).\n"
+      printf "The optional --dump sends the output straight to stdout.\n"
+  else
+    if exists markdown; then 
+      if [ "$2" == "--dump" ] || [ "$2" == "-d" ]; then
+        local dump="-dump"
+      fi
+      markdown "$1" | lynx -stdin $dump
+    else
+      # Sorry, couldn't find the right software
+      echo "Couldn't convert markdown. Get 'Markdown.pl' from: http://daringfireball.net/projects/markdown/"; return 1
     fi
   fi
 }
