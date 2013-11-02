@@ -6,7 +6,7 @@ var args = process.argv.splice(2),
     quiet = false;
 
 if ( args.length < 1 ) {
-    console.log('Usage: \033[1mgrowl\033[0m <message> [ <--push-over> <--quiet> ]')
+    console.log('Usage: \033[1mgrowl\033[0m <message> [ --push-over ] [ --quiet ]')
     console.log('Prints message on screen using Growl for Node by TJ Holowaychuk. Falls back to Pushover if app token is set in ~/.extras.')
     console.log('--push-over forces Pushover. --quiet supresses console output.')
     process.exit(1)
