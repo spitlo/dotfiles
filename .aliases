@@ -121,7 +121,7 @@
   alias ie8="VBoxManage startvm \"IE8 - WinXP\""
   alias ie9="VBoxManage startvm \"IE9 - Win7\""
   alias ie10="VBoxManage startvm \"IE10 - Win8\""
-  alias ie11="VBoxManage startvm \"IE10 - Win8\""
+  alias ie11="VBoxManage startvm \"IE11 - Win7\""
 
   # Sublime Text 3
   if [[ -x "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl" ]]; then
