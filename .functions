@@ -130,7 +130,13 @@ function xt() {
       *.tar.bz2) tar xjf $1 ;;
       *.tar.gz) tar xzf $1 ;;
       *.bz2) bunzip2 $1 ;;
-      *.rar) rar x $1 ;;
+      *.rar)
+        if ( exists rar ) ; then 
+          rar x $1
+        elif ( exists unrar ) ; then 
+          unrar x $1 
+        fi
+      ;;
       *.gz) gunzip $1 ;;
       *.tar) tar xf $1 ;;
       *.tbz2) tar xjf $1 ;;
@@ -138,7 +144,7 @@ function xt() {
       *.zip) unzip $1 ;;
       *.Z) uncompress $1 ;;
       *.7z) 7z x $1 ;;
-      *) echo "'$1' cannot be extracted via extract()" ;;
+      *) echo "'$1' cannot be extracted via xt()" ;;
     esac
   else
     echo "'$1' is not a valid file"
@@ -262,7 +268,8 @@ function mgnt() {
 function kapp() {
   if [ -z "$1" ]; then
     printf "Usage:\n${BOLD}kapp${RESET} <port> [ <kbits> ]\n"
-    printf "Puts a quick cap on specified port. The optional variable defaults to 680.\nTypical bandwidths: ${BOLD}GPRS${RESET}: ~100; ${BOLD}EDGE${RESET}: ~200; ${BOLD}3G${RESET}: ~300.\nRequires root and ${BOLD}ipfw${RESET}.\n"
+    printf "Puts a quick cap on specified port. The optional variable defaults to 680.\n"
+    printf "Typical bandwidths: ${BOLD}GPRS${RESET}: ~100; ${BOLD}EDGE${RESET}: ~200; ${BOLD}3G${RESET}: ~300.\nRequires root and ${BOLD}ipfw${RESET}.\n"
     return 1
   fi
   if [ -z "$2" ]; then
