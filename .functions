@@ -236,12 +236,21 @@ function ask(){
 # Download website $1 to folder $2
 function mirror() {
   if [ -z "$1" ]; then
-    printf "Usage:\n${BOLD}mirror${RESET} <url to download> <destination folder>\n"
+    printf "Usage:\n${BOLD}mirror${RESET} <url to download> <destination folder> [ <username> <password> ]\n"
     printf "Tries to create a local mirror of a site and offers to serve it on complete.\n"
+    printf "Optional arguments are for sites using basic authentication.\n"
     return 1
   fi
   echo Downloading url \'$1\' to folder \'$2\'
-  wget --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.43 Safari/537.31" -mpckPE -e robots=off -w 1 --random-wait --directory-prefix=$2 $1 && echo -e "\nDone."
+
+  # Do we have username/password?
+  if [ "$#" -eq 4 ]; then
+    echo Using basic authentication: $3/$4
+    local un="--user=$3"
+    local pw="--password=$4"
+  fi
+
+  wget --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.43 Safari/537.31" -mpckPE -e robots=off -w 1 --random-wait --directory-prefix=$2 $un $pw $1 && echo -e "\nDone."
   fldr=$(echo $1 | awk -F/ '{print $3}')
   cd $2/$fldr && la && read -p "Serve this folder? Enter port number or 0 to exit. "
   echo
