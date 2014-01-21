@@ -9,7 +9,7 @@
   alias .....="cd ../../../.."
   alias -- -="cd -"
   alias _="pwd"
-  alias __="get_path"
+  alias __="gpath"
 
   # Enable aliases to be sudo’ed
   alias sudo='sudo '

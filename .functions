@@ -78,8 +78,8 @@ function cp_p() {
 }
 
 # Copy file path to clipboard
-# Includes argument if given
-function get_path() {
+# Includes argument if given (good w/ tab completion for getting path of specific file)
+function gpath() {
   ##echo "$PWD/$*" | pbcopy
   printf "%s/%s" $(printf "$PWD" | tr -d "\n") $(printf "${1}" | tr -d "\n") | pbcopy
 } 
@@ -94,10 +94,10 @@ function httpcomp() {
 function json() {
   if [ -p /dev/stdin ]; then
     # piping, e.g. `echo '{"foo":42}' | json`
-    python -mjson.tool | pygmentize -l javascript
+    python -mjson.tool | pygmentize -l javascript -O style=monokai -f console256
   else
     # e.g. `json '{"foo":42}'`
-    python -mjson.tool <<< "$*" | pygmentize -l javascript
+    python -mjson.tool <<< "$*" | pygmentize -l javascript -O style=monokai -f console256
   fi
 }
 
