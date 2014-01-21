@@ -1,106 +1,212 @@
+1
 After playing with the other projects, I tossed together a command-line time-tracker with a little Python code in a couple hours. It doesn't have a fancy installer, but it's just the one python file. The only dependencies are Python and sqlite3. Python 2.5 comes with sqlite3, so that's an easy way to go. It should also work in Python 2.4 as long as you've taken the extra step to get sqlite installed.
+2
 
+3
 You can snag it at
+4
 
+5
   http://tim.thechases.com/bvi/tt.py
+6
 
+7
 The "tt" stands for time-tracker. To make it easy, you may want to put a link to it in your path. Assuming /usr/local/bin is in your path, you can do the following as root:
+8
 
+9
   bash# cd /usr/local/bin
+10
   bash# wget http://tim.thechases.com/bvi/tt.py
+11
   bash# chmod ugo+x tt.py
+12
   bash# ln -s tt.py tt
+13
 
+14
 It has a feel much like CVS/Subversion/Mercurial/etc. All the commands or of the form
+15
 
+16
   tt [options] ACTION [parameters]
+17
 
+18
 You can have multiple projects, each of which have a variety of blocks of time associated with them (a block of time has a start-time, an optional end-time, and an optional description--if you're working on it, the end-time isn't set)
+19
 
+20
 You start it up by using the INIT action:
+21
 
+22
   bash$ tt init
+23
 
+24
 This will create ~/.timetracker/[username].db
+25
 
+26
 This is just a sqlite3 DB, so you can use any SQL-aware tools for querying this that you want. It also creates a default project, boringly called "Default". If you want to specify the project name, you can do so on the command line:
+27
 
+28
   bash$ tt init "Spanish Inquisition"
+29
 
+30
 It will automatically start the timer for your first task. This task doesn't have any note associated with it, but you can include that too
+31
 
+32
   bash$ tt init "Spanish Inquisition" "Putting in comfy chair"
+33
 
+34
 When you're done with a task, you can either move on to another task which will automatically stop the previous task:
+35
 
+36
   bash$ tt start "Poking with soft cushions"
+37
 
+38
 Or you can explicitly stop whatever you're working on and start a new task later:
+39
 
+40
   bash$ tt stop
+41
 
+42
 To add further projects, use the ADD command:
+43
 
+44
   bash$ tt add "Finding the Holy Grail"
+45
 
+46
 You can list your available projects:
+47
 
+48
   bash$ tt ls
+49
   1: Spanish Inquisition
+50
   2: Finding the Holy Grail (current)
+51
 
+52
 and you can list the tasks and the times taken for a given project
+53
 
+54
   bash$ tt ls 1
+55
   [output follows]
+56
 
+57
 The current project (the one to which START adds the next block of time) is shown in the output of the "ls" command. If you want to start a task for the non-current project, you can just include the project # as the first argument:
+58
 
+59
   bash$ tt ls
+60
   1: Spanish Inquisition
+61
   2: Finding the Holy Grail (current)
+62
   bash$ tt start 1 "Maniacal laughter"
+63
   bash$ tt ls
+64
   1: Spanish Inquisition (current)
+65
   2: Finding the Holy Grail
+66
 
+67
 When you're done with a project, you can mark it as deleted:
+68
 
+69
   bash$ tt del 1
+70
   Deleted
+71
   bash$ tt ls
+72
   2: Finding the Holy Grail (current)
+73
 
+74
 If you delete the current project, the most recently added project is made current, or it notifies you that you have no projects. If you have no current project and attempt to START a task, it will notify you.
+75
 
+76
 To show all projects, including deleted projects, use the "-a" or "--all" parameter:
+77
 
+78
   bash$  tt ls -a
+79
   1: Spanish Inquistion (deleted)
+80
   2: Finding the Holy Grail (current)
+81
 
+82
 If you accidentally delete a project, you can undelete it:
+83
 
+84
   bash$ tt undelete 1
+85
   bash$ tt ls
+86
   1: Spanish Inquisition
+87
   2: Finding the Holy Grail (current)
+88
 
+89
 It also offers meager help, listing available actions:
+90
 
+91
   bash$ tt help
+92
 
+93
 or you can ask for help on a particular item:
+94
 
+95
   bash$ tt help start
+96
 
+97
 Most commands have alternatives as listed in the detailed help so "remove", "rm", "del", and "delete" all behave the same. Case doesn't matter.
+98
 
+99
 There are a couple other options to control date formatting, to override the database file, or to change the verbosity. You can also force a database init, which will delete your existing database of tasks, and start afresh.
+100
 
+101
 It's all pretty simple Python code, so if you want to tweak it, feel free. Consider it in the public domain. The code isn't overly elegant, as it issues direct SQL queries instead of using some abstraction/ORM layer, but none of the queries are anything too complex. I threw it together in a couple hours.
+102
 
+103
 Hope you find it helpful. If you have questions, I'll try my best to answer them.
+104
 
+105
 -tim
+106
 

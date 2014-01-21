@@ -125,6 +125,12 @@ function unidecode() {
 # Extract archives - use: xt <file>
 # Credits to http://dotfiles.org/~pseup/.bashrc
 function xt() {
+  if [ -z "$1" ]; then
+    printf "Usage:\n${BOLD}xt${RESET} <archive to extract>\n"
+    printf "Tries to extract an archive based on file extension.\n"
+    printf "\n"
+    return 1
+  fi
   local error="'$1' cannot be extracted via xt"
   if [ -f $1 ] ; then
     case $1 in
@@ -262,7 +268,7 @@ function mirror() {
   fi
 }
 
-# Kill all processes listening on specified port (Beware this will also kill browsers etc)
+# Kill all processes listening on specified port (Beware this might also kill browsers etc)
 function killport() {
   local port="${1:-8000}"
   lsof -i tcp:${port} | awk 'NR!=1 {print $2}' | xargs kill 
@@ -291,27 +297,54 @@ function kapp() {
   fi
   sudo ipfw pipe 1 config bw $kbits >/dev/null 2>&1 && sudo ipfw add 1 pipe 1 src-port $1 >/dev/null 2>&1
   read -p "Capping port $1 to $kbits. Press any key to stop..." -n 1 -s
-  printf "\nKapp removed.\n"
+  printf "\nCap removed.\n"
   sudo ipfw delete 1
 }
 
 # Replace word $1 with word $2 in files with names 
-# matching "*.$3" in current folder
+# matching "$3" recursively from current folder
 function snr() {
   if [ -z "$1" ]; then
-    printf "Usage:\n${BOLD}snr${RESET} <word to find> <word to substitute> <file extension>\n"
+    printf "Usage:\n${BOLD}snr${RESET} <word to find> <word to substitute> \"<file matching pattern>\"\n"
+    printf "Search and replace using ${BOLD}find${RESET} and ${BOLD}sed${RESET}.\n"
+    printf "Before any actual replacing is done, you will be presented a list of affected lines\n"
+    printf "for each matching files containing the word, and the opportunity to cancel or proceed.\n"
     return 1
   fi
-  # $1 find this
-  # $2 replace with this
-  # $3 file extension
-    echo -e "Replacing '$1' with '$2' in all files matching '*.$3' in current folder."
-    read -p "Continue? (y/n) "
-    if [[ "$REPLY" == "y" ]]; then
-      find . -name "*.$3" -type f -exec sed -i '' "s/$(echo $1 | sed -e 's/[\/&]/\\&/g')/$(echo $2 | sed -e 's/[\/&]/\\&/g')/g" {} +
-    else 
-      echo "Aborting."
-    fi
+
+  local fnd="$1"
+  local sbt="$2"
+  local pat="$3"
+
+  printf "Replacing \'$fnd\' with \'$sbt\' in all files matching pattern \'$pat\' recursively from current folder.\n"
+  printf "${BOLD}Matches${RESET}:\n"
+  
+  find . -name "$pat" -exec \
+    awk -v bd="$BOLD" -v yw="$YELLOW" -v rt="$RESET" -v ul="$UNDERLINE" '
+      BEGIN {
+        mtchs = 0
+      }
+      /'$fnd'/ {
+        # Print filename on first match 
+        if ( mtchs == 0 ) {
+          print ( ul FILENAME rt ":" );
+        }
+        # Color all matches yellow and add the number of matches to total count
+        mtchs += gsub(/'$fnd'/, ( yw "'$fnd'" rt ), $0);
+        # Print line with linenumber
+        printf ( "%s %5d:%s %s\n", bd, FNR, rt, $0)
+      }
+      END {
+        if ( mtchs > 0 ) {
+          print ( mtchs (mtchs > 1 ? " matches" : " match") " in file " FILENAME ".\n" )
+        }
+      }' {} \;
+  read -p "Continue? (y/n) " -n 1
+  if [[ "$REPLY" == "y" ]]; then
+    find . -name "$3" -type f -exec sed -i '' "s/$(echo $fnd | sed -e 's/[\/&]/\\&/g')/$(echo $sbt | sed -e 's/[\/&]/\\&/g')/g" {} +
+  else 
+    printf "\nAborting.\n"
+  fi
 }
 
 # Shortcut to time tracker
