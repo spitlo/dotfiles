@@ -27,6 +27,9 @@
   # -p: Slash after dir, -h: "human readable" units
   alias ls="command ls ${colorflag} -ph"
 
+  # Force diff to always report identical files
+  alias diff="command diff -s"
+
   # List all files colorized in long format
   alias l="ls -l"
 
@@ -34,8 +37,9 @@
   alias la="ls -la"
 
   # List only dot files colorized in long format
-  alias ld="ls -ld ./.??*"
-
+  #alias ld="ls -ld ./.??*"
+  alias ld="ls -ld .[!.]*"
+  
   # List only directories
   alias lsd='ls -l | grep "^d"'
 
@@ -111,7 +115,7 @@
   alias markdown="$HOME/bin/Markdown/Markdown.pl"
 
   # Spotify
-  alias sy=". ~/bin/spotify/spotify.sh $1"
+  alias sy=". ~/bin/spotify/spotify.sh"
   alias '°'='sy pause'
   alias '§'='sy play'
 
