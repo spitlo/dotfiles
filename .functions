@@ -80,8 +80,12 @@ function cp_p() {
 # Copy file path to clipboard
 # Includes argument if given (good w/ tab completion for getting path of specific file)
 function gpath() {
-  ##echo "$PWD/$*" | pbcopy
-  printf "%s/%s" $(printf "$PWD" | tr -d "\n") $(printf "${1}" | tr -d "\n") | pbcopy
+  # Print to clipboard if possible
+  if exists pbcopy;
+    printf "%s/%s" $(printf "$PWD" | tr -d "\n") $(printf "${1}" | tr -d "\n") | pbcopy
+  else
+    printf "%s/%s\n" $(printf "$PWD" | tr -d "\n") $(printf "${1}" | tr -d "\n")
+  fi
 } 
 
 # Test if HTTP compression (RFC 2616 + SDCH) is enabled for a given URL.
