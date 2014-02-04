@@ -81,7 +81,7 @@ function cp_p() {
 # Includes argument if given (good w/ tab completion for getting path of specific file)
 function gpath() {
   # Print to clipboard if possible
-  if exists pbcopy;
+  if exists pbcopy; then
     printf "%s/%s" $(printf "$PWD" | tr -d "\n") $(printf "${1}" | tr -d "\n") | pbcopy
   else
     printf "%s/%s\n" $(printf "$PWD" | tr -d "\n") $(printf "${1}" | tr -d "\n")
