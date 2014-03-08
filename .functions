@@ -263,9 +263,11 @@ function mirror() {
   wget --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.43 Safari/537.31" -mpckPE -e robots=off -w 1 --random-wait --directory-prefix=$2 $un $pw $1 && echo -e "\nDone."
   #fldr=$(echo $1 | awk -F/ '{print $3}')
   # wget doesn't need http:// so we cant rely on that when getting the domain for the folder name.
-  # Trying a different approach
-  fldr=$( echo ${1#http://} | awk -F/ '{print $1}' )
-  cd $2/$fldr && ls -la && read -p "Serve this folder? Enter port number or 0 to exit. "
+  # Trying a different approach:
+  fldr=$(echo $1 | sed 's/http[s?]:\/\/\([^\/]*\).*/\1/g')
+  # Other attempts saved for prosperity: fldr=${1#http[s?]://};fldr=${fldr%%/*} || fldr=$( echo ${1#http[s?]://} | awk -F/ '{print $1}' )
+  # Cd into folder and offer to serve it:
+  cd $2/$fldr && echo $PWD && ls -la && read -p "Serve this folder? Enter port number or 0 to exit. "
   echo
   if [[ "$REPLY" > 0 ]]; then
     server $REPLY
