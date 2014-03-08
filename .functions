@@ -18,7 +18,7 @@ if ! [[ "$OSTYPE" =~ ^darwin ]]; then
       alias pbcopy='xclip -selection clipboard'
       alias pbpaste='xclip -selection clipboard -o'
     else 
-      echo "Could not find a viable alternative to pbcopy/pbpaste.";
+      echo "Could not find a viable alternative to pbcopy/pbpaste. Try installing xsel or xclip.";
     fi
   fi
 fi
@@ -261,8 +261,11 @@ function mirror() {
   fi
 
   wget --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.43 Safari/537.31" -mpckPE -e robots=off -w 1 --random-wait --directory-prefix=$2 $un $pw $1 && echo -e "\nDone."
-  fldr=$(echo $1 | awk -F/ '{print $3}')
-  cd $2/$fldr && la && read -p "Serve this folder? Enter port number or 0 to exit. "
+  #fldr=$(echo $1 | awk -F/ '{print $3}')
+  # wget doesn't need http:// so we cant rely on that when getting the domain for the folder name.
+  # Trying a different approach
+  fldr=$( echo ${1#http://} | awk -F/ '{print $1}' )
+  cd $2/$fldr && ls -la && read -p "Serve this folder? Enter port number or 0 to exit. "
   echo
   if [[ "$REPLY" > 0 ]]; then
     server $REPLY
