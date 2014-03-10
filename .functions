@@ -264,7 +264,7 @@ function mirror() {
   #fldr=$(echo $1 | awk -F/ '{print $3}')
   # wget doesn't need http:// so we cant rely on that when getting the domain for the folder name.
   # Trying a different approach:
-  fldr=$(echo $1 | sed 's/http[s?]:\/\/\([^\/]*\).*/\1/g')
+  fldr=$(echo $1 | sed 's/https*:\/\/\([^\/]*\).*/\1/g')
   # Other attempts saved for prosperity: fldr=${1#http[s?]://};fldr=${fldr%%/*} || fldr=$( echo ${1#http[s?]://} | awk -F/ '{print $1}' )
   # Cd into folder and offer to serve it:
   cd $2/$fldr && echo $PWD && ls -la && read -p "Serve this folder? Enter port number or 0 to exit. "
