@@ -113,6 +113,7 @@
   alias h=". ~/dotfiles/does help"
   alias cls="clear"
   alias markdown="$HOME/bin/Markdown/Markdown.pl"
+  alias tweets="TTYtter -rc=tweets"
 
   # Spotify
   alias sy=". ~/bin/spotify/spotify.sh"
