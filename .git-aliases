@@ -12,7 +12,7 @@ function exists() {
 # Or aliasexists tlog && git tlog || git log 
 function aliasexists() {
   local als=${1:?"Please supply an alias to look for."}
-  git config --get-regexp '^alias.'$als >/dev/null 2>&1 && { return 0; } || { return 1; }
+  git config --get-regexp '^alias.'$als' ' >/dev/null 2>&1 && { return 0; } || { return 1; }
 }
 
 if exists git; then
@@ -23,5 +23,6 @@ if exists git; then
   aliasexists tlog || git config --global alias.tlog "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all"
   aliasexists co || git config --global alias.co "checkout"
   aliasexists cm || git config --global alias.cm "commit -am"
+  aliasexists st || git config --global alias.st "status"
   aliasexists last || git config --global alias.last "show HEAD^..HEAD"
 fi
