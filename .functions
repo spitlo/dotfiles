@@ -466,11 +466,11 @@ function mdx() {
       printf "Renders a markdown formatted file as HTML and pipes it to ${BOLD}lynx${RESET}).\n"
       printf "The optional --dump sends the output straight to stdout.\n"
   else
-    if exists markdown; then 
+    if exists "$HOME/bin/Markdown/Markdown.pl"; then 
       if [ "$2" == "--dump" ] || [ "$2" == "-d" ]; then
         local dump="-dump"
       fi
-      markdown "$1" | lynx -stdin $dump
+      $HOME/bin/Markdown/Markdown.pl "$1" | lynx -stdin $dump
     else
       # Sorry, couldn't find the right software
       echo "Couldn't convert markdown. Get 'Markdown.pl' from: http://daringfireball.net/projects/markdown/"; return 1

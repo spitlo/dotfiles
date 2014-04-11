@@ -3,16 +3,23 @@
 # Utility function to check if $1 command exists
 # Use example: if exists ls; then echo "Command exists."; else echo "Command does not exist."; fi
 function exists() {
-  cmnd=${1:?"Please supply a command to look for."}
+  local cmnd=${1:?"Please supply a command to look for."}
   command -v $cmnd >/dev/null 2>&1 && { return 0; } || { return 1; }
+}
+
+# Utility function to check if git alias exists
+# Use example: if aliasexists qlog; then echo "Alias exists."; else echo "Alias does not exist."; fi
+function aliasexists() {
+  local als=${1:?"Please supply an alias to look for."}
+  git config --get-regexp alias | egrep '^alias.'$als >/dev/null 2>&1 && { return 0; } || { return 1; }
 }
 
 if exists git; then
   ##----------------##
   ## LOG STUFF ##
   #=//
-  git config --global alias.qlog "log --abbrev-commit --format=format:'%C(bold blue)%h%C(reset): %C(green)(%ad%x08%x08%x08%x08%x08%x08)%C(reset) -%C(bold yellow)%d%C(reset)  %C(white)%s%C(reset) %C(bold red)<%an>%C(reset)' --since=2.weeks --date=iso" 
-  git config --global alias.tlog "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all"
-  git config --global alias.co "checkout"
-  git config --global alias.cm "commit -am"
+  aliasexists qlog || git config --global alias.qlog "log --abbrev-commit --format=format:'%C(bold blue)%h%C(reset): %C(green)(%ad%x08%x08%x08%x08%x08%x08)%C(reset) -%C(bold yellow)%d%C(reset)  %C(white)%s%C(reset) %C(bold red)<%an>%C(reset)' --since=2.weeks --date=iso" 
+  aliasexists tlog || git config --global alias.tlog "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all"
+  aliasexists co || git config --global alias.co "checkout"
+  aliasexists cm || git config --global alias.cm "commit -am"
 fi
