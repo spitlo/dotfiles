@@ -220,7 +220,7 @@ function fs() {
 
 # Grep shorthand 
 function gr() {
-  grep -nRHIi "$1" .
+  grep -nRHIi --color=AUTO "$1" .
 }
 
 # Check a url every 10 seconds until it returns 200 OK
