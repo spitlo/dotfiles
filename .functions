@@ -445,6 +445,9 @@ function cdp() {
     for folder in $PROJECT_FOLDER/{"$1"/src/"$1","$1"/"$1","$1"}; do
       if [[ -d "$folder" ]]; then
         cd $folder
+        # Make sure project root appears on top in finder. Don't forget to include .keepontop in your .gitignore
+        # Needs more logic to find the project root folder
+        # touch ../.keepontop
         echo -e "Found project folder: $folder."
         break
       fi
@@ -477,3 +480,8 @@ function mdx() {
     fi
   fi
 }
+
+function lucky() { 
+  url=$(echo "http://www.google.com/search?hl=en&q=$@&btnI=I%27m+Feeling+Lucky&aq=f&oq=" | sed 's/ /+/g')
+  lynx -dump $url | more
+};
