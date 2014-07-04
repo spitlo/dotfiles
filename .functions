@@ -481,7 +481,36 @@ function mdx() {
   fi
 }
 
-function lucky() { 
-  url=$(echo "http://www.google.com/search?hl=en&q=$@&btnI=I%27m+Feeling+Lucky&aq=f&oq=" | sed 's/ /+/g')
-  lynx -dump $url | more
-};
+function ddg() {
+  if [[ -z "$1" ]]; then
+      printf "Usage:\n${BOLD}ddg${RESET} <phrase to search for> [ --dump ]\n"
+      printf "Searches DuckDuckGo for a phrase using ${BOLD}lynx${RESET}).\n"
+      printf "The optional --dump sends the output straight to stdout.\n"
+  else
+    local q=$@
+    local nq=""
+    for arg in $q; do
+      if [ "$arg" == "--dump" ] || [ "$arg" == "-d" ]; then
+        local dump="-dump"
+      else
+        nq="$nq $arg"
+      fi
+    done
+    local url="https://duckduckgo.com/?q=${nq//\ /+}"
+    lynx $url $dump
+  fi
+}
+
+function wiki() {
+  local q=$@
+  dig +short txt "$q".wp.dg.cx
+}
+
+function say() {
+  if exists mplayer; then
+    local q=$@
+    mplayer -prefer-ipv4 "http://translate.google.com/translate_tts?ie=UTF-8&tl=en&q=${q//\ /+}"  > /dev/null 2>&1
+  else
+    printf "Please install mplayer to enable ${BOLD}say${RESET}.\n"
+  fi
+}
