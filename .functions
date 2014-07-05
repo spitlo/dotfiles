@@ -506,11 +506,43 @@ function wiki() {
   dig +short txt "$q".wp.dg.cx
 }
 
-function say() {
-  if exists mplayer; then
-    local q=$@
-    mplayer -prefer-ipv4 "http://translate.google.com/translate_tts?ie=UTF-8&tl=en&q=${q//\ /+}"  > /dev/null 2>&1
+# say() { if [[ "${1}" =~ -[a-z]{2} ]]; then local lang=${1#-}; local text="${*#$1}"; else local lang=${LANG%_*}; local text="$*";fi; mplayer "http://translate.google.com/translate_tts?ie=UTF-8&tl=${lang}&q=${text}" &> /dev/null ; }
+
+function speak() {
+  if [[ -z "$1" ]]; then
+      printf "Usage:\n${BOLD}speak${RESET} <phrase to speak> [ --robot || --lang=<lc> ]\n"
+      printf "Speaks a phrase using ${BOLD}Google Translate${RESET}).\n"
+      printf "The optional --robot uses ${BOLD}Speechutil.com${RESET} instead.\n"
+      printf "The optional --lang parameter takes a ${BOLD}ISO 639-1${RESET} language code.\n"
+      printf "(Only works with Google Translate.)"
   else
-    printf "Please install mplayer to enable ${BOLD}say${RESET}.\n"
+    local q=$@
+    local phrase=""
+    local lang="en"
+    local base_url="http://translate.google.com/translate_tts?ie=UTF-8&tl=LANGUAGE_PLACEHOLDER&q="
+    for arg in $q; do
+      if [ "$arg" == "--robot" ] || [ "$arg" == "-r" ]; then
+        base_url="http://speechutil.com/convert/ogg?text="
+      elif [[ "$arg" =~ --lang=[a-z]{2} ]] || [[ "$arg" =~ -l=[a-z]{2} ]]; then
+        lang=${arg: -2:2}
+      else
+        phrase="$phrase $arg"
+      fi
+    done
+    # Strip leading space and convert spaces to plus signs
+    phrase="${phrase#"${phrase%%[![:space:]]*}"}"
+    phrase=${phrase//\ /+}
+    # Set language code in url
+    base_url=${base_url//LANGUAGE_PLACEHOLDER/$lang}
+    # echo "$phrase, $lang, $base_url"
+    if exists mplayer; then
+      mplayer -prefer-ipv4 "$base_url$phrase" > /dev/null 2>&1
+    elif exists play; then
+      # play doesn't seem to like mp3, fall back to speechutil.com for ogg
+      play --type ogg "http://speechutil.com/convert/ogg?text=$phrase" > /dev/null 2>&1
+    else
+      printf "Please install mplayer or SoX to enable ${BOLD}speak${RESET}.\n"
+      printf "If you're on a mac, use ${BOLD}say${RESET} instead, it's faster."
+    fi
   fi
 }
