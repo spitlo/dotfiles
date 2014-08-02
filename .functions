@@ -73,7 +73,7 @@ AWK
 }
 
 # Copy w/ progress
-function cp_p() {
+function pcp() {
   rsync -WavP --human-readable --progress $1 $2
 }
 
@@ -514,7 +514,7 @@ function speak() {
       printf "Speaks a phrase using ${BOLD}Google Translate${RESET}).\n"
       printf "The optional --robot uses ${BOLD}Speechutil.com${RESET} instead.\n"
       printf "The optional --lang parameter takes a ${BOLD}ISO 639-1${RESET} language code.\n"
-      printf "(Only works with Google Translate.)"
+      printf "(Only works with Google Translate.)\n"
   else
     local q=$@
     local phrase=""
@@ -542,7 +542,7 @@ function speak() {
       play --type ogg "http://speechutil.com/convert/ogg?text=$phrase" > /dev/null 2>&1
     else
       printf "Please install mplayer or SoX to enable ${BOLD}speak${RESET}.\n"
-      printf "If you're on a mac, use ${BOLD}say${RESET} instead, it's faster."
+      printf "If you're on a mac, use ${BOLD}say${RESET} instead, it's faster.\n"
     fi
   fi
 }
