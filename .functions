@@ -129,12 +129,12 @@ function unidecode() {
 # Extract archives - use: xt <file>
 # Credits to http://dotfiles.org/~pseup/.bashrc
 function xt() {
-  if [ -z "$1" ]; then
+  if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     printf "Usage:\n${BOLD}xt${RESET} <archive to extract>\n"
-    printf "Tries to extract an archive based on file extension.\n"
-    printf "\n"
+    printf "\tTries to extract an archive based on file extension.\n"
     return 1
   fi
+
   local error="'$1' cannot be extracted via xt"
   if [ -f $1 ] ; then
     case $1 in
@@ -225,11 +225,12 @@ function gr() {
 
 # Check a url every 10 seconds until it returns 200 OK
 function ask(){
-  if [ -z "$1" ]; then
+  if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     printf "Usage:\n${BOLD}ask${RESET} <url> [ <interval in seconds> ]\n"
-    printf "Check url every 10 seconds until it returns 200 OK. Second parameter is optional and changes the interval.\n"
+    printf "\tCheck url every 10 seconds until it returns 200 OK. Second parameter is optional and changes the interval.\n"
     return 1
   fi
+
   if ! [[ "$2" =~ ^[0-9]+$ ]]; then
     delay=10
   else
@@ -246,12 +247,13 @@ function ask(){
 
 # Download website $1 to folder $2
 function mirror() {
-  if [ -z "$1" ]; then
+  if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     printf "Usage:\n${BOLD}mirror${RESET} <url to download> <destination folder> [ <username> <password> ]\n"
-    printf "Tries to create a local mirror of a site and offers to serve it on complete.\n"
-    printf "Optional arguments are for sites using basic authentication.\n"
+    printf "\tTries to create a local mirror of a site and offers to serve it on complete.\n"
+    printf "\tOptional arguments are for sites using basic authentication.\n"
     return 1
   fi
+
   echo Downloading url \'$1\' to folder \'$2\'
 
   # Do we have username/password?
@@ -285,21 +287,24 @@ function killport() {
 }
 
 function mgnt() {
-  if [ -z "$1" ]; then
+  if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     printf "Usage:\n${BOLD}mgnt${RESET} <full magnet: link>\n"
-    printf "Starts download from magnet: link using aria2. Executes ${BOLD}~/.aria_done${RESET} on complete.\n"
+    printf "\tStarts download from magnet: link using aria2. Executes ${BOLD}~/.aria_done${RESET} on complete.\n"
     return 1
   fi
+
   aria2c --dir=$DOWNLOADS_FOLDER --quiet=true --on-bt-download-complete=$HOME/.aria_done "$1" &
 }
 
 function kapp() {
-  if [ -z "$1" ]; then
+  if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     printf "Usage:\n${BOLD}kapp${RESET} <port> [ <kbits> ]\n"
-    printf "Puts a quick cap on specified port. The optional variable defaults to 680.\n"
-    printf "Typical bandwidths: ${BOLD}GPRS${RESET}: ~100; ${BOLD}EDGE${RESET}: ~200; ${BOLD}3G${RESET}: ~300.\nRequires root and ${BOLD}ipfw${RESET}.\n"
+    printf "\tPuts a quick cap on specified port. The optional variable defaults to 680.\n"
+    printf "\tTypical bandwidths: ${BOLD}GPRS${RESET}: ~100; ${BOLD}EDGE${RESET}: ~200; ${BOLD}3G${RESET}: ~300.\n"
+    printf "\tRequires root and ${BOLD}ipfw${RESET}.\n"
     return 1
   fi
+
   if [ -z "$2" ]; then
     kbits="680Kbit/s"
   else
@@ -314,11 +319,11 @@ function kapp() {
 # Replace word $1 with word $2 in files with names 
 # matching "$3" recursively from current folder
 function snr() {
-  if [ -z "$1" ]; then
+  if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     printf "Usage:\n${BOLD}snr${RESET} <word to find> <word to substitute> \"<file matching pattern>\"\n"
-    printf "Search and replace using ${BOLD}find${RESET} and ${BOLD}sed${RESET}.\n"
-    printf "Before any actual replacing is done, you will be presented a list of affected lines\n"
-    printf "for each matching files containing the word, and the opportunity to cancel or proceed.\n"
+    printf "\tSearch and replace using ${BOLD}find${RESET} and ${BOLD}sed${RESET}.\n"
+    printf "\tBefore any actual replacing is done, you will be presented a list of affected lines\n"
+    printf "\tfor each matching files containing the word, and the opportunity to cancel or proceed.\n"
     return 1
   fi
 
@@ -369,12 +374,13 @@ function t(){
 
 # Print out images in console as ascii
 function primg() {
-  if [ -z "$1" ]; then
+  if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     printf "Usage:\n${BOLD}primg${RESET} <path/to/file/> [ --force ]\n"
-    printf "Attempts to print out an image file as ascii using asciiart or jp2a (using ImageMagick's ${BOLD}convert${RESET}).\n"
-    echo -e "The optional --force option sends any file through convert and might cause errors or unexpected behavior.\n"
+    printf "\tAttempts to print out an image file as ascii using asciiart or jp2a (using ImageMagick's ${BOLD}convert${RESET}).\n"
+    printf "\tThe optional --force option sends any file through convert and might cause errors or unexpected behavior.\n"
     return 1
   fi
+
   width=$((COLUMNS-2))
   file=$1
 
@@ -428,10 +434,11 @@ function primg() {
 
 # Find project folder, enter it and activate the corresponding virtual env
 function cdp() {
-  if [[ -z "$1" ]]; then
+  if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     if [ "$VIRTUAL_ENV" = "" ]; then
       printf "Usage:\n${BOLD}cdp${RESET} <project_name>\n"
-      printf "Finds project folder, enters it and activates the corresponding ${BOLD}virtualenv${RESET}).\n"
+      printf "\tFinds project folder, enters it and activates the corresponding ${BOLD}virtualenv${RESET}).\n"
+      return 1
     else
       deactivate
     fi
@@ -464,41 +471,43 @@ function cdp() {
 
 # Send a markdown formatted file to lynx as html
 function mdx() {
-  if [[ -z "$1" ]]; then
-      printf "Usage:\n${BOLD}mdx${RESET} <path/to/file> [ --dump ]\n"
-      printf "Renders a markdown formatted file as HTML and pipes it to ${BOLD}lynx${RESET}).\n"
-      printf "The optional --dump sends the output straight to stdout.\n"
-  else
-    if exists "$HOME/bin/Markdown/Markdown.pl"; then 
-      if [ "$2" == "--dump" ] || [ "$2" == "-d" ]; then
-        local dump="-dump"
-      fi
-      $HOME/bin/Markdown/Markdown.pl "$1" | lynx -stdin $dump
-    else
-      # Sorry, couldn't find the right software
-      echo "Couldn't convert markdown. Get 'Markdown.pl' from: http://daringfireball.net/projects/markdown/"; return 1
+  if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    printf "Usage:\n${BOLD}mdx${RESET} <path/to/file> [ --dump ]\n"
+    printf "\tRenders a markdown formatted file as HTML and pipes it to ${BOLD}lynx${RESET}).\n"
+    printf "\tThe optional --dump sends the output straight to stdout.\n"
+    return 1
+  fi
+
+  if exists "$HOME/bin/Markdown/Markdown.pl"; then 
+    if [ "$2" == "--dump" ] || [ "$2" == "-d" ]; then
+      local dump="-dump"
     fi
+    $HOME/bin/Markdown/Markdown.pl "$1" | lynx -stdin $dump
+  else
+    # Sorry, couldn't find the right software
+    echo "Couldn't convert markdown. Get 'Markdown.pl' from: http://daringfireball.net/projects/markdown/"; return 1
   fi
 }
 
 function ddg() {
-  if [[ -z "$1" ]]; then
-      printf "Usage:\n${BOLD}ddg${RESET} <phrase to search for> [ --dump ]\n"
-      printf "Searches DuckDuckGo for a phrase using ${BOLD}lynx${RESET}).\n"
-      printf "The optional --dump sends the output straight to stdout.\n"
-  else
-    local q=$@
-    local nq=""
-    for arg in $q; do
-      if [ "$arg" == "--dump" ] || [ "$arg" == "-d" ]; then
-        local dump="-dump"
-      else
-        nq="$nq $arg"
-      fi
-    done
-    local url="https://duckduckgo.com/?q=${nq//\ /+}"
-    lynx $url $dump
+  if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    printf "Usage:\n${BOLD}ddg${RESET} <phrase to search for> [ --dump ]\n"
+    printf "\tSearches DuckDuckGo for a phrase using ${BOLD}lynx${RESET}).\n"
+    printf "\tThe optional --dump sends the output straight to stdout.\n"
+    return 1
   fi
+
+  local q=$@
+  local nq=""
+  for arg in $q; do
+    if [ "$arg" == "--dump" ] || [ "$arg" == "-d" ]; then
+      local dump="-dump"
+    else
+      nq="$nq $arg"
+    fi
+  done
+  local url="https://duckduckgo.com/?q=${nq//\ /+}"
+  lynx $url $dump
 }
 
 function wiki() {
@@ -509,40 +518,57 @@ function wiki() {
 # say() { if [[ "${1}" =~ -[a-z]{2} ]]; then local lang=${1#-}; local text="${*#$1}"; else local lang=${LANG%_*}; local text="$*";fi; mplayer "http://translate.google.com/translate_tts?ie=UTF-8&tl=${lang}&q=${text}" &> /dev/null ; }
 
 function speak() {
-  if [[ -z "$1" ]]; then
-      printf "Usage:\n${BOLD}speak${RESET} <phrase to speak> [ --robot || --lang=<lc> ]\n"
-      printf "Speaks a phrase using ${BOLD}Google Translate${RESET}).\n"
-      printf "The optional --robot uses ${BOLD}Speechutil.com${RESET} instead.\n"
-      printf "The optional --lang parameter takes a ${BOLD}ISO 639-1${RESET} language code.\n"
-      printf "(Only works with Google Translate.)\n"
-  else
-    local q=$@
-    local phrase=""
-    local lang="en"
-    local base_url="http://translate.google.com/translate_tts?ie=UTF-8&tl=LANGUAGE_PLACEHOLDER&q="
-    for arg in $q; do
-      if [ "$arg" == "--robot" ] || [ "$arg" == "-r" ]; then
-        base_url="http://speechutil.com/convert/ogg?text="
-      elif [[ "$arg" =~ --lang=[a-z]{2} ]] || [[ "$arg" =~ -l=[a-z]{2} ]]; then
-        lang=${arg: -2:2}
-      else
-        phrase="$phrase $arg"
-      fi
-    done
-    # Strip leading space and convert spaces to plus signs
-    phrase="${phrase#"${phrase%%[![:space:]]*}"}"
-    phrase=${phrase//\ /+}
-    # Set language code in url
-    base_url=${base_url//LANGUAGE_PLACEHOLDER/$lang}
-    # echo "$phrase, $lang, $base_url"
-    if exists mplayer; then
-      mplayer -prefer-ipv4 "$base_url$phrase" > /dev/null 2>&1
-    elif exists play; then
-      # play doesn't seem to like mp3, fall back to speechutil.com for ogg
-      play --type ogg "http://speechutil.com/convert/ogg?text=$phrase" > /dev/null 2>&1
-    else
-      printf "Please install mplayer or SoX to enable ${BOLD}speak${RESET}.\n"
-      printf "If you're on a mac, use ${BOLD}say${RESET} instead, it's faster.\n"
-    fi
+  if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    printf "Usage:\n${BOLD}speak${RESET} <phrase to speak> [ --robot || --lang=<lc> ]\n"
+    printf "\tSpeaks a phrase using ${BOLD}Google Translate${RESET}).\n"
+    printf "\tThe optional --robot uses ${BOLD}Speechutil.com${RESET} instead.\n"
+    printf "\tThe optional --lang parameter takes a ${BOLD}ISO 639-1${RESET} language code.\n"
+    printf "\t(Only works with Google Translate.)\n"
+    return 1
   fi
+
+  local q=$@
+  local phrase=""
+  local lang="en"
+  local base_url="http://translate.google.com/translate_tts?ie=UTF-8&tl=LANGUAGE_PLACEHOLDER&q="
+  for arg in $q; do
+    if [ "$arg" == "--robot" ] || [ "$arg" == "-r" ]; then
+      base_url="http://speechutil.com/convert/ogg?text="
+    elif [[ "$arg" =~ --lang=[a-z]{2} ]] || [[ "$arg" =~ -l=[a-z]{2} ]]; then
+      lang=${arg: -2:2}
+    else
+      phrase="$phrase $arg"
+    fi
+  done
+  # Strip leading space and convert spaces to plus signs
+  phrase="${phrase#"${phrase%%[![:space:]]*}"}"     ## " <-- Syntax highlighting fix
+  phrase=${phrase//\ /+}
+  # Set language code in url 
+  base_url=${base_url//LANGUAGE_PLACEHOLDER/$lang}
+
+  if exists mplayer; then
+    mplayer -prefer-ipv4 "$base_url$phrase" > /dev/null 2>&1
+  elif exists play; then
+    # play doesn't seem to like mp3, fall back to speechutil.com for ogg
+    play --type ogg "http://speechutil.com/convert/ogg?text=$phrase" > /dev/null 2>&1
+  else
+    printf "Please install mplayer or SoX to enable ${BOLD}speak${RESET}.\n"
+    printf "If you're on a mac, use ${BOLD}say${RESET} instead, it's faster.\n"
+  fi
+}
+
+function get_links() {
+  if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    printf "Usage:\n${BOLD}get_links${RESET} <url to spider> [ --all ]\n"
+    printf "\tTries to list all \"normal\" links on a webpage using ${BOLD}wget${RESET}) with --spider option.\n"
+    printf "\tThe optional --all also lists links to images, scripts and other.\n"
+    printf "\tWill likely take some time and appear unresponsive.\n"
+    return 1
+  fi
+
+  reject_list="--reject css,js,png,gif,jpg,ogg,ogv,webm,mp3"
+  if [ "$2" = "--all" ] || [ "$2" = "-a" ]; then
+    reject_list=""
+  fi
+  wget --spider --force-html -r -l3 $reject_list $1 2>&1   | grep '^--' | awk '{ print $3 }'  | sort | uniq # | grep -v '\.\(css\|js\|png\|gif\|jpg\)$' | sort | uniq
 }
