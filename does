@@ -70,8 +70,8 @@ function doIt() {
 cd "$dotfiles_dir"
 
 case "$1" in
-  sync)
-    git pull origin master && _sync $2
+  update)
+    git pull origin master && _sync --force
   ;;
   
   copy)
