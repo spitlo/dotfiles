@@ -220,7 +220,8 @@ function fs() {
 
 # Grep shorthand 
 function gr() {
-  grep -nRHIi --color=AUTO "$1" .
+  local path="${2:-.}"
+  grep -nRHIi --color=AUTO "$1" "$path"
 }
 
 # Check a url every 10 seconds until it returns 200 OK
@@ -558,6 +559,7 @@ function speak() {
 }
 
 function get_links() {
+  # http://stackoverflow.com/questions/20030148/wget-doesnt-download-recursively-after-following-a-redirect
   if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     printf "Usage:\n${BOLD}get_links${RESET} <url to spider> [ --all ]\n"
     printf "\tTries to list all \"normal\" links on a webpage using ${BOLD}wget${RESET}) with --spider option.\n"
@@ -570,5 +572,32 @@ function get_links() {
   if [ "$2" = "--all" ] || [ "$2" = "-a" ]; then
     reject_list=""
   fi
-  wget --spider --force-html -r -l3 $reject_list $1 2>&1   | grep '^--' | awk '{ print $3 }'  | sort | uniq # | grep -v '\.\(css\|js\|png\|gif\|jpg\)$' | sort | uniq
+  #wget --spider --force-html -r -l3 $reject_list $1 2>&1   | grep '^--' | awk '{ print $3 }'  | sort | uniq # | grep -v '\.\(css\|js\|png\|gif\|jpg\)$' | sort | uniq
+  wget --spider --max-redirect=1 --force-html -r -l3 $reject_list $1 2>&1 | grep '^--' | awk '{ print $3 }' | sort | uniq # | grep -v '\.\(css\|js\|png\|gif\|jpg\)$' | sort | uniq
+}
+
+function nospace() {
+  if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    printf "Usage:\n${BOLD}nospace${RESET} <glob (quoted)> [ replacement character, \"_\" by default ] [ prefix, \"\" by default ]\n"
+    printf "\t\n"
+    printf "\t\n"
+    return 1
+  fi
+
+  # if [ -z "$2" ]; then
+  #   local replacement="_"
+  # else
+  #   local replacement="${2}"
+  # fi
+  local replacement="${2:-_}"
+
+  # if [ -z "$3" ]; then
+  #   local prefix="_"
+  # else
+  #   local prefix="${3}"
+  # fi
+  local prefix="${3:-}"
+
+
+  for file in $1; do mv "$file" "$prefix"$(echo "$file" | tr " " "$replacement" | tr "A-Z" "a-z"); done
 }
