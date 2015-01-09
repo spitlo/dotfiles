@@ -294,7 +294,7 @@ function mgnt() {
     return 1
   fi
 
-  aria2c --dir=$DOWNLOADS_FOLDER --quiet=true --on-bt-download-complete=$HOME/.aria_done "$1" &
+  aria2c --dir=$DOWNLOADS_FOLDER --quiet=true --enable-rpc --rpc-listen-all --on-bt-download-complete=$HOME/.aria_done "$1" &
 }
 
 function kapp() {

@@ -25,4 +25,7 @@ if exists git; then
   aliasexists cm || git config --global alias.cm "commit -am"
   aliasexists st || git config --global alias.st "status"
   aliasexists last || git config --global alias.last "show HEAD^..HEAD"
+  aliasexists unpushed || git config --global alias.unpushed "git diff --stat `git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)`.."
+  aliasexists testmerge || git config --global alias.testmerge '!f(){ git merge --no-commit --no-ff "$1"; git merge --abort; echo "Merge aborted"; };f '
+  aliasexists hist || git config --global alias.hist "log -p"
 fi
