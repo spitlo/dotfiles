@@ -30,7 +30,8 @@ function md() {
 
 # find shorthand
 function f() {
-  find . -name "$1"
+  local path="${2:-.}"
+  find "$path" -name "$1"
 }
 
 # On Mac, cd into whatever is the forefront Finder window.
