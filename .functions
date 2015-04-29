@@ -602,3 +602,17 @@ function nospace() {
 
   for file in $1; do mv "$file" "$prefix"$(echo "$file" | tr " " "$replacement" | tr "A-Z" "a-z"); done
 }
+
+function filerefs() {
+  if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    printf "Usage:\n${BOLD}filerefs${RESET} <filenames.txt> [ directory, \".\" by default ]\n"
+    printf "\tTakes a list of filenames (or whatever, really) separated by newline\n"
+    printf "\tand searches all files in current or given directory for references.\n"
+    return 1
+  fi
+
+  local dir="${2:-.}"
+
+  grep -n --color=auto -r -F "$(sed 's#.*/##g' "$1")" "$dir"
+
+}
