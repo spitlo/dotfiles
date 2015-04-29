@@ -35,12 +35,14 @@
 
   # List all files colorized in long format, including dot files
   alias la="ls -la"
-  
+
   # List only directories
   alias lsd='ls -l | grep "^d"'
 
-  # `cat` with beautiful colors. 
+  # `cat` with beautiful colors.
   alias c='pygmentize -O style=monokai,linenos=1 -f console256 -g'
+
+  alias ackl='ack "--pager=less -r"'
 
 ##-----------##
 ## NET STUFF ##

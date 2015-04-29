@@ -64,3 +64,5 @@ gpath         °Copies PWD to clipboard, including optional <file> (for use with
 ddg           °Search DuckDuckGo for <phrase>. The optional --dump parameter directs output straight to console.
 wiki          °Search Wikipedia for <phrase> and output  answer straight to console.
 speak         °Speak <phrase> using Speechutil.com or Google Translate. Requires mplayer or SoX.
+nospace       °Remove spaces from filenames.
+filerefs      °Search all files in directory for references to words/filenames in a newline separated file.

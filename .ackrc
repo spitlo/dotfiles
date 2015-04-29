@@ -1,5 +1,9 @@
---ignore-dir=.git
 --ignore-dir=dist
 --ignore-dir=node_modules
 
 --ignore-file=ext:map
+--ignore-file=ext:svg
+
+--context=2
+
+--smart-case
