@@ -10,14 +10,14 @@ function exists() {
 # Try to make clipboard available
 if ! [[ "$OSTYPE" =~ ^darwin ]]; then
   # Not on a Mac. If available, use xclip or xsel instead of pbcopy/pbpaste
-  if exists xsel; then 
+  if exists xsel; then
     alias pbcopy='xsel --clipboard --input'
     alias pbpaste='xsel --clipboard --output'
-  else 
+  else
     if exists xclip; then
       alias pbcopy='xclip -selection clipboard'
       alias pbpaste='xclip -selection clipboard -o'
-    else 
+    else
       echo "Could not find a viable alternative to pbcopy/pbpaste. Try installing xsel or xclip.";
     fi
   fi
@@ -87,7 +87,7 @@ function gpath() {
   else
     printf "%s/%s\n" $(printf "$PWD" | tr -d "\n") $(printf "${1}" | tr -d "\n")
   fi
-} 
+}
 
 # Test if HTTP compression (RFC 2616 + SDCH) is enabled for a given URL.
 # Send a fake UA string for sites that sniff it instead of using the Accept-Encoding header. (Looking at you, ajax.googleapis.com!)
@@ -144,9 +144,9 @@ function xt() {
       *.tar.xz) tar Jxvf $1;;
       *.bz2) bunzip2 $1 ;;
       *.rar)
-        if ( exists rar ) ; then 
+        if ( exists rar ) ; then
           rar x $1
-        elif ( exists unrar ) ; then 
+        elif ( exists unrar ) ; then
           unrar x $1
         else
           echo $error
@@ -219,7 +219,7 @@ function fs() {
   fi
 }
 
-# Grep shorthand 
+# Grep shorthand
 function gr() {
   local path="${2:-.}"
   grep -nRHIi --color=AUTO "$1" "$path"
@@ -276,18 +276,19 @@ function mirror() {
   echo
   if [[ "$REPLY" > 0 ]]; then
     server $REPLY
-  else 
+  else
     echo "Done."
     return
   fi
 }
 
-# Kill all processes listening on specified port (Beware this might also kill browsers etc)
+# Kill all processes listening on specified port (Beware! This might also kill browsers etc)
 function killport() {
   local port="${1:-8000}"
-  lsof -i tcp:${port} | awk 'NR!=1 {print $2}' | xargs kill 
+  lsof -i tcp:${port} | awk 'NR!=1 {print $2}' | xargs kill
 }
 
+# Download from magnet link using aria2.
 function mgnt() {
   if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     printf "Usage:\n${BOLD}mgnt${RESET} <full magnet: link>\n"
@@ -318,7 +319,7 @@ function kapp() {
   sudo ipfw delete 1
 }
 
-# Replace word $1 with word $2 in files with names 
+# Replace word $1 with word $2 in files with names
 # matching "$3" recursively from current folder
 function snr() {
   if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
@@ -335,14 +336,14 @@ function snr() {
 
   printf "Replacing \'$fnd\' with \'$sbt\' in all files matching pattern \'$pat\' recursively from current folder.\n"
   printf "${BOLD}Matches${RESET}:\n"
-  
+
   find . -name "$pat" -exec \
     awk -v bd="$BOLD" -v yw="$YELLOW" -v rt="$RESET" -v ul="$UNDERLINE" '
       BEGIN {
         mtchs = 0
       }
       /'$fnd'/ {
-        # Print filename on first match 
+        # Print filename on first match
         if ( mtchs == 0 ) {
           print ( ul FILENAME rt ":" );
         }
@@ -359,7 +360,7 @@ function snr() {
   read -p "Continue? (y/n) " -n 1
   if [[ "$REPLY" == "y" ]]; then
     find . -name "$3" -type f -exec sed -i '' "s/$(echo $fnd | sed -e 's/[\/&]/\\&/g')/$(echo $sbt | sed -e 's/[\/&]/\\&/g')/g" {} +
-  else 
+  else
     printf "\nAborting.\n"
   fi
 }
@@ -480,7 +481,7 @@ function mdx() {
     return 1
   fi
 
-  if exists "$HOME/bin/Markdown/Markdown.pl"; then 
+  if exists "$HOME/bin/Markdown/Markdown.pl"; then
     if [ "$2" == "--dump" ] || [ "$2" == "-d" ]; then
       local dump="-dump"
     fi
@@ -545,7 +546,7 @@ function speak() {
   # Strip leading space and convert spaces to plus signs
   phrase="${phrase#"${phrase%%[![:space:]]*}"}"     ## " <-- Syntax highlighting fix
   phrase=${phrase//\ /+}
-  # Set language code in url 
+  # Set language code in url
   base_url=${base_url//LANGUAGE_PLACEHOLDER/$lang}
 
   if exists mplayer; then
@@ -580,27 +581,15 @@ function get_links() {
 function nospace() {
   if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
     printf "Usage:\n${BOLD}nospace${RESET} <glob (quoted)> [ replacement character, \"_\" by default ] [ prefix, \"\" by default ]\n"
-    printf "\t\n"
-    printf "\t\n"
+    printf "\tRenames all files matching glob, replacing spaces for the optional replacement character (defaults to underscore).\n"
+    printf "\tAlso replaces all diacritics with their non-diacritical counterpart using iconv.\n"
     return 1
   fi
 
-  # if [ -z "$2" ]; then
-  #   local replacement="_"
-  # else
-  #   local replacement="${2}"
-  # fi
   local replacement="${2:-_}"
-
-  # if [ -z "$3" ]; then
-  #   local prefix="_"
-  # else
-  #   local prefix="${3}"
-  # fi
   local prefix="${3:-}"
 
-
-  for file in $1; do mv "$file" "$prefix"$(echo "$file" | tr " " "$replacement" | tr "A-Z" "a-z"); done
+  for file in $1; do mv "$file" "$prefix"$(echo "$file" | tr " " "$replacement" | iconv -f utf8 -t ascii//TRANSLIT//IGNORE | tr "A-Z" "a-z"); done
 }
 
 function filerefs() {
