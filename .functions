@@ -39,7 +39,7 @@ function cdf() {  # short for cdfinder
   cd "`osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)'`"
 }
 
-# List recursively from working directory using less. Don't use in ~
+# List recursively from working directory using more. Don't use in ~
 # http://stackoverflow.com/a/1767559
 function lr() {
   ls -R `pwd` | awk '/:$/&&f{s=$0;f=0}/:$/&&!f{sub(/:$/,"");s=$0;f=1;next}NF&&f{ print s"/"$0 }' | more
@@ -58,19 +58,6 @@ function server() {
   # Set the default Content-Type to `text/plain` instead of `application/octet-stream`
   # And serve everything as UTF-8 (although not technically correct, this doesn’t break anything for binary files)
   python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port"
-}
-
-# git log with per-commit cmd-clickable GitHub URLs (iTerm)
-function gl() {
-  local remote="$(git remote -v | awk '/^origin.*\(push\)$/ {print $2}')"
-  [[ "$remote" ]] || return
-  local user_repo="$(echo "$remote" | perl -pe 's/.*://;s/\.git$//')"
-  git log $* --name-status --color | awk "$(cat <<AWK
-    /^.*commit [0-9a-f]{40}/ {sha=substr(\$2,1,7)}
-    /^[MA]\t/ {printf "%s\thttps://github.com/$user_repo/blob/%s/%s\n", \$1, sha, \$2; next}
-    /.*/ {print \$0}
-AWK
-  )" | less -F
 }
 
 # Copy w/ progress
@@ -212,7 +199,7 @@ function fs() {
   else
     local arg=-sh
   fi
-  if [[ -n "$@" ]]; then
+  if [ -n "$@" ]; then
     du $arg -- "$@"
   else
     du $arg .[^.]* *
@@ -291,12 +278,22 @@ function killport() {
 # Download from magnet link using aria2.
 function mgnt() {
   if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-    printf "Usage:\n${BOLD}mgnt${RESET} <full magnet: link>\n"
-    printf "\tStarts download from magnet: link using aria2. Executes ${BOLD}~/.aria_done${RESET} on complete.\n"
+    printf "Usage:\n${BOLD}mgnt${RESET} <full magnet link in quotes> [ <--screen=SESSION_NAME> ]\n"
+    printf "\tStarts background download from magnet link using aria2. Executes ${BOLD}~/.aria_done${RESET} on complete.\n"
+    printf "\tThe optional --screen=SESSION_NAME opens aria2 in a ${BOLD}screen${RESET} session named SESSION_NAME.\n"
     return 1
   fi
 
-  aria2c --dir=$DOWNLOADS_FOLDER --quiet=true --enable-rpc --rpc-listen-all --on-bt-download-complete=$HOME/.aria_done "$1" &
+  if [ "$2" = "-s" ] || [[ "$2" =~ --screen=[^a-zA-Z0-9.]* ]]; then
+    if [ -n "$3" ]; then
+      local sessionname=$3
+    else
+      local sessionname=`echo "$2" | cut -d'=' -f 2`
+    fi
+    screen -S "$sessionname" -mdR aria2c --dir=$DOWNLOADS_FOLDER --on-bt-download-complete=$HOME/.aria_done "$1"
+  else
+    aria2c --dir=$DOWNLOADS_FOLDER --daemon=true --quiet=true --enable-rpc --rpc-listen-all --on-bt-download-complete=$HOME/.aria_done "$1"
+  fi
 }
 
 function kapp() {
@@ -323,7 +320,7 @@ function kapp() {
 # matching "$3" recursively from current folder
 function snr() {
   if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-    printf "Usage:\n${BOLD}snr${RESET} <word to find> <word to substitute> \"<file matching pattern>\"\n"
+    printf "Usage:\n${BOLD}snr${RESET} <word to find> <word to substitute> \"<file matching pattern in quotes>\"\n"
     printf "\tSearch and replace using ${BOLD}find${RESET} and ${BOLD}sed${RESET}.\n"
     printf "\tBefore any actual replacing is done, you will be presented a list of affected lines\n"
     printf "\tfor each matching files containing the word, and the opportunity to cancel or proceed.\n"
@@ -358,7 +355,7 @@ function snr() {
         }
       }' {} \;
   read -p "Continue? (y/n) " -n 1
-  if [[ "$REPLY" == "y" ]]; then
+  if [ "$REPLY" = "y" ]; then
     find . -name "$3" -type f -exec sed -i '' "s/$(echo $fnd | sed -e 's/[\/&]/\\&/g')/$(echo $sbt | sed -e 's/[\/&]/\\&/g')/g" {} +
   else
     printf "\nAborting.\n"
@@ -368,7 +365,7 @@ function snr() {
 # Shortcut to time tracker
 # http://tim.thechases.com/bvi/tt.py
 function t(){
-  if [[ "$1" == "fullhelp" ]]; then
+  if [ "$1" = "fullhelp" ]; then
     cat ~/bin/tt/fullhelp.txt | more
   else
     python ~/bin/tt/tt.py "$@"
@@ -407,7 +404,7 @@ function primg() {
       # Check file format. If --force is set just send it through convert without caring about file types.
       if [ -f $file ]; then
         # Check if force option is set
-        if [ "$2" == "--force" ] || [ "$2" == "-f" ]; then
+        if [ "$2" = "--force" ] || [ "$2" = "-f" ]; then
           echo -e "Forcing convert.\n"
           command $pipe_through | jp2a $opts - $file 2>/dev/null
         else
@@ -438,7 +435,7 @@ function primg() {
 # Find project folder, enter it and activate the corresponding virtual env
 function cdp() {
   if [ "$#" = "0" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
-    if [ "$VIRTUAL_ENV" = "" ]; then
+    if [ -z "$VIRTUAL_ENV" ]; then
       printf "Usage:\n${BOLD}cdp${RESET} <project_name>\n"
       printf "\tFinds project folder, enters it and activates the corresponding ${BOLD}virtualenv${RESET}).\n"
       return 1
@@ -448,13 +445,14 @@ function cdp() {
     return
   fi
 
-  if [[ -z "$PROJECT_FOLDER" ]]; then
+  if [ -z "$PROJECT_FOLDER" ]; then
     echo "You have not set your project folder in .extras. Exiting."
     return 1
   else
     for folder in $PROJECT_FOLDER/{"$1"/src/"$1","$1"/"$1","$1"}; do
-      if [[ -d "$folder" ]]; then
+      if [ -d "$folder" ]; then
         cd $folder
+        # TODO:
         # Make sure project root appears on top in finder. Don't forget to include .keepontop in your .gitignore
         # Needs more logic to find the project root folder
         # touch ../.keepontop
@@ -482,7 +480,7 @@ function mdx() {
   fi
 
   if exists "$HOME/bin/Markdown/Markdown.pl"; then
-    if [ "$2" == "--dump" ] || [ "$2" == "-d" ]; then
+    if [ "$2" = "--dump" ] || [ "$2" = "-d" ]; then
       local dump="-dump"
     fi
     $HOME/bin/Markdown/Markdown.pl "$1" | lynx -stdin $dump
@@ -503,7 +501,7 @@ function ddg() {
   local q=$@
   local nq=""
   for arg in $q; do
-    if [ "$arg" == "--dump" ] || [ "$arg" == "-d" ]; then
+    if [ "$arg" = "--dump" ] || [ "$arg" = "-d" ]; then
       local dump="-dump"
     else
       nq="$nq $arg"
@@ -535,7 +533,7 @@ function speak() {
   local lang="en"
   local base_url="http://translate.google.com/translate_tts?ie=UTF-8&tl=LANGUAGE_PLACEHOLDER&q="
   for arg in $q; do
-    if [ "$arg" == "--robot" ] || [ "$arg" == "-r" ]; then
+    if [ "$arg" = "--robot" ] || [ "$arg" = "-r" ]; then
       base_url="http://speechutil.com/convert/ogg?text="
     elif [[ "$arg" =~ --lang=[a-z]{2} ]] || [[ "$arg" =~ -l=[a-z]{2} ]]; then
       lang=${arg: -2:2}

@@ -33,7 +33,6 @@ pcp           °Copy with progress.
 hd/m5/tnl     °Things to pipe to. Hexdump, md5 & trim newlines (tnl also copies to c/b).
 etrash        °Empty the Trash on all mounted volumes and the main HDD.
 clup          °Recursively delete `.DS_Store` files.
-gl            °Git log with per-commit cmd-clickable GitHub URLs.
 calc          °Simple calculator.
 phind         °Given a value, shows neighbouring values according to the golden ratio.
 week          °Show week number.
