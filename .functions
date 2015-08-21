@@ -449,7 +449,7 @@ function cdp() {
     echo "You have not set your project folder in .extras. Exiting."
     return 1
   else
-    for folder in $PROJECT_FOLDER/{"$1"/src/"$1","$1"/"$1","$1"}; do
+    for folder in $PROJECT_FOLDER/{"$1"/src/"$1","$1","$1"/"$1"}; do
       if [ -d "$folder" ]; then
         cd $folder
         # TODO:
