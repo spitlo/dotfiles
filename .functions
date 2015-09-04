@@ -13,13 +13,14 @@ if ! [[ "$OSTYPE" =~ ^darwin ]]; then
   if exists xsel; then
     alias pbcopy='xsel --clipboard --input'
     alias pbpaste='xsel --clipboard --output'
+  elif exists xclip; then
+    alias pbcopy='xclip -selection clipboard'
+    alias pbpaste='xclip -selection clipboard -o'
+  elif exists termux-clipboard-get; then
+    alias pbcopy='termux-clipboard-set'
+    alias pbpaste='termux-clipboard-get'
   else
-    if exists xclip; then
-      alias pbcopy='xclip -selection clipboard'
-      alias pbpaste='xclip -selection clipboard -o'
-    else
-      echo "Could not find a viable alternative to pbcopy/pbpaste. Try installing xsel or xclip.";
-    fi
+    echo "Could not find a viable alternative to pbcopy/pbpaste. Try installing xsel or xclip.";
   fi
 fi
 
