@@ -14,7 +14,7 @@ nu/ns/ni      °Npm update, search, install.
 
 dl/pj/ht      °Go to Downloads/Projects/htdocs folder (and list folders for pj & ht). Set paths in .extras.
 
-md            °Make directory and enter it.
+mkd           °Make directory and enter it.
 cx            °Extended cd, enter directory and list all.
 cdf           °Go to folder in forefront Finder window.
 cdp           °Go to and workon <project> folder (virtualenvwrapper).
