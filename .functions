@@ -379,6 +379,7 @@ function primg() {
     printf "Usage:\n${BOLD}primg${RESET} <path/to/file/> [ --force ]\n"
     printf "\tAttempts to print out an image file as ascii using asciiart or jp2a (using ImageMagick's ${BOLD}convert${RESET}).\n"
     printf "\tThe optional --force option sends any file through convert and might cause errors or unexpected behavior.\n"
+    printf "${YELLOW}NB:${RESET} You should probably use catimg instead: github.com/posva/catimg\n"
     return 1
   fi
 
