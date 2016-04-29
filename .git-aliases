@@ -24,9 +24,10 @@ if exists git; then
   aliasexists co || git config --global alias.co "checkout"
   aliasexists cm || git config --global alias.cm "commit -am"
   aliasexists st || git config --global alias.st "status"
-  aliasexists last || git config --global alias.last "show HEAD^..HEAD"
-  aliasexists unpushed || git config --global alias.unpushed "git diff --stat `git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)`.."
-  aliasexists testmerge || git config --global alias.testmerge '!f(){ git merge --no-commit --no-ff "$1"; git merge --abort; echo "Merge aborted"; };f '
   aliasexists hist || git config --global alias.hist "log -p"
-  aliasexists tt || git config --global alias.tt '!f(){ git checkout `git rev-list -n 1 --before="$1" master`; };f '
+  aliasexists last || git config --global alias.last "show HEAD^..HEAD"
+  aliasexists unpushed || git config --global alias.unpushed "diff --stat `git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)`.."
+  aliasexists testmerge || git config --global alias.testmerge '!f(){ git merge --no-commit --no-ff "$1"; git merge --abort; echo "Merge aborted"; };f'
+  aliasexists tt || git config --global alias.tt '!f(){ git checkout `git rev-list -n 1 --before="$1" master`; };f'
+  aliasexists mmc || git config --global alias.mmc '!f(){ git log --abbrev-commit --format=format:"%C(bold blue)%h%C(reset): %C(green)(%ad%x08%x08%x08%x08%x08%x08)%C(reset) -%C(bold yellow)%d%C(reset)  %C(white)%s%C(reset)" --since="last month" --date=iso --no-merges --author="$(whoami)";};f'
 fi
