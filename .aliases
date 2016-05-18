@@ -76,6 +76,9 @@
   # Gzip-enabled `curl`
   alias gurl="curl --compressed"
 
+  # Time server response
+  alias time_url='curl -o /dev/null -s -w "Connect: %{time_connect}\\nStart transfer: %{time_starttransfer}\\nTotal: %{time_total}\\n"'
+
 ##-------------------##
 ## THINGS TO PIPE TO ##
 #=//
