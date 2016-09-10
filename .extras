@@ -11,30 +11,31 @@
 #  . $(brew --prefix)/etc/bash_completion
 #fi
 
-# Set project folder for this particular user/system
-export PROJECT_FOLDER=
+# Set project folder for this particular user/system, and a list of projects for `cdp` autocomplete
+#export PROJECT_FOLDER=
+#export LOCAL_PROJECTS= # F.ex. "project1 project2"
 
 # Set Downloads folder for this particular user/system
-export DOWNLOADS_FOLDER=
+#export DOWNLOADS_FOLDER=
 
 # Set htdocs folder for this particular user/system
-export HTDOCS_FOLDER=
+#export HTDOCS_FOLDER=
 
 # Set default username
-export DEFAULT_USERNAME=
+#export DEFAULT_USERNAME=
 
 # Virtualenwrapper constants
-export WORKON_HOME=
-export VIRTUALENVWRAPPER_PYTHON=
-export VIRTUALENVWRAPPER_VIRTUALENV=
+#export WORKON_HOME=
+#export VIRTUALENVWRAPPER_PYTHON=
+#export VIRTUALENVWRAPPER_VIRTUALENV=
 
 # Your app token and user name on Pushover for Aria notifications
-export PO_APP_TOKEN=""
-export PO_USER_KEY=""
+#export PO_APP_TOKEN=""
+#export PO_USER_KEY=""
 
 # Path to Growl by TJ Holowaychuk
-export GROWL_PATH=
+#export GROWL_PATH=
 
-# Alias adb if it's not installed globally 
+# Alias adb if it's not installed globally
 # (f.ex if it's installed through the Chrome extension)
-alias adb=""
+#alias adb=""

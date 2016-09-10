@@ -1,0 +1,5 @@
+_cdp() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  COMPREPLY=( $(compgen -W "$LOCAL_PROJECTS" -- $cur) )
+}
+complete -F _cdp cdp

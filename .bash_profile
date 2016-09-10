@@ -6,6 +6,12 @@
 for file in $HOME/.{exports,colors,functions,aliases,extras,bash_prompt,git-aliases,git-completion,wp-completion}; do
     [ -r "$file" ] && . "$file"
 done
+
+if [ -d "$HOME/.bash_completion.d" ]; then
+  for file in $HOME/.bash_completion.d/*; do
+    source $file
+  done
+fi
 unset file
 
 # Load z
