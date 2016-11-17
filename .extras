@@ -36,6 +36,9 @@
 # Path to Growl by TJ Holowaychuk
 #export GROWL_PATH=
 
+# Download directory for podgrab (PodGrab.py)
+#export PODGRAB_DIRECTORY=
+
 # Alias adb if it's not installed globally
 # (f.ex if it's installed through the Chrome extension)
 #alias adb=""
