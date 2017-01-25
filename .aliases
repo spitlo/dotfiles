@@ -44,6 +44,9 @@
 
   alias ackl='ack "--pager=less -r"'
 
+  # Copy last command to clipboard
+  alias clc='fc -ln -1 | awk '\''{$1=$1}1'\'' ORS='\'''\'' | pbcopy'
+
 ##-----------##
 ## NET STUFF ##
 #=//
