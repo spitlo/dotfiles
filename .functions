@@ -605,3 +605,13 @@ function filerefs() {
   grep -n --color=auto -r -F "$(sed 's#.*/##g' "$1")" "$dir"
 
 }
+
+function font_info() {
+  # http://apple.stackexchange.com/a/275493
+  # if exists "fc-scan" then;
+    for file in "$arg"*.{ttf,otf}; do
+      postscriptname=$(fc-scan --format "%{postscriptname}\n" $file);
+      printf "\033[36m PostScript Name:\033[0m %s \e[90m(%s)\033[0m\n" "$postscriptname" "$file";
+    done
+  # fi
+}
