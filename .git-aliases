@@ -30,4 +30,6 @@ if exists git; then
   aliasexists testmerge || git config --global alias.testmerge '!f(){ git merge --no-commit --no-ff "$1"; git merge --abort; echo "Merge aborted"; };f'
   aliasexists tt || git config --global alias.tt '!f(){ git checkout `git rev-list -n 1 --before="$1" master`; };f'
   aliasexists mmc || git config --global alias.mmc '!f(){ git log --abbrev-commit --format=format:"%C(bold blue)%h%C(reset): %C(green)(%ad%x08%x08%x08%x08%x08%x08)%C(reset) -%C(bold yellow)%d%C(reset)  %C(white)%s%C(reset)" --since="last month" --date=iso --no-merges --author="$(whoami)";};f'
+  aliasexists llcm || git config --global alias.llcm '!f(){ for branch in `git branch -r --merged | grep -v HEAD`; do echo -e `git show --format="%ci %cr %an" $branch | head -n 1` \\t$branch; done | sort -r;};f'
+  aliasexists llcu || git config --global alias.llcu '!f(){ for branch in `git branch -r --no-merged | grep -v HEAD`; do echo -e `git show --format="%ci %cr %an" $branch | head -n 1` \\t$branch; done | sort -r;};f'
 fi
