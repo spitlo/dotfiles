@@ -16,15 +16,3 @@ unset file
 
 # Load z
 [ -s "$HOME/bin/z/z.sh" ] && . "$HOME/bin/z/z.sh"
-
-# Load RVM
-[ -s "$HOME/.rvm/scripts/rvm" ] && . "$HOME/.rvm/scripts/rvm"
-
-# Load virtualenvwrapper
-[ -s "/usr/local/bin/virtualenvwrapper.sh" ] && . "/usr/local/bin/virtualenvwrapper.sh"
-
-# Load NVM
-[ -s "$HOME/.nvm/nvm.sh" ] && . "$HOME/.nvm/nvm.sh"
-
-# You might want to run the oneliner below once to get natural scrolling
-# echo "pointer = 1 2 3 5 4 7 6 8 9 10 11 12" > ~/.Xmodmap && xmodmap ~/.Xmodmap
