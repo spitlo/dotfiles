@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Send notification using Growl for Node:
 # https://npmjs.org/package/growl

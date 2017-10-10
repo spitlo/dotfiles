@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Set some variables
 tab=$(echo -e '\t')
@@ -17,7 +17,7 @@ function _help() {
     desc=${arr[1]}
     fdesc=$(echo $desc | sed -e "s/\([\'\`\/\+\<\>\(\)]\)/${GREEN}\1${YELLOW}/g");
     if [[ "$cmnd" ]]; then
-      printf "${MAGENTA}%s${RESET} ${LIGHTGREEN}-${RESET} ${YELLOW}%s\n" $fcmnd $fdesc 
+      printf "${MAGENTA}%s${RESET} ${LIGHTGREEN}-${RESET} ${YELLOW}%s\n" $fcmnd $fdesc
     else
       echo "$nl"
     fi
@@ -52,7 +52,7 @@ function _sync() {
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
       doIt
-    else 
+    else
       echo "Aborted."
       return
     fi
@@ -73,7 +73,7 @@ case "$1" in
   update)
     git pull origin master && _sync --force
   ;;
-  
+
   copy)
     _sync $2
   ;;
@@ -96,7 +96,7 @@ case "$1" in
   help)
     _help
   ;;
-  
+
   *)
     echo -e "${BOLD}USAGE${RESET}: ${YELLOW}. does${RESET} [ sync | copy | reset | backup | help ]"
     echo -e "\t${UNDERLINE}sync${RESET} pulls from git and copies the files."
