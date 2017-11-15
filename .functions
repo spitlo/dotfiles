@@ -615,3 +615,8 @@ function font_info() {
     done
   # fi
 }
+
+function pyclean() {
+  find . -type f -name "*.py[co]" -delete
+  find . -type d -name "__pycache__" -delete 2>/dev/null
+}
