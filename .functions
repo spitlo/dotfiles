@@ -459,6 +459,9 @@ function cdp() {
         # Needs more logic to find the project root folder
         # touch ../.keepontop
         echo -e "Found project folder: $folder."
+        if exists nvm && [ -e "$folder/.nvmrc" ]; then
+          nvm use
+        fi
         break
       fi
     done
