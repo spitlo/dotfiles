@@ -623,3 +623,68 @@ function pyclean() {
   find . -type f -name "*.py[co]" -delete
   find . -type d -name "__pycache__" -delete 2>/dev/null
 }
+
+function _spinner() {
+  # Author: Tasos Latsas
+  # See https://github.com/tlatsas/bash-spinner for original readme
+
+  # Modified 2017 by github.com/spitlo
+  local ON_SUCCESS="DONE"
+  local ON_FAIL="FAIL"
+
+  local RED="\033[0;31m"
+  local GREEN="\033[0;32m"
+  local NC="\033[0m"
+
+  local SNAKE='⣾⣽⣻⢿⡿⣟⣯⣷'
+  local PISTON='▁▃▄▅▆▇▆▅▄▃'
+
+  case $1 in
+    start)
+      echo -ne "${2}\n"
+
+      i=1
+      delay=${SPINNER_DELAY:-0.15}
+      sp=$SNAKE
+
+      tput civis;
+      while :
+      do
+        printf "\b${sp:i++%${#sp}:1}"
+        sleep $delay
+      done
+      tput cnorm;
+      ;;
+    stop)
+      if [[ -z ${3} ]]; then
+        echo "spinner is not running.."
+        exit 1
+      fi
+
+      kill $3 > /dev/null 2>&1
+
+      echo -en "\b["
+      if [[ $2 -eq 0 ]]; then
+        echo -en "${GREEN}${ON_SUCCESS}${NC}"
+      else
+        echo -en "${RED}${ON_FAIL}${NC}"
+      fi
+      echo -e "]"
+      ;;
+    *)
+      echo "invalid argument, try {start/stop}"
+      exit 1
+      ;;
+  esac
+}
+
+function start_spinner {
+  _spinner "start" "${1}" &
+  _sp_pid=$!
+  disown
+}
+
+function stop_spinner {
+  _spinner "stop" $1 $_sp_pid
+  unset _sp_pid
+}
