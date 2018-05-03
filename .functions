@@ -458,6 +458,7 @@ function cdp() {
         # Make sure project root appears on top in finder. Don't forget to include .keepontop in your .gitignore
         # Needs more logic to find the project root folder
         # touch ../.keepontop
+        clear
         echo -e "Found project folder: $folder."
         if exists nvm && [ -e "$folder/.nvmrc" ]; then
           nvm use
@@ -469,7 +470,7 @@ function cdp() {
 
     if [ -e ~/.virtualenvs/$1/bin/activate ]; then
       workon $1
-      . $HOME/.bash_profile && clear
+      . $HOME/.bash_prompt
       echo -e "Project ${YELLOW}$1${RESET} activated."
     fi
   fi
