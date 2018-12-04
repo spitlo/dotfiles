@@ -47,6 +47,9 @@
   # Copy last command to clipboard
   alias clc='fc -ln -1 | awk '\''{$1=$1}1'\'' ORS='\'''\'' | pbcopy'
 
+  # Always search in hidden files with ag
+  alias ag="ag --hidden"
+
 ##-----------##
 ## NET STUFF ##
 #=//
