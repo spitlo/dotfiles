@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+# https://ubuntuforums.org/showthread.php?t=1505788
+#
+# Pass a file to mogrify, set quality to 1,
+# but retain the timestamp to the nearest second.
+#
+# Parameters:
+#    The input file and nothing else.
+#
+# Return codes:
+#    101    The file does not exist or is not a regular file
+#    102    Did not have permission to read the file
+#    103    Did not have permission to modify the file
+#    Any other code: As returned by mogrify.
+#
+# Example use:
+#    Shrink all files older than one year without changing the timestamp:
+#    find ./media/images -xdev -name '*.jpg' -mtime +360 -execdir squash {} \;
+
+# Find the last parameter.
+FILENAME="${1}"
+
+# Check that the file exists and is readable and writeable.
+if [[ ! -f ${FILENAME} ]]; then
+  echo "The file does not exist or it is not a regular file:  ${FILENAME}" >&2
+  exit 101
+fi
+if [[ ! -r ${FILENAME} ]]; then
+  echo "I cannot read the file: ${FILENAME}" >&2
+  exit 102
+fi
+if [[ ! -w ${FILENAME} ]]; then
+  echo "I cannot modify the file: ${FILENAME}" >&2
+  exit 103
+fi
+
+# Record the time stamp to the nearest second.
+if [[ "$OSTYPE" =~ ^darwin ]]; then
+  # Mac
+  TIMESTAMP="$( stat -l -t '%Y%m%d%H%M.%S' "${FILENAME}" | cut  -d ' ' -f 6 )"
+else
+  # Linux
+  TIMESTAMP="$( ls -l --time-style='+%Y%m%d%H%M.%S' "${FILENAME}" | cut  --delimiter=' ' --fields=6 )"
+fi
+
+# Squash the file.
+mogrify -quality 1 "${FILENAME}"
+
+RETURNCODE=${?}
+
+# Reset the timestamp.
+touch -t ${TIMESTAMP} "${FILENAME}"
+
+# Exit with the appropriate code.
+exit ${RETURNCODE}
