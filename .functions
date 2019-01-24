@@ -689,3 +689,12 @@ function stop_spinner {
   _spinner "stop" $1 $_sp_pid
   unset _sp_pid
 }
+
+function flushdns() {
+  if [[ "$OSTYPE" =~ ^darwin ]]; then
+    sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder
+  else
+    # Probably Ubuntu
+    sudo service network-manager restart
+  fi
+}
