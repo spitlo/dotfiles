@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -eu
 
 # https://ubuntuforums.org/showthread.php?t=1505788
 #
@@ -12,6 +13,7 @@
 #    101    The file does not exist or is not a regular file
 #    102    Did not have permission to read the file
 #    103    Did not have permission to modify the file
+#    104    File is smaller than minimum size
 #    Any other code: As returned by mogrify.
 #
 # Example use:
@@ -20,6 +22,8 @@
 
 # Find the last parameter.
 FILENAME="${1}"
+MINIMUM_SIZE=${INITIAL_SIZE:-100000}
+INITIAL_SIZE=$(wc -c <"$FILENAME")
 
 # Check that the file exists and is readable and writeable.
 if [[ ! -f ${FILENAME} ]]; then
@@ -34,6 +38,12 @@ if [[ ! -w ${FILENAME} ]]; then
   echo "I cannot modify the file: ${FILENAME}" >&2
   exit 103
 fi
+if [[ $INITIAL_SIZE -lt $MINIMUM_SIZE ]]; then
+  # echo "The file: ${FILENAME} is smaller than the minimum size of $((MINIMUM_SIZE / 10**3)) kb." >&2
+  exit 104
+else
+  echo "Squashing file ${FILENAME}."
+fi
 
 # Record the time stamp to the nearest second.
 if [[ "$OSTYPE" =~ ^darwin ]]; then
@@ -44,13 +54,25 @@ else
   TIMESTAMP="$( ls -l --time-style='+%Y%m%d%H%M.%S' "${FILENAME}" | cut  --delimiter=' ' --fields=6 )"
 fi
 
-# Squash the file.
+# Squash the file. TODO: Fix this to handle files starting with -
 mogrify -quality 1 "${FILENAME}"
 
 RETURNCODE=${?}
 
 # Reset the timestamp.
 touch -t ${TIMESTAMP} "${FILENAME}"
+
+# Check new size
+SQUASHED_SIZE=$(wc -c <"$FILENAME")
+
+# Check what we gained
+SAVED_SIZE=$((INITIAL_SIZE - SQUASHED_SIZE))
+
+if [[ $SAVED_SIZE -gt 0 ]]; then
+  echo "Done! Saved $((SAVED_SIZE / 10**3)) kilobytes."
+else
+  echo "Done, but couldn’t squash image harder."
+fi
 
 # Exit with the appropriate code.
 exit ${RETURNCODE}
