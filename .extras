@@ -24,11 +24,6 @@
 # Set default username
 #export DEFAULT_USERNAME=
 
-# Virtualenwrapper constants
-#export WORKON_HOME=
-#export VIRTUALENVWRAPPER_PYTHON=
-#export VIRTUALENVWRAPPER_VIRTUALENV=
-
 # Your app token and user name on Pushover for Aria notifications
 #export PO_APP_TOKEN=""
 #export PO_USER_KEY=""
@@ -52,8 +47,10 @@
 # Load NVM
 # [ -s "$HOME/.nvm/nvm.sh" ] && . "$HOME/.nvm/nvm.sh"
 
-# Load virtualenvwrapper
-# [ -s "/usr/local/bin/virtualenvwrapper.sh" ] && . "/usr/local/bin/virtualenvwrapper.sh"
+# Load pyenv
+# export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+# if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+# if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 
 # Load Nix
 # [ -s "$HOME/.nix-profile/etc/profile.d/nix.sh" ] && . "$HOME/.nix-profile/etc/profile.d/nix.sh"
