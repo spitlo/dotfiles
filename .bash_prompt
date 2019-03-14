@@ -52,14 +52,21 @@ function make_line {
         virtualenv_name=""
     else
         # Yes. Get length of virtualenv name + parenthesis + space + time
-        virtualenv_name=$(basename $VIRTUAL_ENV);
-        virtualenv_name_length=$(echo $virtualenv_name  | awk '{print length}');
+        virtualenv_name=$(basename $VIRTUAL_ENV)
+        virtualenv_name_length=$(echo $virtualenv_name  | awk '{print length}')
         prefix_length=$((virtualenv_name_length + 12));
         virtualenv_name=" [${ORANGE}$virtualenv_name${RESET}]"
     fi
-    # create a $fill of all screen width minus the time string and a space:
+
+    # Now get node version
+    node_version=$(node -v)
+    node_version_length=$(echo $node_version  | awk '{print length}')
+    prefix_length=$((prefix_length + node_version_length + 4))
+    node_version=" [${YELLOW}$node_version${RESET}]"
+
+    # Create a $fill of all screen width minus the time string and a space:
     let fillsize=${COLUMNS}-$prefix_length
-    fill=$virtualenv_name
+    fill=$virtualenv_name""$node_version
     while [ "$fillsize" -gt "0" ]
     do
         fill="-${fill}"
