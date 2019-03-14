@@ -147,6 +147,8 @@
   # Get week number
   alias week='date +%V'
 
+  alias panu="pyenv activate > /dev/null; nvm use"
+
 ##------------##
 ## OS X STUFF ##
 #=//
