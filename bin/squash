@@ -10,6 +10,7 @@ set -eu
 #    The input file and nothing else.
 #
 # Return codes:
+#    100    No file input
 #    101    The file does not exist or is not a regular file
 #    102    Did not have permission to read the file
 #    103    Did not have permission to modify the file
@@ -21,10 +22,21 @@ set -eu
 #    find ./media/images -xdev -name '*.jpg' -mtime +360 -execdir squash {} \;
 
 # Find the last parameter.
-FILENAME="${1}"
-MINIMUM_SIZE=${INITIAL_SIZE:-100000}
-INITIAL_SIZE=$(wc -c <"$FILENAME")
+FILENAME="${1:-__unset}"
+MINIMUM_SIZE=${MINIMUM_SIZE:-80000}
 
+# If no filename is provided, show help
+if [[ ${FILENAME} == "__unset" ]]; then
+  echo "Usage: squash FILENAME"
+  echo "Pass a file to mogrify, set quality to one,"
+  echo -e "but retail the timestamp to the nearest second.\n"
+  echo "Usage examples:"
+  echo "Shrink all files in a folder older than one year:"
+  echo "find ./media/images -xdev -name '*.jpg' -mtime +360 -execdir squash {} \;"
+  echo -e "\nCustom size limit:"
+  echo "MINIMUM_SIZE=50000 find ./media/images -xdev -name '*.jpg' -execdir squash {} \;"
+  exit 100
+fi
 # Check that the file exists and is readable and writeable.
 if [[ ! -f ${FILENAME} ]]; then
   echo "The file does not exist or it is not a regular file:  ${FILENAME}" >&2
@@ -38,6 +50,8 @@ if [[ ! -w ${FILENAME} ]]; then
   echo "I cannot modify the file: ${FILENAME}" >&2
   exit 103
 fi
+# File seems to exist. Now check size
+INITIAL_SIZE=$(wc -c <"$FILENAME")
 if [[ $INITIAL_SIZE -lt $MINIMUM_SIZE ]]; then
   # echo "The file: ${FILENAME} is smaller than the minimum size of $((MINIMUM_SIZE / 10**3)) kb." >&2
   exit 104
