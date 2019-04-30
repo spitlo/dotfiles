@@ -51,7 +51,7 @@
   alias ag="ag --hidden"
 
   # New type setup from https://www.atlassian.com/git/tutorials/dotfiles
-  alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+  alias dot='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
 ##-----------##
 ## NET STUFF ##
