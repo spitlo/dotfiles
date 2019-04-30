@@ -1,0 +1,56 @@
+###################################
+##  L O C A L   S E T T I N G S  ##
+###################################
+
+# If possible, add tab completion for many more commands
+# System specific
+# try this
+# [ -f /etc/bash_completion ] && source /etc/bash_completion
+# or on a mac
+#if [ -f $(brew --prefix)/etc/bash_completion ]; then
+#  . $(brew --prefix)/etc/bash_completion
+#fi
+
+# Set project folder for this particular user/system, and a list of projects for `cdp` autocomplete
+#export PROJECT_FOLDER=
+#export LOCAL_PROJECTS= # F.ex. "project1 project2"
+
+# Set Downloads folder for this particular user/system
+#export DOWNLOADS_FOLDER=
+
+# Set htdocs folder for this particular user/system
+#export HTDOCS_FOLDER=
+
+# Set default username
+#export DEFAULT_USERNAME=
+
+# Your app token and user name on Pushover for Aria notifications
+#export PO_APP_TOKEN=""
+#export PO_USER_KEY=""
+
+# Path to Growl by TJ Holowaychuk
+#export GROWL_PATH=
+
+# Download directory for podgrab (PodGrab.py)
+#export PODGRAB_DIRECTORY=
+
+# Alias adb if it's not installed globally
+# (f.ex if it's installed through the Chrome extension)
+#alias adb=""
+
+# You might want to run the oneliner below once to get natural scrolling
+# echo "pointer = 1 2 3 5 4 7 6 8 9 10 11 12" > ~/.Xmodmap && xmodmap ~/.Xmodmap
+
+# Load RVM
+# [ -s "$HOME/.rvm/scripts/rvm" ] && . "$HOME/.rvm/scripts/rvm"
+
+# Load NVM
+# [ -s "$HOME/.nvm/nvm.sh" ] && . "$HOME/.nvm/nvm.sh"
+
+# Load pyenv
+# export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+# if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+# if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+
+# Load Nix
+# [ -s "$HOME/.nix-profile/etc/profile.d/nix.sh" ] && . "$HOME/.nix-profile/etc/profile.d/nix.sh"
