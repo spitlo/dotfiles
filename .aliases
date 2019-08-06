@@ -168,4 +168,4 @@
   # Remove duplicates from "Open with" menu
   alias fixowdupes='/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -kill -r -domain local -domain user;killall Finder;echo "Open With has been rebuilt, Finder will relaunch"'
 
-  alias svteps="svtplay-dl -q 1050 -Q 100 -AS --stream-priority=dash --remux --exclude=syntolkat,teckentolkat"
+  alias svteps="svtplay-dl -q 1050 -Q 100 -AS --remux --exclude=syntolkat,teckentolkat"
