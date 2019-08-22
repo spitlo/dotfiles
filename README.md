@@ -8,5 +8,21 @@ These dotfiles assume you have Node.js, Pygments, virtualenvwrapper, Growl for N
 
 ## Installation
 
-Preferred install process is described here:
+Preferred install process is described in detail here:
 https://www.atlassian.com/git/tutorials/dotfiles
+
+### Short version (YMMV)
+```bash
+$ git clone --bare https://github.com/spitlo/dotfiles $HOME/.cfg
+$ alias dot='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+$ dot checkout
+$ dot config --local status.showUntrackedFiles no
+```
+
+## Termux
+
+On Termux (Android) you must install `ncurses-utils` before installing:
+
+```bash
+$ pkg install ncurses-utils
+```
