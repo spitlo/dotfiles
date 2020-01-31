@@ -700,3 +700,11 @@ function flushdns() {
     sudo service network-manager restart
   fi
 }
+
+function qrab() {
+  if exists qrencode; then
+    pbpaste|qrencode -o - -t UTF8
+  else
+    echo "You need qrencode for this to work."
+  fi
+}
