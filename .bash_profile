@@ -21,7 +21,7 @@ unset file
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-export PATH="$NVM_DIR/versions/node/$(<"$NVM_DIR"/alias/default)/bin:$PATH"
+[ -s "$NVM_DIR/nvm.sh" ] && export PATH="$NVM_DIR/versions/node/$(<"$NVM_DIR"/alias/default)/bin:$PATH"
 function nvm() {
   if [ -s "$NVM_DIR/nvm.sh" ]; then
     unset nvm
