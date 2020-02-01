@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# shellcheck disable=SC1090
+
 # Load the shell dotfiles, and then some:
 # * ~/.extras can be used for other settings you don’t want to commit.
 # Make a copy of .extras-sample and edit it to your needs.
@@ -21,9 +23,11 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 export PATH="$NVM_DIR/versions/node/$(<"$NVM_DIR"/alias/default)/bin:$PATH"
 function nvm() {
-  unset nvm;
-  [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"  # This loads nvm
-  nvm "$@"
+  if [ -s "$NVM_DIR/nvm.sh" ]; then
+    unset nvm
+    source "$NVM_DIR/nvm.sh"  # This loads nvm
+    nvm "$@" # .. and runs it
+  fi
 }
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
