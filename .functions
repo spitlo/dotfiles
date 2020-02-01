@@ -4,7 +4,7 @@
 # Use example: if exists ls; then echo "Command exists."; else echo "Command does not exist."; fi
 function exists() {
   cmnd=${1:?"Please supply a command to look for."}
-  command -v $cmnd >/dev/null 2>&1 && { return 0; } || { return 1; }
+  command -v "$cmnd" >/dev/null 2>&1 && { return 0; } || { return 1; }
 }
 
 # Try to make clipboard available
@@ -20,7 +20,8 @@ if ! [[ "$OSTYPE" =~ ^darwin ]]; then
     alias pbcopy='termux-clipboard-set'
     alias pbpaste='termux-clipboard-get'
   else
-    echo "Could not find a viable alternative to pbcopy/pbpaste. Try installing xsel or xclip.";
+    echo "Could not find a viable alternative to pbcopy/pbpaste. Try installing xsel or xclip."
+    echo "On Termux, install Termux API."
   fi
 fi
 
