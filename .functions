@@ -709,3 +709,37 @@ function qrab() {
     echo "You need qrencode for this to work."
   fi
 }
+
+function bmg() {
+  if exists fzf; then
+    local paths=''
+    if [ -r ~/.bm_paths ]; then
+      # Remove empty lines and comment lines
+      paths=$(<  ~/.bm_paths sed '/^\s*$/d' | sed '/^#/d')
+    else
+      echo -e "You need to add a ${GREEN}bookmark${NC} for this to work."
+      echo -e "Go to a favorite folder and run ${YELLOW}bma${NC} to create a bookmark."
+    fi
+    local dest_dir
+    dest_dir=$(echo -e "$paths" | sed '/^\s*$/d' | fzf )
+    if [[ $dest_dir != '' ]]; then
+      # dest_dir=$(echo "$dest_dir" | sed 's/#.*//g')
+      # Remove comments after line
+      dest_dir="${dest_dir%%#*}"
+      cd "$dest_dir" || return
+    fi
+  else
+    echo -e "You need ${YELLOW}fzf${NC} for this to work."
+  fi
+}
+
+function bma() {
+  local curr_dir="${PWD} # $*"
+  if [ ! -r ~/.bm_paths ]; then
+    touch ~/.bm_paths
+  fi
+  if ! grep -Fxq "$curr_dir" ~/.bm_paths; then
+    echo "$curr_dir" >> ~/.bm_paths
+    echo "Added $curr_dir to bookmark file."
+  fi
+}
