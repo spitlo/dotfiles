@@ -637,10 +637,6 @@ function _spinner() {
   local ON_SUCCESS="DONE"
   local ON_FAIL="FAIL"
 
-  local RED="\033[0;31m"
-  local GREEN="\033[0;32m"
-  local NC="\033[0m"
-
   local SNAKE='⣾⣽⣻⢿⡿⣟⣯⣷'
   local PISTON='▁▃▄▅▆▇▆▅▄▃'
 
@@ -670,9 +666,9 @@ function _spinner() {
 
       echo -en "\b["
       if [[ $2 -eq 0 ]]; then
-        echo -en "${GREEN}${ON_SUCCESS}${NC}"
+        echo -en "${GREEN}${ON_SUCCESS}${RESET}"
       else
-        echo -en "${RED}${ON_FAIL}${NC}"
+        echo -en "${RED}${ON_FAIL}${RESET}"
       fi
       echo -e "]"
       ;;
@@ -718,8 +714,8 @@ function bmg() {
       # Remove empty lines and comment lines
       paths=$(<  ~/.bm_paths sed '/^\s*$/d' | sed '/^#/d')
     else
-      echo -e "You need to add a ${GREEN}bookmark${NC} for this to work."
-      echo -e "Go to a favorite folder and run ${YELLOW}bma${NC} to create a bookmark."
+      echo -e "You need to add a ${GREEN}bookmark${RESET} for this to work."
+      echo -e "Go to a favorite folder and run ${YELLOW}bma${RESET} to create a bookmark."
     fi
     local dest_dir
     dest_dir=$(echo -e "$paths" | sed '/^\s*$/d' | fzf )
@@ -730,7 +726,7 @@ function bmg() {
       cd "$dest_dir" || return
     fi
   else
-    echo -e "You need ${YELLOW}fzf${NC} for this to work."
+    echo -e "You need ${YELLOW}fzf${RESET} for this to work."
   fi
 }
 
