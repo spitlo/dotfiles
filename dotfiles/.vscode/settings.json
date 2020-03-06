@@ -1,0 +1,10 @@
+{
+  "files.associations": {
+    ".aliases": "shellscript",
+    ".colors": "shellscript",
+    ".exports": "shellscript",
+    ".extras": "shellscript",
+    ".extras-sample": "shellscript",
+    ".inputrc": "shellscript",
+  }
+}

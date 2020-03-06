@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 # Add stuff to path
 export PATH="$HOME/bin:/usr/local/bin:$PATH"
 

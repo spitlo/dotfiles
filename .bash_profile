@@ -1,5 +1,4 @@
-#!/usr/bin/env bash
-
+# shellcheck shell=bash
 # shellcheck disable=SC1090
 
 # Load the shell dotfiles, and then some:
