@@ -707,7 +707,22 @@ function qrab() {
   fi
 }
 
-function bmg() {
+function bma() {
+  local curr_dir="${PWD} # $*"
+  if [ ! -r ~/.bookmarks ]; then
+    touch ~/.bookmarks
+  fi
+  if ! grep -Fxq "$curr_dir" ~/.bookmarks; then
+    echo "$curr_dir" >> ~/.bookmarks
+    echo "Added $curr_dir to bookmark file."
+  fi
+}
+
+function bme() {
+  $EDITOR ~/.bookmarks
+}
+
+function bmu() {
   if exists fzf; then
     local bookmarks=''
     if [ -r ~/.bookmarks ]; then
@@ -732,16 +747,5 @@ function bmg() {
     fi
   else
     echo -e "You need ${YELLOW}fzf${RESET} for this to work."
-  fi
-}
-
-function bma() {
-  local curr_dir="${PWD} # $*"
-  if [ ! -r ~/.bookmarks ]; then
-    touch ~/.bookmarks
-  fi
-  if ! grep -Fxq "$curr_dir" ~/.bookmarks; then
-    echo "$curr_dir" >> ~/.bookmarks
-    echo "Added $curr_dir to bookmark file."
   fi
 }
