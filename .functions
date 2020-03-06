@@ -709,21 +709,26 @@ function qrab() {
 
 function bmg() {
   if exists fzf; then
-    local paths=''
-    if [ -r ~/.bm_paths ]; then
+    local bookmarks=''
+    if [ -r ~/.bookmarks ]; then
       # Remove empty lines and comment lines
-      paths=$(<  ~/.bm_paths sed '/^\s*$/d' | sed '/^#/d')
+      bookmarks=$(<  ~/.bookmarks sed '/^\s*$/d' | sed '/^#/d')
     else
       echo -e "You need to add a ${GREEN}bookmark${RESET} for this to work."
       echo -e "Go to a favorite folder and run ${YELLOW}bma${RESET} to create a bookmark."
     fi
-    local dest_dir
-    dest_dir=$(echo -e "$paths" | sed '/^\s*$/d' | fzf )
-    if [[ $dest_dir != '' ]]; then
-      # dest_dir=$(echo "$dest_dir" | sed 's/#.*//g')
+    local bookmark
+    bookmark=$(echo -e "$bookmarks" | sed '/^\s*$/d' | fzf )
+    if [[ $bookmark != '' ]]; then
       # Remove comments after line
-      dest_dir="${dest_dir%%#*}"
-      cd "$dest_dir" || return
+      bookmark="${bookmark%%#*}"
+      if [ -d "$bookmark" ]; then
+        cd "$bookmark" || return
+      else
+        # This is not a folder, just copy the string content to clipboard
+        echo "$bookmark" | tr -d '\n' | pbcopy
+        echo -e "Copied ${GREEN}bookmark${RESET} to clipboard."
+      fi
     fi
   else
     echo -e "You need ${YELLOW}fzf${RESET} for this to work."
@@ -732,11 +737,11 @@ function bmg() {
 
 function bma() {
   local curr_dir="${PWD} # $*"
-  if [ ! -r ~/.bm_paths ]; then
-    touch ~/.bm_paths
+  if [ ! -r ~/.bookmarks ]; then
+    touch ~/.bookmarks
   fi
-  if ! grep -Fxq "$curr_dir" ~/.bm_paths; then
-    echo "$curr_dir" >> ~/.bm_paths
+  if ! grep -Fxq "$curr_dir" ~/.bookmarks; then
+    echo "$curr_dir" >> ~/.bookmarks
     echo "Added $curr_dir to bookmark file."
   fi
 }
