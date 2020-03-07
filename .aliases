@@ -119,7 +119,6 @@
   alias v="vim"
   alias s="subl"
   alias o="open ."
-  alias h=". ~/dotfiles/does help"
   alias cls="clear"
   alias markdown="$HOME/bin/Markdown/Markdown.pl"
   alias tweets="TTYtter -rc=tweets -exts=$HOME/src/ttytter-extensions/deshortify.pl,$HOME/src/ttytter-extensions/multigeo.pl,$HOME/src/ttytter-extensions/timestamp.pl"

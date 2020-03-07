@@ -749,3 +749,15 @@ function bmu() {
     echo -e "You need ${YELLOW}fzf${RESET} for this to work."
   fi
 }
+
+function h() {
+  awk -v bl="$BLUE" -v yw="$YELLOW" -v rt="$RESET" '
+    {
+      command=$1;
+      desc="";
+      for (i=2; i<=NF; i++) {
+        desc=desc" "$i
+      };
+      printf "%s%s\t %s%s %s\n", yw, command, bl, desc, rt;
+    }' ~/.help | column -s$'\t' -t
+}

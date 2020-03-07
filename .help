@@ -1,67 +1,72 @@
-l             °List all files, colorized, in long format.
-la            °List all files, colorized, in long format, including dot files.
-ld            °List only dot files, colorized, in long format.
-lr            °List recursively from working directory using less.
-lsd           °List only directories.
-lst           °List folder using a tree structure.
+l             List all files, colorized, in long format.
+la            List all files, colorized, in long format, including dot files.
+ld            List only dot files, colorized, in long format.
+lr            List recursively from working directory using less.
+lsd           List only directories.
+lst           List folder using a tree structure.
 
-..(...)       °Move up the directory structure.
--             °Go to latest working directory.
-_/__          °Print current working directory/copies it to clipboard. __ is an alias for gpath (see below).
+..(...)       Move up the directory structure.
+-             Go to latest working directory.
+_/__          Print current working directory/copies it to clipboard. __ is an alias for gpath (see below).
 
-bu/bs/bi      °Brew update, search, install.
-nu/ns/ni      °Npm update, search, install.
+bu/bs/bi      Brew update, search, install.
+nu/ns/ni      Npm update, search, install.
 
-dl/pj/ht      °Go to Downloads/Projects/htdocs folder (and list folders for pj & ht). Set paths in .extras.
+dl/pj/ht      Go to Downloads/Projects/htdocs folder (and list folders for pj & ht). Set paths in .extras.
 
-mkd           °Make directory and enter it.
-cx            °Extended cd, enter directory and list all.
-cdf           °Go to folder in forefront Finder window.
-cdp           °Go to and workon <project> folder (virtualenvwrapper).
-z             °Go to most frecent dir matching <argument>.
-f             °Find shorthand.
-gr            °Grep shorthand (Recursive, print filename + line number, case-insensitive).
-o             °Open current directory in Finder.
-g/v/s         °Git, Vim, Sublime.
-r             °Refresh .bash_profile.
-fs            °Get size of file or folder.
-gz            °Get gzipped size.
-xt            °Extract most archives.
-c             °`cat` with syntax highlighting with pygmentize.
-pcp           °Copy with progress.
+mkd           Make directory and enter it.
+cx            Extended cd, enter directory and list all.
+cdf           Go to folder in forefront Finder window.
+cdp           Go to <project> folder and activate python and/or node env. Add projects  to .extras>LOCAL_PROJECTS for tab completion.
+z             Go to most frecent dir matching <argument>.
+f             Find shorthand.
+gr            Grep shorthand (Recursive, print filename + line number, case-insensitive).
+o             Open current directory in Finder.
+g/v/s         Git, Vim, Sublime.
+r             Refresh .bash_profile.
+fs            Get size of file or folder.
+gz            Get gzipped size.
+xt            Extract most archives.
+c             `cat` with syntax highlighting by pygmentize.
+pcp           Copy with progress.
 
-hd/m5/tnl     °Things to pipe to. Hexdump, md5 & trim newlines (tnl also copies to c/b).
-etrash        °Empty the Trash on all mounted volumes and the main HDD.
-clup          °Recursively delete `.DS_Store` files.
-calc          °Simple calculator.
-phind         °Given a value, shows neighbouring values according to the golden ratio.
-week          °Show week number.
-colors        °Print out all 256 colors using tput.
+hd/m5/tnl     Things to pipe to. Hexdump, md5 & trim newlines (tnl also copies to clipboard).
+etrash        Empty the Trash on all mounted volumes and the main HDD.
+clup          Recursively delete `.DS_Store` files.
+calc          Simple calculator.
+phind         Given a value, shows neighbouring values according to the golden ratio.
+week          Show week number.
+colors        Print out all 256 colors using tput.
 
-mirror        °Downloads <url> to <folder> and offers to serve it. Takes optional <user> <password> for basic auth.
-ask           °Check <url> every <X> seconds until it returns 200 OK (defaults to 10 seconds).
-httpcomp      °Test if HTTP compression (RFC 2616 + SDCH) is enabled for a given URL.
-httpdump      °View HTTP traffic.
-sniff         °View HTTP traffic.
-server        °Start an HTTP server from a directory, optionally specifying <port> (defaults to 8000).
-killport      °Kill applications listening to <port> (defaults to 8000).
-gurl          °Gzip-enabled `curl`.
-hosts         °Edit hosts file.
-ip/locip      °IP and local IP.
-whi           °Enhanced WHOIS lookups.
-urlenc        °URL-encode strings.
-ieXX          °Run IE 6-11 in VirtualBox (Requires ievms).
-undopush      °Undo a `git push`.
+mirror        Downloads <url> to <folder> and offers to serve it. Takes optional <user> <password> for basic auth.
+ask           Check <url> every <X> seconds until it returns 200 OK (defaults to 10 seconds).
+httpcomp      Test if HTTP compression (RFC 2616 + SDCH) is enabled for a given URL.
+httpdump      View HTTP traffic.
+sniff         View HTTP traffic.
+server        Start an HTTP server from a directory, optionally specifying <port> (defaults to 8000).
+killport      Kill applications listening to <port> (defaults to 8000).
+gurl          Gzip-enabled `curl`.
+hosts         Edit hosts file.
+ip/locip      IP and local IP.
+whi           Enhanced WHOIS lookups.
+urlenc        URL-encode strings.
+ieXX          Run IE 6-11 in VirtualBox (Requires ievms).
+undopush      Undo a `git push`.
 
-mgnt          °Starts download from <magnet link> in the background using aria2. Runs ~/.aria_done on complete.
-growl         °Shows <message> on screen using Growl for Node by TJ Holowaychuk and/or Pushover.
-primg         °Outputs <image> to console as color ascii.
-snr           °Search and replace in files based on file matching pattern.
-mdx           °View a markdown formatted file in lynx as html.
-kapp          °Puts a temp. cap on specified <port> simulating slow connections. Optional <kbits> defaults to 600.
-gpath         °Copies PWD to clipboard, including optional <file> (for use with tab completion).
-ddg           °Search DuckDuckGo for <phrase>. The optional --dump parameter directs output straight to console.
-wiki          °Search Wikipedia for <phrase> and output  answer straight to console.
-speak         °Speak <phrase> using Speechutil.com or Google Translate. Requires mplayer or SoX.
-nospace       °Remove spaces from filenames.
-filerefs      °Search all files in directory for references to words/filenames in a newline separated file.
+mgnt          Starts download from <magnet link> in the background using aria2. Runs ~/.aria_done on complete.
+growl         Shows <message> on screen using Growl for Node by TJ Holowaychuk and/or Pushover.
+primg         Outputs <image> to console as color ascii.
+snr           Search and replace in files based on file matching pattern.
+mdx           View a markdown formatted file in lynx as html.
+kapp          Puts a temp. cap on specified <port> simulating slow connections. Optional <kbits> defaults to 600.
+gpath         Copies PWD to clipboard, including optional <file> (for use with tab completion).
+ddg           Search DuckDuckGo for <phrase>. The optional --dump parameter directs output straight to console.
+dict          Search Dict.org for <phrase> and output answer straight to console.
+speak         Speak <phrase> using Speechutil.com or Google Translate. Requires mplayer or SoX.
+nospace       Remove spaces from filenames.
+filerefs      Search all files in directory for references to words/filenames in a newline separated file.
+
+pyclean       Clean up python project folder.
+flushdns      Flush DNS.
+qrab          Output contents of clipboard as a QR code.
+bma/bme/bme   Add, edit or use bookmark. A bookmark can be a folder which is cd:d into. Otherwise put in clipboard.
