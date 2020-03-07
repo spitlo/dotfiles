@@ -9,6 +9,7 @@ fi
 if tput setaf 1 &> /dev/null; then
     tput sgr0
     if [[ $(tput colors) -ge 256 ]] 2>/dev/null; then
+        export BLUE=$(tput setaf 33)
         export GREEN=$(tput setaf 64)
         export LIGHTGREEN=$(tput setaf 118)
         export MAGENTA=$(tput setaf 125)
@@ -18,11 +19,12 @@ if tput setaf 1 &> /dev/null; then
         export WHITE=$(tput setaf 254)
         export YELLOW=$(tput setaf 184)
     else
+        export BLUE=$(tput setaf 4)
         export GREEN=$(tput setaf 2)
         export LIGHTGREEN=$(tput setaf 2)
         export MAGENTA=$(tput setaf 5)
-        export ORANGE=$(tput setaf 4)
-        export PURPLE=$(tput setaf 1)
+        export ORANGE=$(tput setaf 3)
+        export PURPLE=$(tput setaf 5)
         export RED=$(tput setaf 1)
         export WHITE=$(tput setaf 7)
         export YELLOW=$(tput setaf 3)
@@ -33,6 +35,7 @@ if tput setaf 1 &> /dev/null; then
     export REVERSE=$(tput smso)
     export UNDERLINE=$(tput smul)
 else
+    export BLUE="\033[1;34m"
     export GREEN="\033[1;32m"
     export LIGHTGREEN="\033[1;32m"
     export MAGENTA="\033[1;31m"
