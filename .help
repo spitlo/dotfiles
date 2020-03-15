@@ -69,4 +69,4 @@ filerefs      Search all files in directory for references to words/filenames in
 pyclean       Clean up python project folder.
 flushdns      Flush DNS.
 qrab          Output contents of clipboard as a QR code.
-bma/bme/bme   Add, edit or use bookmark. A bookmark can be a folder which is cd:d into. Otherwise put in clipboard.
+bma/bme/bmu   Add, edit or use bookmark. A bookmark can be a folder which is cd:d into. Otherwise put in clipboard.
