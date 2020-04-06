@@ -471,6 +471,10 @@ function cdp() {
           pyenv activate
           . $HOME/.bash_prompt
           echo -e "Project ${YELLOW}$1${RESET} activated."
+        else
+          if exists pyenv; then
+            pyenv deactivate
+          fi
         fi
         break
       fi
