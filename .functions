@@ -741,8 +741,8 @@ function bmu() {
     if [[ $bookmark != '' ]]; then
       # Remove comments after line
       bookmark="${bookmark%%#*}"
-      # Remove trailing whitespace
-      bookmark="${bookmark//[[:space:]]/}"
+      # Trim whitespace
+      bookmark=$(echo "$bookmark"|sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
       if [ -d "$bookmark" ]; then
         cd "$bookmark" || return
       else
