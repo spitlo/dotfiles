@@ -35,7 +35,7 @@
   # List all files colorized in long format
   alias l="ls -l"
 
-  # List all files colorized in long format with human readable sizes, including dot files
+  # List all files colorized in long format with human readable file sizes, including dot files
   alias la="ls -lah"
 
   # List only directories
