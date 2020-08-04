@@ -767,3 +767,7 @@ function h() {
       printf "%s%s\t %s%s %s\n", yw, command, bl, desc, rt;
     }' ~/.help | column -s$'\t' -t
 }
+
+function weather() {
+  curl "wttr.in/$1"
+}
