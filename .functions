@@ -769,5 +769,5 @@ function h() {
 }
 
 function weather() {
-  curl "wttr.in/$1?n"
+  curl "wttr.in/$1?Fnq"
 }
