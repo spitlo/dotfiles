@@ -13,7 +13,7 @@ https://www.atlassian.com/git/tutorials/dotfiles
 
 ### Short version (YMMV)
 ```bash
-$ git clone --bare https://github.com/spitlo/dotfiles $HOME/.cfg
+$ git clone --bare git@github.com:spitlo/dotfiles.gits $HOME/.cfg
 $ alias dot='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 $ dot checkout
 $ dot config --local status.showUntrackedFiles no
