@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# shellcheck shell=bash
 
 # Utility function to check if $1 command exists
 # Use example: if exists ls; then echo "Command exists."; else echo "Command does not exist."; fi
@@ -471,6 +471,10 @@ function cdp() {
           pyenv activate
           . $HOME/.bash_prompt
           echo -e "Project ${YELLOW}$1${RESET} activated."
+        else
+          if exists pyenv; then
+            pyenv deactivate
+          fi
         fi
         break
       fi
@@ -707,36 +711,63 @@ function qrab() {
   fi
 }
 
-function bmg() {
+function bma() {
+  local curr_dir="${PWD} # $*"
+  if [ ! -r ~/.bookmarks ]; then
+    touch ~/.bookmarks
+  fi
+  if ! grep -Fxq "$curr_dir" ~/.bookmarks; then
+    echo "$curr_dir" >> ~/.bookmarks
+    echo "Added $curr_dir to bookmark file."
+  fi
+}
+
+function bme() {
+  $EDITOR ~/.bookmarks
+}
+
+function bmu() {
   if exists fzf; then
-    local paths=''
-    if [ -r ~/.bm_paths ]; then
+    local bookmarks=''
+    if [ -r ~/.bookmarks ]; then
       # Remove empty lines and comment lines
-      paths=$(<  ~/.bm_paths sed '/^\s*$/d' | sed '/^#/d')
+      bookmarks=$(<  ~/.bookmarks sed '/^\s*$/d' | sed '/^#/d')
     else
       echo -e "You need to add a ${GREEN}bookmark${RESET} for this to work."
       echo -e "Go to a favorite folder and run ${YELLOW}bma${RESET} to create a bookmark."
     fi
-    local dest_dir
-    dest_dir=$(echo -e "$paths" | sed '/^\s*$/d' | fzf )
-    if [[ $dest_dir != '' ]]; then
-      # dest_dir=$(echo "$dest_dir" | sed 's/#.*//g')
+    local bookmark
+    bookmark=$(echo -e "$bookmarks" | sed '/^\s*$/d' | fzf )
+    if [[ $bookmark != '' ]]; then
       # Remove comments after line
-      dest_dir="${dest_dir%%#*}"
-      cd "$dest_dir" || return
+      bookmark="${bookmark%%#*}"
+      # Trim whitespace
+      bookmark=$(echo "$bookmark"|sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+      if [ -d "$bookmark" ]; then
+        cd "$bookmark" || return
+      else
+        # This is not a folder, just copy the string content to clipboard
+        echo "$bookmark" | tr -d '\n' | pbcopy
+        echo -e "Copied ${GREEN}bookmark${RESET} to clipboard."
+      fi
     fi
   else
     echo -e "You need ${YELLOW}fzf${RESET} for this to work."
   fi
 }
 
-function bma() {
-  local curr_dir="${PWD} # $*"
-  if [ ! -r ~/.bm_paths ]; then
-    touch ~/.bm_paths
-  fi
-  if ! grep -Fxq "$curr_dir" ~/.bm_paths; then
-    echo "$curr_dir" >> ~/.bm_paths
-    echo "Added $curr_dir to bookmark file."
-  fi
+function h() {
+  awk -v bl="$BLUE" -v yw="$YELLOW" -v rt="$RESET" '
+    {
+      command=$1;
+      desc="";
+      for (i=2; i<=NF; i++) {
+        desc=desc" "$i
+      };
+      printf "%s%s\t %s%s %s\n", yw, command, bl, desc, rt;
+    }' ~/.help | column -s$'\t' -t
+}
+
+function weather() {
+  curl "wttr.in/$1?Fnq"
 }

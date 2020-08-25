@@ -1,0 +1,14 @@
+{
+  "files.associations": {
+    ".aliases": "shellscript",
+    ".bash_profile": "shellscript",
+    ".bash_prompt": "shellscript",
+    ".colors": "shellscript",
+    ".exports": "shellscript",
+    ".extras": "shellscript",
+    ".extras-sample": "shellscript",
+    ".functions": "shellscript",
+    ".git-aliases": "shellscript",
+    ".inputrc": "shellscript",
+  }
+}
