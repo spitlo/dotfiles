@@ -60,4 +60,4 @@
 # On macos, make browsers available from the command line
 #alias firefox="open -a Firefox"
 #alias chrome="open -a Chromium"
-#alias brave="open -a Brave"
+#alias brave="open -a 'Brave Browser'"
