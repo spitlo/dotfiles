@@ -7,7 +7,7 @@
 # If possible, add tab completion for many more commands
 # System specific
 # try this
-# [ -f /etc/bash_completion ] && source /etc/bash_completion
+#[ -f /etc/bash_completion ] && source /etc/bash_completion
 # or on a mac
 #if [ -f $(brew --prefix)/etc/bash_completion ]; then
 #  . $(brew --prefix)/etc/bash_completion
@@ -41,18 +41,23 @@
 #alias adb=""
 
 # You might want to run the oneliner below once to get natural scrolling
-# echo "pointer = 1 2 3 5 4 7 6 8 9 10 11 12" > ~/.Xmodmap && xmodmap ~/.Xmodmap
+#echo "pointer = 1 2 3 5 4 7 6 8 9 10 11 12" > ~/.Xmodmap && xmodmap ~/.Xmodmap
 
 # Load RVM
-# [ -s "$HOME/.rvm/scripts/rvm" ] && . "$HOME/.rvm/scripts/rvm"
+#[ -s "$HOME/.rvm/scripts/rvm" ] && . "$HOME/.rvm/scripts/rvm"
 
 # Load NVM
-# [ -s "$HOME/.nvm/nvm.sh" ] && . "$HOME/.nvm/nvm.sh"
+#[ -s "$HOME/.nvm/nvm.sh" ] && . "$HOME/.nvm/nvm.sh"
 
 # Load pyenv
-# export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-# if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
-# if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+#export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+#if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
+#if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 
 # Load Nix
-# [ -s "$HOME/.nix-profile/etc/profile.d/nix.sh" ] && . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+#[ -s "$HOME/.nix-profile/etc/profile.d/nix.sh" ] && . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+
+# On macos, make browsers available from the command line
+#alias firefox="open -a Firefox"
+#alias chrome="open -a Chromium"
+#alias brave="open -a 'Brave Browser'"
