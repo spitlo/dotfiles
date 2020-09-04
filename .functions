@@ -771,3 +771,11 @@ function h() {
 function weather() {
   curl "wttr.in/$1?Fnq"
 }
+
+function groot {
+  if exists br; then
+    br --conf ~/etc/broot-git-diff.toml --git-status
+  else
+    echo "You need broot for this to work."
+  fi
+}
