@@ -1,10 +1,11 @@
 # shellcheck shell=bash
+# shellcheck disable=SC2016
 
 # Utility function to check if $1 command exists
 # Use example: if exists ls; then echo "Command exists."; else echo "Command does not exist."; fi
 function exists() {
   local cmnd=${1:?"Please supply a command to look for."}
-  command -v $cmnd >/dev/null 2>&1 && { return 0; } || { return 1; }
+  command -v "$cmnd" >/dev/null 2>&1 && { return 0; } || { return 1; }
 }
 
 # Utility function to check if git alias exists
@@ -12,28 +13,49 @@ function exists() {
 # Or aliasexists tlog && git tlog || git log
 function aliasexists() {
   local als=${1:?"Please supply an alias to look for."}
-  git config --get-regexp '^alias.'$als >/dev/null 2>&1 && { return 0; } || { return 1; }
+  git config --get-regexp '^alias.'"$als" >/dev/null 2>&1 && { return 0; } || { return 1; }
+}
+
+# Utility function to check if git config section exists
+# Use example: if sectionexists merge; then echo "Section [merge] exists."; else echo "Section [merge] does not exist."; fi
+function sectionexists() {
+  local section=${1:?"Please supply a section to look for."}
+  git config --get-regexp '^'"$section" >/dev/null 2>&1 && { return 0; } || { return 1; }
 }
 
 if exists git; then
   ##----------------##
-  ## LOG STUFF ##
+  ## BASIC STUFF ##
   #=//
-  aliasexists qlog || git config --global alias.qlog "log --abbrev-commit --format=format:'%C(bold blue)%h%C(reset): %C(green)(%ad%x08%x08%x08%x08%x08%x08)%C(reset) -%C(bold yellow)%d%C(reset)  %C(white)%s%C(reset) %C(bold red)<%an>%C(reset)' --date=iso --no-merges"
-  aliasexists tlog || git config --global alias.tlog "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all"
   aliasexists co || git config --global alias.co "checkout"
   aliasexists cm || git config --global alias.cm "commit -am"
   aliasexists st || git config --global alias.st "status"
   aliasexists hist || git config --global alias.hist "log -p"
   aliasexists last || git config --global alias.last "show HEAD^..HEAD"
-  # aliasexists unpushed || git config --global alias.unpushed "diff --stat `git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD)`.."
+
+  ## LOG STUFF ##
+  #=//
+  aliasexists qlog || git config --global alias.qlog "log --abbrev-commit --format=format:'%C(bold blue)%h%C(reset): %C(green)(%ad%x08%x08%x08%x08%x08%x08)%C(reset) -%C(bold yellow)%d%C(reset)  %C(white)%s%C(reset) %C(bold red)<%an>%C(reset)' --date=iso --no-merges"
+  aliasexists tlog || git config --global alias.tlog "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all"
+
+  ## USEFUL STUFF ##
+  #=//
   aliasexists testmerge || git config --global alias.testmerge '!f(){ git merge --no-commit --no-ff "$1"; git merge --abort; echo "Merge aborted"; };f'
-  aliasexists tt || git config --global alias.tt '!f(){ git checkout `git rev-list -n 1 --before="$1" master`; };f'
-  aliasexists mmc || git config --global alias.mmc '!f(){ git log --abbrev-commit --format=format:"%C(bold blue)%h%C(reset): %C(green)(%ad%x08%x08%x08%x08%x08%x08)%C(reset) -%C(bold yellow)%d%C(reset)  %C(white)%s%C(reset)" --since="last month" --date=iso --no-merges --author="$(whoami)";};f'
-  aliasexists llcm || git config --global alias.llcm '!f(){ for branch in `git branch -r --merged | grep -v HEAD`; do echo -e `git show --format="%ci %cr %an" $branch | head -n 1` \\t$branch; done | sort -r;};f'
-  aliasexists llcu || git config --global alias.llcu '!f(){ for branch in `git branch -r --no-merged | grep -v HEAD`; do echo -e `git show --format="%ci %cr %an" $branch | head -n 1` \\t$branch; done | sort -r;};f'
   # Branch unique commits
   aliasexists bruq || git config --global alias.bruq '!f(){ git log $(git symbolic-ref -q HEAD) ^master --no-merges; };f'
   # List branches by last commit https://gist.github.com/jasonrudolph/1810768#gistcomment-2678759
   aliasexists brup || git config --global alias.brup '!f() { git branch -r | grep -v HEAD | while read b; do git log --color --format="%ci _%C(magenta)%cr##%C(bold cyan)$b%Creset##%s %C(bold blue)<%an>%Creset" $b | head -n 1; done | sort -r | cut -d_ -f2- | sed "s;origin/;;g" | head -20 | column -t -s "##"; }; f'
+  aliasexists unpushed || git config --global alias.unpushed "diff --stat origin/master.."
+
+  ## UNUSED STUFF ##
+  #=//
+  aliasexists tt || git config --global alias.tt '!f(){ git checkout `git rev-list -n 1 --before="$1" master`; };f'
+  aliasexists mmc || git config --global alias.mmc '!f(){ git log --abbrev-commit --format=format:"%C(bold blue)%h%C(reset): %C(green)(%ad%x08%x08%x08%x08%x08%x08)%C(reset) -%C(bold yellow)%d%C(reset)  %C(white)%s%C(reset)" --since="last month" --date=iso --no-merges --author="$(whoami)";};f'
+  aliasexists llcm || git config --global alias.llcm '!f(){ for branch in `git branch -r --merged | grep -v HEAD`; do echo -e `git show --format="%ci %cr %an" $branch | head -n 1` \\t$branch; done | sort -r;};f'
+  aliasexists llcu || git config --global alias.llcu '!f(){ for branch in `git branch -r --no-merged | grep -v HEAD`; do echo -e `git show --format="%ci %cr %an" $branch | head -n 1` \\t$branch; done | sort -r;};f'
+
+  ## MERGE AND DIFF TOOLS ##
+  #=//
+  sectionexists merge || git config --global merge.tool vscode && git config --global mergetool.vscode.cmd 'code --wait '\"'$MERGED'\"
+  sectionexists diff || git config --global diff.tool vscode && git config --global difftool.vscode.cmd 'code --wait --diff '\"'$LOCAL'\"' '\"'$REMOTE'\"
 fi
