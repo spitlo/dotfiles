@@ -55,7 +55,7 @@ function output_statusline() {
   echo "$fill $(date +"%T")"
 }
 
-if exists starship___________disabled; then
+if exists starship; then
   starship_precmd_user_func="output_statusline"
   eval "$(starship init bash)"
 else

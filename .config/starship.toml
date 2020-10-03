@@ -1,9 +1,10 @@
-format='''$directory$git_branch$git_status
+format='''$directory$package$git_branch$git_status
 $character
 '''
 
-[prompt]
-add_newline = false
+[character]
+success_symbol = "[➜](bold green) "
+error_symbol = "[➜](bold red) "
 
 [directory]
 style = "bold fg:64"
@@ -25,3 +26,9 @@ staged = ""
 stashed = ""
 style = "bold fg:61"
 untracked = "*"
+
+[package]
+symbol = "☱ "
+
+[prompt]
+add_newline = false
