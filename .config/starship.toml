@@ -1,0 +1,27 @@
+format='''$directory$git_branch$git_status
+$character
+'''
+
+[prompt]
+add_newline = false
+
+[directory]
+style = "bold fg:64"
+truncate_to_repo = false
+truncation_length = -1
+
+[git_branch]
+format = "on [$symbol$branch]($style)"
+style = "bold fg:61"
+
+[git_status]
+conflicted = "*"
+deleted = "*"
+diverged = ""
+format = "[$all_status]($style)"
+modified = "*"
+renamed = "*"
+staged = ""
+stashed = ""
+style = "bold fg:61"
+untracked = "*"
