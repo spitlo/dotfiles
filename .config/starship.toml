@@ -28,7 +28,9 @@ style = "bold fg:61"
 untracked = "*"
 
 [package]
+format = "| [$symbol$version]($style) "
 symbol = "☱ "
+display_private = true
 
 [prompt]
 add_newline = false
