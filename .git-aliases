@@ -47,7 +47,7 @@ if exists git; then
   aliasexists brup || git config --global alias.brup '!f() { git branch -r | grep -v HEAD | while read b; do git log --color --format="%ci _%C(magenta)%cr##%C(bold cyan)$b%Creset##%s %C(bold blue)<%an>%Creset" $b | head -n 1; done | sort -r | cut -d_ -f2- | sed "s;origin/;;g" | head -20 | column -t -s "##"; }; f'
   aliasexists unpushed || git config --global alias.unpushed "diff --stat origin/master.."
   aliasexists full-prune || git config --global alias.full-prune '!f() { git fetch -p; git branch -vv | grep "origin/.*: gone]" | cut -d" " -f3 | xargs git branch -D; }; f'
-  aliasexists clone-gh || git config --global alias.clone-gh '!f() { if [ -z "$1" ]; then echo "Clone what?"; exit; fi; grep -q '/' <<< "$1" && echo "git@github.com:${1}.git" || echo "git@github.com:spitlo/${1}.git"; }; f'
+  aliasexists clone-gh || git config --global alias.clone-gh '!f() { if [ -z "$1" ]; then echo "Clone what?"; exit; fi; if [ "$1" != "$(printf '%s\n' "$1" | sed 's/\//_/')" ]; then git clone "git@github.com:${1}.git"; else git clone "git@github.com:spitlo/${1}.git"; fi }; f'
 
   ## UNUSED STUFF ##
   #=//
