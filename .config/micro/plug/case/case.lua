@@ -162,5 +162,5 @@ function init()
   config.MakeCommand("case.title", title, config.NoComplete)
   config.MakeCommand("case.upper", upper, config.NoComplete)
 
-  config.AddRuntimeFile("case", config.RTHelp, "README.md")
+  config.AddRuntimeFile("case", config.RTHelp, "help/case.md")
 end
