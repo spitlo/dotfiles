@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1090
+set -eu
+
+NC='\033[0m'
+RED='\033[0;31m'
+
+parent_directory="${PWD%/*}"
+parent_directory="${parent_directory##*/}"
+package_name="${PWD##*/}"
+
+# Check if we at least might be in the correct place
+if [[ "$parent_directory" != "packages" ]]; then
+  echo -e "${RED}Error!${NC} Sorry, you need to be in a termux-packages package directory."
+  echo "Exiting."
+  exit 1
+fi
+
+# Check if package version at least might have been changed
+if [[ "$(git status --porcelain | grep "M $parent_directory/$package_name/build.sh")" = "" ]]; then
+  echo -e "${RED}Error!${NC} You need to update the package version in build.sh before running this command."
+  echo "Go to https://repology.org/projects/?search=$package_name&inrepo=termux&outdated=1 to find the latest version."
+  echo "Exiting."
+  exit 1
+fi
+
+(source "$PWD/build.sh"; curl -LO "$TERMUX_PKG_SRCURL")
+
+new_version=$(source "$PWD/build.sh"; echo "${TERMUX_PKG_VERSION##*/}")
+filename=$(source "$PWD/build.sh"; echo "${TERMUX_PKG_SRCURL##*/}")
+old_hash=$(source "$PWD/build.sh"; echo "${TERMUX_PKG_SHA256##*/}")
+new_branch="$package_name-$new_version"
+
+if command -v sha256sum &> /dev/null; then
+  new_hash=$(sha256sum "$filename" | awk '{print $1}')
+else
+  # Assume macos, use shasum with flag
+  new_hash=$(shasum -a 256 "$filename" | awk '{print $1}')
+fi
+
+# Clean up
+rm "$filename"
+
+# Replace old hash
+if [[ "$OSTYPE" =~ ^darwin ]]; then
+  sed -i "" "s/$old_hash/$new_hash/g" "$PWD/build.sh"
+else
+  sed -i "s/$old_hash/$new_hash/g" "$PWD/build.sh"
+fi
+
+git diff
+
+echo "Check the above diff..."
+
+read -p "Does it look right? (y/N) " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+  git push origin HEAD:refs/heads/"$new_branch"
+  git fetch origin
+  git checkout --track -b "$new_branch" origin/"$new_branch"
+
+  git add "$PWD/build.sh" && git commit -m "$package_name: update to $new_version"
+
+  echo "Done. New branch $new_branch set up, changes committed. Push when you feel like it."
+
+  repo_url=$(git config --get remote.origin.url)
+  repo_url=${repo_url#*@}
+  repo_domain=${repo_url%%:*}
+  repo_user=${repo_url#*:}
+  repo_user=${repo_user%%/*}
+
+  if [[ "$repo_domain" = "github.com" ]]; then
+    echo "Then go to https://github.com/$repo_user/termux-packages/pull/new/$new_branch to create a new pull request."
+  else
+    echo "Then create a pull request."
+  fi
+else
+  echo "Commit aborted."
+fi
+
+read -p "Do you want to run a test build of the updated package? (y/N) " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+  ../../scripts/run-docker.sh ./build-package.sh "$package_name"
+else
+  echo "Ok, we’re done for now. Bye!"
+fi
