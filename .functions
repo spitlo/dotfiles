@@ -769,7 +769,11 @@ function h() {
 }
 
 function weather() {
-  curl "wttr.in/$1?Fnq"
+  curl "https://wttr.in/$1?Fnq"
+}
+
+function cht() {
+  curl "https://cht.sh/$1"
 }
 
 function groot {
