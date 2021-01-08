@@ -117,7 +117,6 @@
   alias ni="npm install"
   alias g="git"
   alias v="vim"
-  alias s="subl"
   alias o="open ."
   alias cls="clear"
   alias markdown="$HOME/bin/Markdown/Markdown.pl"
