@@ -2,7 +2,7 @@
 # Create ~/.config/alacritty/extras.yml, or symlink the appropriate file,
 # either macos.yml or linux.yml, to ~/.config/alacritty/extras.yml.
 import:
-  - ~/.config/alacritty/colors/base16-eighties-256.yml
+  - ~/.config/alacritty/colors/base16-oceanicnext-256.yml
   - ~/.config/alacritty/extras.yml
 
 # Window settings
