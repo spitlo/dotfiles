@@ -26,3 +26,6 @@ key_bindings:
   - { key: F, mods: Command|Control, action: ToggleFullscreen }
   - { key: F, mods: Command, mode: ~Search, action: SearchForward }
   - { key: B, mods: Command, mode: ~Search, action: SearchBackward }
+
+  # # Enable Alt+z (Used in tmux as prefix)
+  - { key: Z, mods: Alt, chars: "\x1bz" }
