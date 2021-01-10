@@ -14,6 +14,7 @@ window:
   startup_mode: Windowed
   history: 50000
   multiplier: 3
+  dynamic_title: true
 
 # Font settings
 font:
