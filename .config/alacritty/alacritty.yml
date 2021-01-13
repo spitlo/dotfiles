@@ -1,0 +1,44 @@
+# Import theme file and local settings for this computer.
+# Create ~/.config/alacritty/extras.yml, or symlink the appropriate file,
+# either macos.yml or linux.yml, to ~/.config/alacritty/extras.yml.
+import:
+  - ~/.config/alacritty/colors/base16-oceanicnext-256.yml
+  - ~/.config/alacritty/extras.yml
+
+# Window settings
+window:
+  padding:
+   x: 6
+   y: 6
+  decorations: none
+  startup_mode: Windowed
+  history: 50000
+  multiplier: 3
+  dynamic_title: true
+
+# Font settings
+font:
+  normal:
+    family: "Iosevka Term Light"
+  bold:
+    family: "Iosevka Term"
+    style: Bold
+  italic:
+    family: "Iosevka Term"
+    style: Italic
+  bold_italic:
+    family: "Iosevka Term"
+    style: Bold Italic
+  size: 11.0
+  use_thin_strokes: true
+
+draw_bold_text_with_bright_colors: true
+
+cursor:
+  style:
+    shape: Block
+    blinking: Off
+
+live_config_reload: true
+working_directory: ~
+

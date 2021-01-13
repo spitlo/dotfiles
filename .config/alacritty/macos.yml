@@ -1,0 +1,31 @@
+#  ------//
+#      __  ______   __________  _____    _____ _______________________   _____________
+#     /  |/  /   | / ____/ __ \/ ___/   / ___// ____/_  __/_  __/  _/ | / / ____/ ___/
+#    / /|_/ / /| |/ /   / / / /\__ \    \__ \/ __/   / /   / /  / //  |/ / / __ \__ \
+#   / /  / / ___ / /___/ /_/ /___/ /   ___/ / /___  / /   / / _/ // /|  / /_/ /___/ /
+#  /_/  /_/_/  |_\____/\____//____/   /____/_____/ /_/   /_/ /___/_/ |_/\____//____/
+#  -------------------------------- ------------------ ---  ---------- --
+
+alt_send_esc: false
+
+# Shell
+shell:
+ program: /usr/local/bin/bash
+ args:
+   - --login
+
+# Keys
+key_bindings:
+  - { key: V, mods: Command, action: Paste }
+  - { key: C, mods: Command, action: Copy }
+  - { key: H, mods: Command, action: Hide }
+  - { key: M, mods: Command, action: Minimize }
+  - { key: Q, mods: Command, action: Quit }
+  - { key: W, mods: Command, action: Quit }
+  - { key: N, mods: Command, action: SpawnNewInstance }
+  - { key: F, mods: Command|Control, action: ToggleFullscreen }
+  - { key: F, mods: Command, mode: ~Search, action: SearchForward }
+  - { key: B, mods: Command, mode: ~Search, action: SearchBackward }
+
+  # # Enable Alt+z (Used in tmux as prefix)
+  - { key: Z, mods: Alt, chars: "\x1bz" }
