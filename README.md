@@ -13,10 +13,11 @@ https://www.atlassian.com/git/tutorials/dotfiles
 
 ### Short version (YMMV)
 ```bash
-$ git clone --bare git@github.com:spitlo/dotfiles.gits $HOME/.cfg
-$ alias dot='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-$ dot checkout
-$ dot config --local status.showUntrackedFiles no
+git clone --bare git@github.com:spitlo/dotfiles.git $HOME/.cfg
+alias dot='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+dot checkout
+dot config --local status.showUntrackedFiles no
+source "$HOME/.bash_profile"
 ```
 
 ## Termux
