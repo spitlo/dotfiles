@@ -1,1 +1,5 @@
-{}
+{
+  "mkparents": true,
+  "tabsize": 4,
+  "tabstospaces": false
+}
