@@ -1,7 +1,28 @@
 local wezterm = require 'wezterm';
 
+function font_with_fallback(name, params)
+  local names = {name, "Iosevka Term", "Iosevka"}
+  return wezterm.font_with_fallback(names, params)
+end
+
+
 return {
-  font = wezterm.font("Iosevka Term"),
+  font = font_with_fallback("Iosevka Term Light"),
+  font_rules= {
+    {
+      font = font_with_fallback("Iosevka Term Italic"),
+      italic = true,
+    },
+    {
+      italic = true,
+      intensity = "Bold",
+      font = font_with_fallback("Iosevka Term Bold Italic"),
+    },
+    {
+      intensity = "Bold",
+      font = font_with_fallback("Iosevka Term Bold"),
+    },
+  },
   color_scheme = "OceanicMaterial",
   window_padding = {
     left = 4,
