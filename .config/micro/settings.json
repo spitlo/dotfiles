@@ -1,5 +1,5 @@
 {
   "mkparents": true,
-  "tabsize": 4,
-  "tabstospaces": false
+  "tabsize": 2,
+  "tabstospaces": true
 }
