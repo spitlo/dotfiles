@@ -1,5 +1,5 @@
 format='''${custom.tab}$directory$package$git_branch$git_status$nim$zig
-$character
+$hostname$character
 '''
 
 [character]
@@ -36,6 +36,10 @@ staged = ""
 stashed = ""
 style = "bold fg:61"
 untracked = "*"
+
+[hostname]
+ssh_only = true
+format = '\[[$hostname]($style)\] '
 
 [package]
 format = "| [$symbol$version]($style) "
