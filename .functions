@@ -468,6 +468,7 @@ function cdp() {
           nvm use
         fi
         if exists pyenv && [ -e "$folder/.python-version" ]; then
+          pyenv deactivate --quiet
           pyenv activate
           . $HOME/.bash_prompt
           echo -e "Project ${YELLOW}$1${RESET} activated."
