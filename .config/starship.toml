@@ -1,4 +1,4 @@
-format='''${custom.tab}$directory$package$git_branch$git_status$nim$zig
+format='''${custom.tab}$directory$package$git_branch$git_status$nim$zig$nodejs$python
 $hostname$character
 '''
 
@@ -18,6 +18,14 @@ style = "bold fg:61"
 [nim]
 format = " [$symbol($version )]($style)"
 symbol = "nim "
+
+[nodejs]
+format = " [$symbol($version )]($style)"
+symbol = "node "
+
+[python]
+format = ' [${symbol}${pyenv_prefix}($virtualenv)]($style)'
+symbol = ""
 
 [zig]
 format = " [$symbol($version )]($style)"

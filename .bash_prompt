@@ -50,13 +50,28 @@ function statusline() {
   done
 }
 
+function timeline() {
+  # Create a $fill of all screen width minus the time string and a space:
+  (( fillsize=COLUMNS-9 ))
+  fill=""
+  while [ "$fillsize" -gt "0" ]; do
+    fill="-${fill}"
+    (( fillsize=fillsize-1 ))
+  done
+}
+
 function output_statusline() {
   statusline
   echo "$fill $(date +"%T")"
 }
 
+function output_timeline() {
+  timeline
+  echo "$fill $(date +"%T")"
+}
+
 if exists starship; then
-  starship_precmd_user_func="output_statusline"
+  starship_precmd_user_func="output_timeline"
   eval "$(starship init bash)"
 else
   # Prompt variable:
