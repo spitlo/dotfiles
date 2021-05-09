@@ -35,16 +35,16 @@ symbol = "zig "
 # Use something like this?
 # ᐜ ᐝ ᐞ ᐟ ᐠ ᐡ ᐢ ᐣ ᐤ ᐥ ᐦ ᐨ ᐩ ᐪ ᑉ ᑊ ᑋ ᒃ ᒄ ᒡ ᒢ ᒻ ᒼ ᒽ ᒾ ᓐ ᓑ ᓒ ᓪ ᓫ ᔅ ᔆ ᔇ ᔈ ᔉ ᔊ ᔋ ᔥ ᔾ ᔿ ᕐ ᕑ ᕝ ᕪ ᕻ ᕽ ᖅ ᖕ ᖖ ᖟ ᖦ ᖮ ᗮ ᘁ ᙆ ᙇ ᙚ
 [git_status]
-conflicted = "*"
-deleted = "*"
-diverged = ""
-format = "[$all_status]($style)"
-modified = "*"
-renamed = "*"
+conflicted = "[ᒼ](fg:14)"
+deleted = "[ᕽ](fg:9)"
+diverged = "[ᒄ](fg:12)"
+format = " [$all_status]($style)"
+modified = "[ᔿ](fg:11)"
+renamed = "[ᔇ](fg:2)"
 staged = ""
-stashed = ""
+stashed = "[ᙚ](fg:6)"
 style = "bold fg:61"
-untracked = "*"
+untracked = "[ᐡ](fg:10)"
 
 [hostname]
 ssh_only = true
