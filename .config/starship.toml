@@ -1,6 +1,7 @@
 format='''${custom.tab}$directory$package$git_branch$git_status$nim$zig$nodejs$python
 $hostname$character
 '''
+add_newline = false
 
 [character]
 success_symbol = "[➜](bold green) "
@@ -53,9 +54,6 @@ format = '\[[$hostname]($style)\] '
 format = "| [$symbol$version]($style) "
 symbol = "☱ "
 display_private = true
-
-[prompt]
-add_newline = false
 
 [custom]
 
