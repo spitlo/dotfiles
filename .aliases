@@ -151,7 +151,11 @@
   # Get week number
   alias week='date +%V'
 
+  # Get ready for heavy dev!
   alias panu="[[ -e ./.python-version ]] && pyenv activate > /dev/null || pyenv deactivate -q; [[ -e ./.nvmrc ]] && nvm use 2> /dev/null || nvm use default"
+
+  # Download all episodes of a show
+  alias svteps="svtplay-dl -q 1500 -Q 500 -S --exclude=syntolkat,teckentolkat,teckensprakstolkat -A"
 
 ##------------##
 ## OS X STUFF ##
@@ -168,5 +172,3 @@
 
   # Remove duplicates from "Open with" menu
   alias fixowdupes='/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -kill -r -domain local -domain user;killall Finder;echo "Open With has been rebuilt, Finder will relaunch"'
-
-  alias svteps="svtplay-dl -q 1500 -Q 500 -S --exclude=syntolkat,teckentolkat,teckensprakstolkat -A"
