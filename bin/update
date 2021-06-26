@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1090
+set -eu
+
+# Constants
+NC='\033[0m'
+RED='\033[0;31m'
+BROWN='\033[0;33m'
+GREEN='\033[1;32m'
+USAGE="
+${BROWN}Usage${NC}: $0 [command]
+Utility script to update a few smaller commands that live in my ~/bin dir.
+Available commands to update: ${GREEN}
+svtplay-dl
+gron
+delta
+starship
+${NC}(Well, gron doesn’t work at the moment since it only does prereleases which are not visible in the Github API)"
+
+os="linux"
+if [[ "$OSTYPE" =~ ^darwin ]]; then
+  os="macos"
+elif [[ "$OSTYPE" = "linux-android" ]]; then
+  os="termux"
+fi
+
+mkdir -p ~/tmp
+
+# Utility functions
+print_help() {
+  echo -e "$USAGE"
+  exit 0
+}
+
+get_github_version() {
+  local latest_version=$(
+    curl \
+      --silent \
+      --header "Accept: application/vnd.github.v3+json" \
+      "https://api.github.com/repos/$1/releases/latest" |
+    grep '"tag_name":' |
+    sed -E 's/.*"([^"]+)".*/\1/'
+  )
+  echo "$latest_version"
+}
+
+# Update functions
+function update_svt() {
+  curl -L https://svtplay-dl.se/download/latest/svtplay-dl -o ~/bin/svtplay-dl
+  chmod +x ~/bin/svtplay-dl
+}
+
+function update_gron() {
+  echo -e "${RED}SORRY!${NC} Downloading gron is not posible at the moment."
+  exit 1
+  local latest_version=$(get_github_version "tomnomnom/gron")
+  if [[ "$os" = "macos" ]]; then
+    filename="gron-darwin-amd64-$latest_version.tgz"
+  elif [[ "$os" = "termux" ]]; then
+    filename="gron-linux-arm64-$latest_version.tgz"
+  fi
+  curl -L https://github.com/tomnomnom/gron/releases/download/"$latest_version"/"$filename" -o ~/tmp/gron.tgz
+  tar xzf ~/tmp/gron.tgz
+  mv ~/tmp/gron ~/bin/
+}
+
+function update_starship() {
+  local repo="starship/starship"
+  local latest_version=$(get_github_version "$repo")
+  echo "Downloading starship $latest_version"
+  if [[ "$os" = "macos" ]]; then
+    filename="starship-x86_64-apple-darwin.tar.gz"
+  elif [[ "$os" = "termux" ]]; then
+    echo -e "Please run ${BROWN}apt upgrade starship${NC} instead."
+    exit 0
+  elif [[ "$os" = "linux" ]]; then
+    filename="starship-x86_64-unknown-linux-gnu.tar.gz"
+  fi
+  curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/starship.tgz
+  tar xzf ~/tmp/starship.tgz --directory ~/tmp
+  mv ~/tmp/starship ~/bin/
+}
+
+function update_delta() {
+  local repo="dandavison/delta"
+  local latest_version=$(get_github_version "$repo")
+  echo "Downloading delta $latest_version"
+  if [[ "$os" = "macos" ]]; then
+    filename="delta-$latest_version-x86_64-apple-darwin.tar.gz"
+  elif [[ "$os" = "termux" ]]; then
+    echo -e "Please run ${BROWN}apt upgrade git-delta${NC} instead."
+    exit 0
+  elif [[ "$os" = "linux" ]]; then
+    filename="delta-$latest_version-x86_64-unknown-linux-gnu.tar.gz"
+  fi
+  curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/delta.tgz
+  # --strip 1 makes sure we only get the files and not an extra container directory
+  tar xzf ~/tmp/delta.tgz --directory ~/tmp --strip 1
+  mv ~/tmp/delta ~/bin/
+}
+
+command="${1:-}"
+case "$command" in
+  "svtplay-dl" | "svt" | "svtplay") update_svt ;;
+  "gron") update_gron ;;
+  "starship") update_starship ;;
+  "delta") update_delta ;;
+  *) print_help ;;
+esac
