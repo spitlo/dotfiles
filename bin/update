@@ -2,6 +2,10 @@
 # shellcheck disable=SC1090
 set -eu
 
+# Binenv does about the same as this script: https://github.com/devops-works/binenv
+# Commands we might want to support (from the binenv list):
+# bat, fzf, zola, 
+
 # Constants
 NC='\033[0m'
 RED='\033[0;31m'
