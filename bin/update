@@ -15,11 +15,12 @@ USAGE="
 ${BROWN}Usage${NC}: $0 [command]
 Utility script to update a few smaller commands that live in my ~/bin dir.
 Available commands to update: ${GREEN}
-svtplay-dl
-gron
-delta
-starship
 bombadillo
+delta
+gron
+micro
+starship
+svtplay-dl
 ${NC}(Well, gron doesn’t work at the moment since it only does prereleases which are not visible in the Github API)"
 
 os="linux"
@@ -64,41 +65,22 @@ get_tildegit_version() {
 }
 
 # Update functions
-function update_svt() {
-  echo "Downloading latest version of svtplay-dl"
-  curl -L https://svtplay-dl.se/download/latest/svtplay-dl -o ~/bin/svtplay-dl
-  chmod +x ~/bin/svtplay-dl
-}
-
-function update_gron() {
-  echo -e "${RED}SORRY!${NC} Downloading gron is not posible at the moment."
-  exit 1
-  local latest_version=$(get_github_version "tomnomnom/gron")
+function update_bombadillo() {
+  local repo="sloum/bombadillo"
+  local latest_version=$(get_tildegit_version "$repo")
   if [[ "$os" = "macos" ]]; then
-    filename="gron-darwin-amd64-$latest_version.tgz"
+    filename="bombadillo-""$latest_version""_osx_64.zip"
   elif [[ "$os" = "termux" ]]; then
-    filename="gron-linux-arm64-$latest_version.tgz"
-  fi
-  curl -L https://github.com/tomnomnom/gron/releases/download/"$latest_version"/"$filename" -o ~/tmp/gron.tgz
-  tar xzf ~/tmp/gron.tgz
-  mv ~/tmp/gron ~/bin/
-}
-
-function update_starship() {
-  local repo="starship/starship"
-  local latest_version=$(get_github_version "$repo")
-  if [[ "$os" = "macos" ]]; then
-    filename="starship-x86_64-apple-darwin.tar.gz"
-  elif [[ "$os" = "termux" ]]; then
-    echo -e "Please run ${BROWN}apt upgrade starship${NC} instead."
-    exit 0
+    filename="bombadillo-""$latest_version""_linux_arm.zip"
   elif [[ "$os" = "linux" ]]; then
-    filename="starship-x86_64-unknown-linux-gnu.tar.gz"
+    filename="bombadillo-""$latest_version""_linux_amd64.zip"
   fi
-  echo "Downloading starship $latest_version"
-  curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/starship.tgz
-  tar xzf ~/tmp/starship.tgz --directory ~/tmp
-  mv ~/tmp/starship ~/bin/
+  echo "Downloading bombadillo $latest_version"
+  curl -L https://bombadillo.colorfield.space/binaries/"$filename" -o ~/tmp/bombadillo.zip
+  unzip -qqo ~/tmp/bombadillo.zip -d ~/tmp
+  mv ~/tmp/bombadillo ~/bin/
+  mv ~/tmp/bombadillo.1 ~/bin/
+  chmod u+x ~/bin/bombadillo
 }
 
 function update_delta() {
@@ -119,30 +101,68 @@ function update_delta() {
   mv ~/tmp/delta ~/bin/
 }
 
-function update_bombadillo() {
-  local repo="sloum/bombadillo"
-  local latest_version=$(get_tildegit_version "$repo")
+function update_gron() {
+  echo -e "${RED}SORRY!${NC} Downloading gron is not posible at the moment."
+  exit 1
+  local latest_version=$(get_github_version "tomnomnom/gron")
   if [[ "$os" = "macos" ]]; then
-    filename="bombadillo-""$latest_version""_osx_64.zip"
+    filename="gron-darwin-amd64-$latest_version.tgz"
   elif [[ "$os" = "termux" ]]; then
-    filename="bombadillo-""$latest_version""_linux_arm.zip"
-  elif [[ "$os" = "linux" ]]; then
-    filename="bombadillo-""$latest_version""_linux_amd64.zip"
+    filename="gron-linux-arm64-$latest_version.tgz"
   fi
-  echo "Downloading bombadillo $latest_version"
-  curl -L https://bombadillo.colorfield.space/binaries/"$filename" -o ~/tmp/bombadillo.zip
-  unzip -qqo ~/tmp/bombadillo.zip -d ~/tmp
-  mv ~/tmp/bombadillo ~/bin/
-  mv ~/tmp/bombadillo.1 ~/bin/
-  chmod u+x ~/bin/bombadillo
+  curl -L https://github.com/tomnomnom/gron/releases/download/"$latest_version"/"$filename" -o ~/tmp/gron.tgz
+  tar xzf ~/tmp/gron.tgz
+  mv ~/tmp/gron ~/bin/
+}
+
+function update_micro() {
+  local repo="zyedidia/micro"
+  local latest_version=$(get_github_version "$repo")
+  local clean_version=$(echo "$latest_version" | tr -d 'v')
+  if [[ "$os" = "macos" ]]; then
+    filename="micro-$clean_version-osx.tar.gz"
+  elif [[ "$os" = "termux" ]]; then
+    echo -e "Please run ${BROWN}apt upgrade micro${NC} instead."
+    exit 0
+  elif [[ "$os" = "linux" ]]; then
+    filename="micro-$clean_version-linux64.tar.gz"
+  fi
+  echo "Downloading micro $latest_version"
+  # curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/micro.tgz
+  tar xzf ~/tmp/micro.tgz --directory ~/tmp --strip 1
+  mv ~/tmp/micro ~/bin/
+}
+
+function update_starship() {
+  local repo="starship/starship"
+  local latest_version=$(get_github_version "$repo")
+  if [[ "$os" = "macos" ]]; then
+    filename="starship-x86_64-apple-darwin.tar.gz"
+  elif [[ "$os" = "termux" ]]; then
+    echo -e "Please run ${BROWN}apt upgrade starship${NC} instead."
+    exit 0
+  elif [[ "$os" = "linux" ]]; then
+    filename="starship-x86_64-unknown-linux-gnu.tar.gz"
+  fi
+  echo "Downloading starship $latest_version"
+  curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/starship.tgz
+  tar xzf ~/tmp/starship.tgz --directory ~/tmp
+  mv ~/tmp/starship ~/bin/
+}
+
+function update_svt() {
+  echo "Downloading latest version of svtplay-dl"
+  curl -L https://svtplay-dl.se/download/latest/svtplay-dl -o ~/bin/svtplay-dl
+  chmod u+x ~/bin/svtplay-dl
 }
 
 command="${1:-}"
 case "$command" in
-  "svtplay-dl" | "svt" | "svtplay") update_svt ;;
-  "gron") update_gron ;;
-  "starship") update_starship ;;
-  "delta") update_delta ;;
   "bombadillo") update_bombadillo ;;
+  "delta") update_delta ;;
+  "gron") update_gron ;;
+  "micro") update_micro ;;
+  "starship") update_starship ;;
+  "svtplay-dl" | "svt" | "svtplay") update_svt ;;
   *) print_help ;;
 esac
