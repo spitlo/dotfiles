@@ -21,6 +21,7 @@ gron
 micro
 starship
 svtplay-dl
+youtube-dl
 ${NC}(Well, gron doesn’t work at the moment since it only does prereleases which are not visible in the Github API)"
 
 os="linux"
@@ -160,7 +161,6 @@ function update_youtube() {
   echo "Downloading latest version of youtube-dl"
   curl -L https://yt-dl.org/downloads/latest/youtube-dl -o ~/bin/youtube-dl
   chmod u+x ~/bin/youtube-dl
-
 }
 
 command="${1:-}"
@@ -170,7 +170,7 @@ case "$command" in
   "gron") update_gron ;;
   "micro") update_micro ;;
   "starship") update_starship ;;
-  "svtplay-dl" | "svt" | "svtplay") update_svt ;;
-  "youtube-dl" | "ytdl" | "yt") update_youtube ;;
+  "svtplay-dl" | "svtplay" | "svt") update_svt ;;
+  "youtube-dl" | "youtube" | "ytdl" | "yt") update_youtube ;;
   *) print_help ;;
 esac
