@@ -156,6 +156,13 @@ function update_svt() {
   chmod u+x ~/bin/svtplay-dl
 }
 
+function update_youtube() {
+  echo "Downloading latest version of youtube-dl"
+  curl -L https://yt-dl.org/downloads/latest/youtube-dl -o ~/bin/youtube-dl
+  chmod u+x ~/bin/youtube-dl
+
+}
+
 command="${1:-}"
 case "$command" in
   "bombadillo") update_bombadillo ;;
@@ -164,5 +171,6 @@ case "$command" in
   "micro") update_micro ;;
   "starship") update_starship ;;
   "svtplay-dl" | "svt" | "svtplay") update_svt ;;
+  "youtube-dl" | "ytdl" | "yt") update_youtube ;;
   *) print_help ;;
 esac
