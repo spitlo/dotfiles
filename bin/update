@@ -4,7 +4,7 @@ set -eu
 
 # Binenv does about the same as this script: https://github.com/devops-works/binenv
 # Commands we might want to support (from the binenv list):
-# ~bat~, fzf, ~zola~...
+# ~bat~, ~fzf~, ~zola~...
 
 # Constants
 BLUE='\033[1;34m'
@@ -19,6 +19,7 @@ Available commands to update: ${GREEN}
 bat
 bombadillo
 delta
+fzf
 gron
 micro
 nb
@@ -92,7 +93,6 @@ function update_bat() {
   get_confirmation "$local_version" "$latest_version"
 
   if [[ "$os" = "macos" ]]; then
-    # bat-v0.18.3-x86_64-apple-darwin.tar.gz
     filename="bat-$latest_version-x86_64-apple-darwin.tar.gz"
   elif [[ "$os" = "termux" ]]; then
     echo -e "Please run ${BROWN}apt upgrade bat${NC} instead."
@@ -153,6 +153,32 @@ function update_delta() {
   # --strip 1 makes sure we only get the files and not an extra container directory
   tar xzf ~/tmp/delta.tgz --directory ~/tmp --strip 1
   mv ~/tmp/delta ~/bin/
+}
+
+function update_fzf() {
+  local repo="junegunn/fzf"
+  local local_version
+  local latest_version
+  local_version=$(fzf --version)
+  latest_version=$(get_github_version "$repo")
+  # Give user a chance to exit
+  get_confirmation "$local_version" "$latest_version"
+
+  echo "Downloading fzf $latest_version"
+  if [[ "$os" = "macos" ]]; then
+    filename="fzf-$latest_version-darwin_amd64.zip"
+    curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/fzf.zip
+    unzip -qqo ~/tmp/fzf.zip -d ~/tmp
+  elif [[ "$os" = "termux" ]]; then
+    echo -e "Please run ${BROWN}apt upgrade fzf${NC} instead."
+    exit 0
+  elif [[ "$os" = "linux" ]]; then
+    filename="fzf-$latest_version-linux_amd64.tar.gz"
+    curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/fzf.tgz
+    tar xzf ~/tmp/fzf.tgz --directory ~/tmp --strip 1
+  fi
+
+  mv ~/tmp/fzf ~/bin/
 }
 
 function update_gron() {
@@ -269,6 +295,7 @@ case "$command" in
   "bat") update_bat ;;
   "bombadillo") update_bombadillo ;;
   "delta") update_delta ;;
+  "fzf") update_fzf ;;
   "gron") update_gron ;;
   "micro") update_micro ;;
   "nb") update_nb ;;
