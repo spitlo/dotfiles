@@ -4,7 +4,7 @@ set -eu
 
 # Binenv does about the same as this script: https://github.com/devops-works/binenv
 # Commands we might want to support (from the binenv list):
-# bat, fzf, zola...
+# ~bat~, fzf, ~zola~...
 
 # Constants
 BLUE='\033[1;34m'
@@ -16,6 +16,7 @@ USAGE="
 ${BROWN}Usage${NC}: $0 [command]
 Utility script to update a few smaller commands that live in my ~/bin dir.
 Available commands to update: ${GREEN}
+bat
 bombadillo
 delta
 gron
@@ -81,6 +82,31 @@ function get_confirmation() {
 }
 
 # Update functions
+function update_bat() {
+  local repo="sharkdp/bat"
+  local local_version
+  local latest_version
+  local_version=$(bat --version)
+  latest_version=$(get_github_version "$repo")
+  # Give user a chance to exit
+  get_confirmation "$local_version" "$latest_version"
+
+  if [[ "$os" = "macos" ]]; then
+    # bat-v0.18.3-x86_64-apple-darwin.tar.gz
+    filename="bat-$latest_version-x86_64-apple-darwin.tar.gz"
+  elif [[ "$os" = "termux" ]]; then
+    echo -e "Please run ${BROWN}apt upgrade bat${NC} instead."
+    exit 0
+  elif [[ "$os" = "linux" ]]; then
+    filename="bat-$latest_version-x86_64-unknown-linux-gnu.tar.gz"
+  fi
+  echo "Downloading bat $latest_version"
+  curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/bat.tgz
+  # --strip 1 makes sure we only get the files and not an extra container directory
+  tar xzf ~/tmp/bat.tgz --directory ~/tmp --strip 1
+  mv ~/tmp/bat ~/bin/
+}
+
 function update_bombadillo() {
   local repo="sloum/bombadillo"
   local local_version
@@ -240,6 +266,7 @@ function update_zola() {
 
 command="${1:-}"
 case "$command" in
+  "bat") update_bat ;;
   "bombadillo") update_bombadillo ;;
   "delta") update_delta ;;
   "gron") update_gron ;;
