@@ -4,7 +4,7 @@ set -eu
 
 # Binenv does about the same as this script: https://github.com/devops-works/binenv
 # Commands we might want to support (from the binenv list):
-# bat, fzf, zola, 
+# bat, fzf, zola...
 
 # Constants
 BLUE='\033[1;34m'
@@ -20,6 +20,7 @@ bombadillo
 delta
 gron
 micro
+nb
 starship
 svtplay-dl
 youtube-dl
@@ -143,6 +144,12 @@ function update_micro() {
   mv ~/tmp/micro ~/bin/
 }
 
+function update_nb() {
+  curl -L https://raw.github.com/xwmx/nb/master/nb -o ~/bin/nb &&
+  chmod +x ~/bin/nb &&
+  nb completions install --download
+}
+
 function update_starship() {
   local repo="starship/starship"
   local latest_version
@@ -197,6 +204,7 @@ case "$command" in
   "delta") update_delta ;;
   "gron") update_gron ;;
   "micro") update_micro ;;
+  "nb") update_nb ;;
   "starship") update_starship ;;
   "svtplay-dl" | "svtplay" | "svt") update_svt ;;
   "youtube-dl" | "youtube" | "ytdl" | "yt") update_youtube ;;
