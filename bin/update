@@ -74,26 +74,26 @@ get_tildegit_version() {
 }
 
 function get_confirmation() {
-  if [ -z "$force" ]; then
-    echo -e "${YELLOW}Local version${NC}: $1"
-    echo -e "${YELLOW}Latest version${NC}: $2"
-    read -erp "Continue? (y/n) " -n 1
-    if [ "$REPLY" != "y" ]; then
-      echo -e "\nOk, quitting!\n${BLUE}Bye!${NC}"
-      exit 0
-    fi
+  echo -e "${YELLOW}Local version${NC}: $1"
+  echo -e "${YELLOW}Latest version${NC}: $2"
+  read -erp "Continue? (y/n) " -n 1
+  if [ "$REPLY" != "y" ]; then
+    echo -e "\nOk, quitting!\n${BLUE}Bye!${NC}"
+    exit 0
   fi
 }
 
 # Update functions
 function update_bat() {
   local repo="sharkdp/bat"
-  local local_version
   local latest_version
-  local_version=$(bat --version)
   latest_version=$(get_github_version "$repo")
   # Give user a chance to exit
-  get_confirmation "$local_version" "$latest_version"
+  if [ -z "$force" ]; then
+    local local_version
+    local_version=$(bat --version)
+    get_confirmation "$local_version" "$latest_version"
+  fi
 
   if [[ "$os" = "macos" ]]; then
     filename="bat-$latest_version-x86_64-apple-darwin.tar.gz"
@@ -112,12 +112,14 @@ function update_bat() {
 
 function update_bombadillo() {
   local repo="sloum/bombadillo"
-  local local_version
   local latest_version
-  local_version=$(bombadillo -v)
   latest_version=$(get_tildegit_version "$repo")
   # Give user a chance to exit
-  get_confirmation "$local_version" "$latest_version"
+  if [ -z "$force" ]; then
+    local local_version
+    local_version=$(bombadillo -v)
+    get_confirmation "$local_version" "$latest_version"
+  fi
 
   if [[ "$os" = "macos" ]]; then
     filename="bombadillo-""$latest_version""_osx_64.zip"
@@ -136,12 +138,14 @@ function update_bombadillo() {
 
 function update_delta() {
   local repo="dandavison/delta"
-  local local_version
   local latest_version
-  local_version=$(delta --version)
   latest_version=$(get_github_version "$repo")
   # Give user a chance to exit
-  get_confirmation "$local_version" "$latest_version"
+  if [ -z "$force" ]; then
+    local local_version
+    local_version=$(delta --version)
+    get_confirmation "$local_version" "$latest_version"
+  fi
 
   if [[ "$os" = "macos" ]]; then
     filename="delta-$latest_version-x86_64-apple-darwin.tar.gz"
@@ -160,12 +164,14 @@ function update_delta() {
 
 function update_fzf() {
   local repo="junegunn/fzf"
-  local local_version
   local latest_version
-  local_version=$(fzf --version)
   latest_version=$(get_github_version "$repo")
   # Give user a chance to exit
-  get_confirmation "$local_version" "$latest_version"
+  if [ -z "$force" ]; then
+    local local_version
+    local_version=$(fzf --version)
+    get_confirmation "$local_version" "$latest_version"
+  fi
 
   echo "Downloading fzf $latest_version"
   if [[ "$os" = "macos" ]]; then
@@ -187,12 +193,14 @@ function update_fzf() {
 function update_gron() {
   echo -e "${RED}SORRY!${NC} Downloading gron is not posible at the moment."
   exit 1
-  local local_version
   local latest_version
-  local_version=$(gron --version)
   latest_version=$(get_github_version "tomnomnom/gron")
   # Give user a chance to exit
-  get_confirmation "$local_version" "$latest_version"
+  if [ -z "$force" ]; then
+    local local_version
+    local_version=$(gron --version)
+    get_confirmation "$local_version" "$latest_version"
+  fi
 
   if [[ "$os" = "macos" ]]; then
     filename="gron-darwin-amd64-$latest_version.tgz"
@@ -206,12 +214,14 @@ function update_gron() {
 
 function update_micro() {
   local repo="zyedidia/micro"
-  local local_version
   local latest_version
-  local_version=$(micro --version)
   latest_version=$(get_github_version "$repo")
   # Give user a chance to exit
-  get_confirmation "$local_version" "$latest_version"
+  if [ -z "$force" ]; then
+    local local_version
+    local_version=$(micro --version)
+    get_confirmation "$local_version" "$latest_version"
+  fi
 
   local clean_version
   clean_version=$(echo "$latest_version" | tr -d 'v')
@@ -237,12 +247,14 @@ function update_nb() {
 
 function update_starship() {
   local repo="starship/starship"
-  local local_version
   local latest_version
-  local_version=$(starship --version)
   latest_version=$(get_github_version "$repo")
   # Give user a chance to exit
-  get_confirmation "$local_version" "$latest_version"
+  if [ -z "$force" ]; then
+    local local_version
+    local_version=$(starship --version)
+    get_confirmation "$local_version" "$latest_version"
+  fi
 
   if [[ "$os" = "macos" ]]; then
     filename="starship-x86_64-apple-darwin.tar.gz"
@@ -272,12 +284,14 @@ function update_youtube() {
 
 function update_zola() {
   local repo="getzola/zola"
-  local local_version
   local latest_version
-  local_version=$(zola --version)
   latest_version=$(get_github_version "$repo")
   # Give user a chance to exit
-  get_confirmation "$local_version" "$latest_version"
+  if [ -z "$force" ]; then
+    local local_version
+    local_version=$(zola --version)
+    get_confirmation "$local_version" "$latest_version"
+  fi
 
   if [[ "$os" = "macos" ]]; then
     filename="zola-$latest_version-x86_64-apple-darwin.tar.gz"
