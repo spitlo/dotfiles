@@ -31,3 +31,4 @@ $ pkg install ncurses-utils
 ## Todo
 
 - [ ] Add possibility to override version check to `update` command (good for first time installs)
+- [ ] Make `update` work on Rasberry Pi 400
