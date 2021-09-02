@@ -4,7 +4,7 @@ set -eu
 
 # Binenv does about the same as this script: https://github.com/devops-works/binenv
 # Commands we might want to support (from the binenv list):
-# ~bat~, ~fzf~, ~zola~...
+# ~bat~, ~fzf~, ~zola~, git-extras
 
 # Constants
 BLUE='\033[1;34m'
