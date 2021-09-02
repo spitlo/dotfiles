@@ -35,6 +35,7 @@ if [[ "$OSTYPE" =~ ^darwin ]]; then
 elif [[ "$OSTYPE" = "linux-android" ]]; then
   os="termux"
 fi
+force="${UPDATE_FORCE_INSTALL:-}"
 
 mkdir -p ~/tmp
 
@@ -73,12 +74,14 @@ get_tildegit_version() {
 }
 
 function get_confirmation() {
-  echo -e "${YELLOW}Local version${NC}: $1"
-  echo -e "${YELLOW}Latest version${NC}: $2"
-  read -erp "Continue? (y/n) " -n 1
-  if [ "$REPLY" != "y" ]; then
-    echo -e "\nOk, quitting!\n${BLUE}Bye!${NC}"
-    exit 0
+  if [ -z "$force" ]; then
+    echo -e "${YELLOW}Local version${NC}: $1"
+    echo -e "${YELLOW}Latest version${NC}: $2"
+    read -erp "Continue? (y/n) " -n 1
+    if [ "$REPLY" != "y" ]; then
+      echo -e "\nOk, quitting!\n${BLUE}Bye!${NC}"
+      exit 0
+    fi
   fi
 }
 
