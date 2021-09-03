@@ -32,3 +32,4 @@ $ pkg install ncurses-utils
 
 - [ ] Add possibility to override version check to `update` command (good for first time installs)
 - [ ] Make `update` work on Rasberry Pi 400
+- [ ] Add support for SHA256 checksum to `update`

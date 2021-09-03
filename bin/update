@@ -34,6 +34,8 @@ if [[ "$OSTYPE" =~ ^darwin ]]; then
   os="macos"
 elif [[ "$OSTYPE" = "linux-android" ]]; then
   os="termux"
+elif [[ "$OSTYPE" = "linux-gnueabihf" ]]; then
+  os="raspberry"
 fi
 force="${UPDATE_FORCE_INSTALL:-}"
 
@@ -100,6 +102,8 @@ function update_bat() {
   elif [[ "$os" = "termux" ]]; then
     echo -e "Please run ${BROWN}apt upgrade bat${NC} instead."
     exit 0
+  elif [[ "$os" = "raspberry" ]]; then
+    filename="bat-$latest_version-arm-unknown-linux-gnueabihf.tar.gz"
   elif [[ "$os" = "linux" ]]; then
     filename="bat-$latest_version-x86_64-unknown-linux-gnu.tar.gz"
   fi
@@ -123,7 +127,7 @@ function update_bombadillo() {
 
   if [[ "$os" = "macos" ]]; then
     filename="bombadillo-""$latest_version""_osx_64.zip"
-  elif [[ "$os" = "termux" ]]; then
+  elif [[ "$os" = "termux" ]] || [[ "$os" = "raspberry" ]]; then
     filename="bombadillo-""$latest_version""_linux_arm.zip"
   elif [[ "$os" = "linux" ]]; then
     filename="bombadillo-""$latest_version""_linux_amd64.zip"
@@ -152,6 +156,8 @@ function update_delta() {
   elif [[ "$os" = "termux" ]]; then
     echo -e "Please run ${BROWN}apt upgrade git-delta${NC} instead."
     exit 0
+  elif [[ "$os" = "raspberry" ]]; then
+    filename="delta-$latest_version-arm-unknown-linux-gnueabihf.tar.gz"
   elif [[ "$os" = "linux" ]]; then
     filename="delta-$latest_version-x86_64-unknown-linux-gnu.tar.gz"
   fi
@@ -181,8 +187,12 @@ function update_fzf() {
   elif [[ "$os" = "termux" ]]; then
     echo -e "Please run ${BROWN}apt upgrade fzf${NC} instead."
     exit 0
-  elif [[ "$os" = "linux" ]]; then
-    filename="fzf-$latest_version-linux_amd64.tar.gz"
+  elif [[ "$os" = "linux" ]] || [[ "$os" = "raspberry" ]]; then
+      if [[ "$os" = "raspberry" ]]; then
+        filename="fzf-$latest_version-linux_armv7.tar.gz"
+      else
+        filename="fzf-$latest_version-linux_amd64.tar.gz"
+      fi
     curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/fzf.tgz
     tar xzf ~/tmp/fzf.tgz --directory ~/tmp --strip 1
   fi
@@ -230,6 +240,8 @@ function update_micro() {
   elif [[ "$os" = "termux" ]]; then
     echo -e "Please run ${BROWN}apt upgrade micro${NC} instead."
     exit 0
+  elif [[ "$os" = "raspberry" ]]; then
+    filename="micro-$clean_version-linux-arm64.tar.gz"
   elif [[ "$os" = "linux" ]]; then
     filename="micro-$clean_version-linux64.tar.gz"
   fi
@@ -261,6 +273,8 @@ function update_starship() {
   elif [[ "$os" = "termux" ]]; then
     echo -e "Please run ${BROWN}apt upgrade starship${NC} instead."
     exit 0
+  elif [[ "$os" = "raspberry" ]]; then
+    filename="starship-aarch64-unknown-linux-musl.tar.gz"
   elif [[ "$os" = "linux" ]]; then
     filename="starship-x86_64-unknown-linux-gnu.tar.gz"
   fi
@@ -295,8 +309,8 @@ function update_zola() {
 
   if [[ "$os" = "macos" ]]; then
     filename="zola-$latest_version-x86_64-apple-darwin.tar.gz"
-  elif [[ "$os" = "termux" ]]; then
-    echo -e "Sorry, ${BLUE}zola${NC} is not available for termux."
+  elif [[ "$os" = "termux" ]] || [[ "$os" = "raspberry" ]]; then
+    echo -e "Sorry, ${BLUE}zola${NC} is not available for $os."
     exit 0
   elif [[ "$os" = "linux" ]]; then
     filename="zola-$latest_version-x86_64-unknown-linux-gnu.tar.gz"
