@@ -107,7 +107,7 @@ function update_bat() {
   elif [[ "$os" = "linux" ]]; then
     filename="bat-$latest_version-x86_64-unknown-linux-gnu.tar.gz"
   fi
-  echo "Downloading bat $latest_version"
+  echo "Downloading bat $latest_version from $filename"
   curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/bat.tgz
   # --strip 1 makes sure we only get the files and not an extra container directory
   tar xzf ~/tmp/bat.tgz --directory ~/tmp --strip 1
@@ -132,7 +132,7 @@ function update_bombadillo() {
   elif [[ "$os" = "linux" ]]; then
     filename="bombadillo-""$latest_version""_linux_amd64.zip"
   fi
-  echo "Downloading bombadillo $latest_version"
+  echo "Downloading bombadillo $latest_version from $filename"
   curl -L https://bombadillo.colorfield.space/binaries/"$filename" -o ~/tmp/bombadillo.zip
   unzip -qqo ~/tmp/bombadillo.zip -d ~/tmp
   mv ~/tmp/bombadillo ~/bin/
@@ -161,7 +161,7 @@ function update_delta() {
   elif [[ "$os" = "linux" ]]; then
     filename="delta-$latest_version-x86_64-unknown-linux-gnu.tar.gz"
   fi
-  echo "Downloading delta $latest_version"
+  echo "Downloading delta $latest_version from $filename"
   curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/delta.tgz
   # --strip 1 makes sure we only get the files and not an extra container directory
   tar xzf ~/tmp/delta.tgz --directory ~/tmp --strip 1
@@ -179,7 +179,7 @@ function update_fzf() {
     get_confirmation "$local_version" "$latest_version"
   fi
 
-  echo "Downloading fzf $latest_version"
+  echo "Downloading fzf $latest_version from $filename"
   if [[ "$os" = "macos" ]]; then
     filename="fzf-$latest_version-darwin_amd64.zip"
     curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/fzf.zip
@@ -245,7 +245,7 @@ function update_micro() {
   elif [[ "$os" = "linux" ]]; then
     filename="micro-$clean_version-linux64.tar.gz"
   fi
-  echo "Downloading micro $latest_version"
+  echo "Downloading micro $latest_version from $filename"
   curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/micro.tgz
   tar xzf ~/tmp/micro.tgz --directory ~/tmp --strip 1
   mv ~/tmp/micro ~/bin/
@@ -278,7 +278,7 @@ function update_starship() {
   elif [[ "$os" = "linux" ]]; then
     filename="starship-x86_64-unknown-linux-gnu.tar.gz"
   fi
-  echo "Downloading starship $latest_version"
+  echo "Downloading starship $latest_version from $filename"
   curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/starship.tgz
   tar xzf ~/tmp/starship.tgz --directory ~/tmp
   mv ~/tmp/starship ~/bin/
@@ -315,7 +315,7 @@ function update_zola() {
   elif [[ "$os" = "linux" ]]; then
     filename="zola-$latest_version-x86_64-unknown-linux-gnu.tar.gz"
   fi
-  echo -e "Downloading ${BLUE}zola${NC} $latest_version"
+  echo -e "Downloading ${BLUE}zola${NC} $latest_version from $filename"
   curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/zola.tgz
   tar xzf ~/tmp/zola.tgz --directory ~/tmp
   mv ~/tmp/zola ~/bin/
