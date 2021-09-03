@@ -107,7 +107,7 @@ function update_bat() {
   elif [[ "$os" = "linux" ]]; then
     filename="bat-$latest_version-x86_64-unknown-linux-gnu.tar.gz"
   fi
-  echo "Downloading ${BLUE}bat${NC} $latest_version ($filename)"
+  echo -e "Downloading ${BLUE}bat${NC} $latest_version ($filename)"
   curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/bat.tgz
   # --strip 1 makes sure we only get the files and not an extra container directory
   tar xzf ~/tmp/bat.tgz --directory ~/tmp --strip 1
@@ -132,7 +132,7 @@ function update_bombadillo() {
   elif [[ "$os" = "linux" ]]; then
     filename="bombadillo-""$latest_version""_linux_amd64.zip"
   fi
-  echo "Downloading ${BLUE}bombadillo${NC} $latest_version ($filename)"
+  echo -e "Downloading ${BLUE}bombadillo${NC} $latest_version ($filename)"
   curl -L https://bombadillo.colorfield.space/binaries/"$filename" -o ~/tmp/bombadillo.zip
   unzip -qqo ~/tmp/bombadillo.zip -d ~/tmp
   mv ~/tmp/bombadillo ~/bin/
@@ -161,7 +161,7 @@ function update_delta() {
   elif [[ "$os" = "linux" ]]; then
     filename="delta-$latest_version-x86_64-unknown-linux-gnu.tar.gz"
   fi
-  echo "Downloading ${BLUE}delta${NC} $latest_version ($filename)"
+  echo -e "Downloading ${BLUE}delta${NC} $latest_version ($filename)"
   curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/delta.tgz
   # --strip 1 makes sure we only get the files and not an extra container directory
   tar xzf ~/tmp/delta.tgz --directory ~/tmp --strip 1
@@ -181,7 +181,7 @@ function update_fzf() {
 
   if [[ "$os" = "macos" ]]; then
     filename="fzf-$latest_version-darwin_amd64.zip"
-    echo "Downloading ${BLUE}fzf${NC} $latest_version ($filename)"
+    echo -e "Downloading ${BLUE}fzf${NC} $latest_version ($filename)"
     curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/fzf.zip
     unzip -qqo ~/tmp/fzf.zip -d ~/tmp
   elif [[ "$os" = "termux" ]]; then
@@ -193,7 +193,7 @@ function update_fzf() {
       else
         filename="fzf-$latest_version-linux_amd64.tar.gz"
       fi
-    echo "Downloading ${BLUE}fzf${NC} $latest_version ($filename)"
+    echo -e "Downloading ${BLUE}fzf${NC} $latest_version ($filename)"
     curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/fzf.tgz
     tar xzf ~/tmp/fzf.tgz --directory ~/tmp --strip 1
   fi
@@ -246,7 +246,7 @@ function update_micro() {
   elif [[ "$os" = "linux" ]]; then
     filename="micro-$clean_version-linux64.tar.gz"
   fi
-  echo "Downloading ${BLUE}micro${NC} $latest_version ($filename)"
+  echo -e "Downloading ${BLUE}micro${NC} $latest_version ($filename)"
   curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/micro.tgz
   tar xzf ~/tmp/micro.tgz --directory ~/tmp --strip 1
   mv ~/tmp/micro ~/bin/
@@ -279,20 +279,20 @@ function update_starship() {
   elif [[ "$os" = "linux" ]]; then
     filename="starship-x86_64-unknown-linux-gnu.tar.gz"
   fi
-  echo "Downloading ${BLUE}starship${NC} $latest_version ($filename)"
+  echo -e "Downloading ${BLUE}starship${NC} $latest_version ($filename)"
   curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/starship.tgz
   tar xzf ~/tmp/starship.tgz --directory ~/tmp
   mv ~/tmp/starship ~/bin/
 }
 
 function update_svt() {
-  echo "Downloading latest version of svtplay-dl"
+  echo -e "Downloading latest version of ${BLUE}svtplay-dl${NC}"
   curl -L https://svtplay-dl.se/download/latest/svtplay-dl -o ~/bin/svtplay-dl
   chmod u+x ~/bin/svtplay-dl
 }
 
 function update_youtube() {
-  echo "Downloading latest version of youtube-dl"
+  echo -e "Downloading latest version of ${BLUE}youtube-dl${NC}"
   curl -L https://yt-dl.org/downloads/latest/youtube-dl -o ~/bin/youtube-dl
   chmod u+x ~/bin/youtube-dl
 }
