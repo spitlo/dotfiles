@@ -195,7 +195,7 @@ function update_fzf() {
       fi
     echo -e "Downloading ${BLUE}fzf${NC} $latest_version ($filename)"
     curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/fzf.tgz
-    tar xzf ~/tmp/fzf.tgz --directory ~/tmp --strip 1
+    tar xzf ~/tmp/fzf.tgz --directory ~/tmp # --strip 1 # Not needed?
   fi
 
   mv ~/tmp/fzf ~/bin/
