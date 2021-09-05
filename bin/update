@@ -242,7 +242,7 @@ function update_micro() {
     echo -e "Please run ${BROWN}apt upgrade micro${NC} instead."
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
-    filename="micro-$clean_version-linux-arm64.tar.gz"
+    filename="micro-$clean_version-linux-arm.tar.gz"
   elif [[ "$os" = "linux" ]]; then
     filename="micro-$clean_version-linux64.tar.gz"
   fi
@@ -275,7 +275,7 @@ function update_starship() {
     echo -e "Please run ${BROWN}apt upgrade starship${NC} instead."
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
-    filename="starship-aarch64-unknown-linux-musl.tar.gz"
+    filename="starship-arm-unknown-linux-musleabihf.tar.gz"
   elif [[ "$os" = "linux" ]]; then
     filename="starship-x86_64-unknown-linux-gnu.tar.gz"
   fi
