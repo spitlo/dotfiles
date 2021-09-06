@@ -779,3 +779,21 @@ function groot {
     echo "You need broot for this to work."
   fi
 }
+
+function denter() {
+  local DOCKER_PS_LINE
+  local CONTAINER_NAME
+  local CONTAINER_ID
+
+  DOCKER_PS_LINE=$(docker ps | awk '{print $1,$2,$NF}' | grep -m 1 "$1")
+  echo "$DOCKER_PS_LINE"
+  CONTAINER_NAME=$(echo "$DOCKER_PS_LINE" | awk '{print $2}')
+  CONTAINER_ID=$(echo "$DOCKER_PS_LINE" | awk '{print $1}')
+
+  if [ -n "$CONTAINER_ID" ]; then
+      echo "Logging in to: $CONTAINER_NAME"
+      docker exec -it "$CONTAINER_ID" /bin/bash
+  else
+      echo "No container found matching '$1'"
+  fi
+}
