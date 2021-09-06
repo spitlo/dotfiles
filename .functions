@@ -468,6 +468,7 @@ function cdp() {
           nvm use
         fi
         if exists pyenv && [ -e "$folder/.python-version" ]; then
+          pyenv deactivate --quiet
           pyenv activate
           . $HOME/.bash_prompt
           echo -e "Project ${YELLOW}$1${RESET} activated."
@@ -769,7 +770,11 @@ function h() {
 }
 
 function weather() {
-  curl "wttr.in/$1?Fnq"
+  curl "https://wttr.in/$1?Fnq"
+}
+
+function cht() {
+  curl "https://cht.sh/$1"
 }
 
 function groot {
@@ -796,4 +801,26 @@ function denter() {
   else
       echo "No container found matching '$1'"
   fi
+}
+
+function tcurl() {
+  # Inspired by https://blog.josephscott.org/2011/10/14/timing-details-with-curl/
+  curl -w @- -o /dev/null -s "$@" <<'EOF'
+time_namelookup:    %{time_namelookup}\n
+time_connect:       %{time_connect}\n
+time_appconnect:    %{time_appconnect}\n
+time_pretransfer:   %{time_pretransfer}\n
+time_redirect:      %{time_redirect}\n
+time_starttransfer: %{time_starttransfer}\n
+----------------------------\n
+time_total:         %{time_total}\n
+  EOF
+}
+
+function prlink() {
+  # https://tighten.co/blog/open-github-pull-request-from-terminal/
+  github_url=$(git remote -v | awk '/fetch/{print $2}' | sed -Ee 's#(git@|git://)#https://#' -e 's@com:@com/@' -e 's%\.git$%%' | awk '/github/')
+  branch_name=$(git symbolic-ref HEAD | cut -d"/" -f 3,4)
+  pr_url=$github_url"/compare/main..."$branch_name
+  echo "$pr_url"
 }
