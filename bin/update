@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1090
 set -eu
+trap 'catch $?' EXIT
 
 # Binenv does about the same as this script: https://github.com/devops-works/binenv
 # Commands we might want to support (from the binenv list):
@@ -37,11 +38,20 @@ elif [[ "$OSTYPE" = "linux-android" ]]; then
 elif [[ "$OSTYPE" = "linux-gnueabihf" ]]; then
   os="raspberry"
 fi
-force="${UPDATE_FORCE_INSTALL:-}"
+force=""
 
 mkdir -p ~/tmp
 
 # Utility functions
+catch() {
+  if [[ "$1" = "127" ]]; then
+    # 127 is "Command not found". If it’s not installed, version checking will throw an error.
+    # Invite user to bypass version checking with the --force flag.
+    echo -e "Error updating ${BLUE}$command${NC}. Perhaps it’s not installed yet?"
+    echo -e "Try ${BROWN}update $command --force${NC} instead."
+  fi
+}
+
 print_help() {
   echo -e "$USAGE"
   exit 0
@@ -322,7 +332,19 @@ function update_zola() {
   mv ~/tmp/zola ~/bin/
 }
 
-command="${1:-}"
+# Handle args
+for arg in "$@"; do
+  if [ "$arg" = "force" ] || [ "$arg" = "--force" ] || [ "$arg" = "-f" ]; then
+    force="yes"
+  elif [ "$arg" = "help" ] || [ "$arg" = "--help" ] || [ "$arg" = "-h" ]; then
+    echo -e "$USAGE"
+    exit 0
+  else
+    command="$arg"
+  fi
+done
+
+# Handle command
 case "$command" in
   "bat") update_bat ;;
   "bombadillo") update_bombadillo ;;
