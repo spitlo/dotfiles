@@ -242,7 +242,7 @@ function update_h2c() {
   # h2c has no version command, proceed with install
   echo -e "Downloading ${BLUE}h2c${NC} $latest_version"
   curl -L https://github.com/"$repo"/raw/"$latest_version"/h2c -o ~/bin/h2c
-  chmod +ux ~/bin/h2c
+  chmod u+x ~/bin/h2c
 }
 
 function update_micro() {
