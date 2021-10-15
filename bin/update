@@ -212,7 +212,6 @@ function update_fzf() {
     curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/fzf.tgz
     tar xzf ~/tmp/fzf.tgz --directory ~/tmp # --strip 1 # Not needed?
   fi
-
   mv ~/tmp/fzf ~/bin/
 }
 
@@ -226,7 +225,7 @@ function update_grit() {
     local_version=$(grit --version)
     get_confirmation "$local_version" "$latest_version"
   fi
-# grit_v0.3.0_darwin_amd64.tar.gz
+
   if [[ "$os" = "macos" ]]; then
     filename="grit_${latest_version}_darwin_amd64.tar.gz"
   elif [[ "$os" = "termux" ]]; then
@@ -305,8 +304,9 @@ function update_micro() {
 }
 
 function update_nb() {
-  curl -L https://raw.github.com/xwmx/nb/master/nb -o ~/bin/nb &&
-  chmod +x ~/bin/nb &&
+  curl -L https://raw.github.com/xwmx/nb/master/nb -o ~/tmp/nb
+  mv ~/tmp/nb ~/bin/
+  chmod u+x ~/bin/nb
   nb completions install --download
 }
 
