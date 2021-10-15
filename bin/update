@@ -18,6 +18,7 @@ COMMANDS="\
   bombadillo \
   delta \
   fzf \
+  grit \
   gron \
   h2c \
   micro \
@@ -213,6 +214,32 @@ function update_fzf() {
   fi
 
   mv ~/tmp/fzf ~/bin/
+}
+
+function update_grit() {
+  local repo="climech/grit"
+  local latest_version
+  latest_version=$(get_github_version "$repo")
+  # Give user a chance to exit
+  if [ -z "$force" ]; then
+    local local_version
+    local_version=$(grit --version)
+    get_confirmation "$local_version" "$latest_version"
+  fi
+# grit_v0.3.0_darwin_amd64.tar.gz
+  if [[ "$os" = "macos" ]]; then
+    filename="grit_${latest_version}_darwin_amd64.tar.gz"
+  elif [[ "$os" = "termux" ]]; then
+    filename="grit_${latest_version}_linux_arm7.tar.gz"
+  elif [[ "$os" = "raspberry" ]]; then
+    filename="grit_${latest_version}_linux_arm7.tar.gz"
+  elif [[ "$os" = "linux" ]]; then
+    filename="grit_${latest_version}_linux_amd64.tar.gz"
+  fi
+  echo -e "Downloading ${BLUE}grit${NC} $latest_version ($filename)"
+  curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/grit.tgz
+  tar xzf ~/tmp/grit.tgz --directory ~/tmp --strip 1
+  mv ~/tmp/grit ~/bin/
 }
 
 function update_gron() {
