@@ -1,0 +1,21 @@
+COMMANDS="\
+  bat \
+  bombadillo \
+  delta \
+  fzf \
+  gron \
+  h2c \
+  micro \
+  nb \
+  starship \
+  svtplay-dl \
+  youtube-dl \
+  zola \
+"
+
+_update() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  COMPREPLY=( $(compgen -W "$COMMANDS" -- $cur) )
+}
+
+complete -F _update update

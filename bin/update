@@ -13,22 +13,25 @@ BROWN='\033[0;33m'
 GREEN='\033[1;32m'
 NC='\033[0m'
 RED='\033[0;31m'
+COMMANDS="\
+  bat \
+  bombadillo \
+  delta \
+  fzf \
+  gron \
+  h2c \
+  micro \
+  nb \
+  starship \
+  svtplay-dl \
+  youtube-dl \
+  zola \
+"
 USAGE="
 ${BROWN}Usage${NC}: $0 [command]
 Utility script to update a few smaller commands that live in my ~/bin dir.
 Available commands to update: ${GREEN}
-bat
-bombadillo
-delta
-fzf
-gron
-h2c
-micro
-nb
-starship
-svtplay-dl
-youtube-dl
-zola
+${COMMANDS}
 ${NC}(Actually, updating gron doesn’t work at the moment since it only does prereleases which are not visible in the Github API)"
 
 os="linux"
@@ -344,12 +347,20 @@ function update_zola() {
   mv ~/tmp/zola ~/bin/
 }
 
-# Handle args
+# If user supplied no arguments, print help and exit
+if [ $# -eq 0 ]; then
+  print_help
+fi
+
+# Handle arguments
 for arg in "$@"; do
-  if [ "$arg" = "force" ] || [ "$arg" = "--force" ] || [ "$arg" = "-f" ]; then
+  if [ "$arg" = "--force" ] || [ "$arg" = "-f" ]; then
     force="yes"
-  elif [ "$arg" = "help" ] || [ "$arg" = "--help" ] || [ "$arg" = "-h" ]; then
+  elif [ "$arg" = "--help" ] || [ "$arg" = "-h" ]; then
     echo -e "$USAGE"
+    exit 0
+  elif [ "$arg" = "--list" ] || [ "$arg" = "-l" ]; then
+    echo "$COMMANDS"
     exit 0
   else
     command="$arg"
@@ -357,18 +368,7 @@ for arg in "$@"; do
 done
 
 # Handle command
-case "$command" in
-  "bat") update_bat ;;
-  "bombadillo") update_bombadillo ;;
-  "delta") update_delta ;;
-  "fzf") update_fzf ;;
-  "gron") update_gron ;;
-  "h2c") update_h2c ;;
-  "micro") update_micro ;;
-  "nb") update_nb ;;
-  "starship") update_starship ;;
-  "svtplay-dl" | "svtplay" | "svt") update_svt ;;
-  "youtube-dl" | "youtube" | "ytdl" | "yt") update_youtube ;;
-  "zola") update_zola ;;
+case "$COMMANDS" in
+  *" $command "*) update_$command ;;
   *) print_help ;;
 esac
