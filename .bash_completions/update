@@ -1,17 +1,4 @@
-COMMANDS="\
-  bat \
-  bombadillo \
-  delta \
-  fzf \
-  gron \
-  h2c \
-  micro \
-  nb \
-  starship \
-  svtplay-dl \
-  youtube-dl \
-  zola \
-"
+COMMANDS=$(update --list)
 
 _update() {
   local cur=${COMP_WORDS[COMP_CWORD]}
