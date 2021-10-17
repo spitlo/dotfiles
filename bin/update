@@ -337,15 +337,15 @@ function update_starship() {
   mv ~/tmp/starship ~/bin/
 }
 
-function update_svt() {
+function update_svtplay-dl() {
   echo -e "Downloading latest version of ${BLUE}svtplay-dl${NC}"
   curl -L https://svtplay-dl.se/download/latest/svtplay-dl -o ~/bin/svtplay-dl
   chmod u+x ~/bin/svtplay-dl
 }
 
-function update_youtube() {
+function update_youtube-dl() {
   echo -e "Downloading latest version of ${BLUE}youtube-dl${NC}"
-  curl -L https://yt-dl.org/downloads/latest/youtube-dl -o ~/bin/youtube-dl
+  wget https://yt-dl.org/downloads/latest/youtube-dl -O ~/bin/youtube-dl
   chmod u+x ~/bin/youtube-dl
 }
 
