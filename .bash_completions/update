@@ -1,0 +1,8 @@
+COMMANDS=$(update --list)
+
+_update() {
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  COMPREPLY=( $(compgen -W "$COMMANDS" -- $cur) )
+}
+
+complete -F _update update
