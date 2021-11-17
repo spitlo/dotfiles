@@ -25,6 +25,7 @@ COMMANDS="\
   nb \
   starship \
   svtplay-dl \
+  wp-cli \
   youtube-dl \
   zola \
 "
@@ -339,8 +340,14 @@ function update_starship() {
 
 function update_svtplay-dl() {
   echo -e "Downloading latest version of ${BLUE}svtplay-dl${NC}"
-  curl -L https://svtplay-dl.se/download/latest/svtplay-dl -o ~/bin/svtplay-dl
+  wget https://svtplay-dl.se/download/latest/svtplay-dl -O ~/bin/svtplay-dl
   chmod u+x ~/bin/svtplay-dl
+}
+
+function update_wp-cli() {
+  echo -e "Downloading latest version of ${BLUE}wp-cli${NC}"
+  wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -O ~/bin/wp
+  chmod u+x ~/bin/wp
 }
 
 function update_youtube-dl() {
