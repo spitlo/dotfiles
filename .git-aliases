@@ -42,7 +42,7 @@ if exists git; then
   #=//
   aliasexists testmerge || git config --global alias.testmerge '!f(){ git merge --no-commit --no-ff "$1"; git merge --abort; echo "Merge aborted"; };f'
   # Branch unique commits
-  aliasexists bruq || git config --global alias.bruq '!f(){ git log $(git symbolic-ref -q HEAD) ^master --no-merges; };f'
+  aliasexists bruq || git config --global alias.bruq '!f(){ main_branch="${MAIN_BRANCH:-main}"; git log $(git symbolic-ref -q HEAD) ^$main_branch --no-merges; };f'
   # List branches by last commit https://gist.github.com/jasonrudolph/1810768#gistcomment-2678759
   aliasexists brup || git config --global alias.brup '!f() { git branch -r | grep -v HEAD | while read b; do git log --color --format="%ci _%C(magenta)%cr##%C(bold cyan)$b%Creset##%s %C(bold blue)<%an>%Creset" $b | head -n 1; done | sort -r | cut -d_ -f2- | sed "s;origin/;;g" | head -20 | column -t -s "##"; }; f'
   aliasexists unpushed || git config --global alias.unpushed "diff --stat origin/master.."
