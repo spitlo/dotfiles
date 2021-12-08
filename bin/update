@@ -38,7 +38,12 @@ ${NC}(Actually, updating gron doesn’t work at the moment since it only does pr
 
 os="linux"
 if [[ "$OSTYPE" =~ ^darwin ]]; then
-  os="macos"
+  cpu=$(uname -p)
+  if [[ "$cpu" = "i386" ]]; then
+    os="macos"
+  else
+    os="macos-arm"
+  fi
 elif [[ "$OSTYPE" = "linux-android" ]]; then
   os="termux"
 elif [[ "$OSTYPE" = "linux-gnueabihf" ]]; then
@@ -113,8 +118,16 @@ function update_bat() {
     get_confirmation "$local_version" "$latest_version"
   fi
 
-  if [[ "$os" = "macos" ]]; then
+  if [[ "$os" =~ ^macos.* ]]; then
     filename="bat-$latest_version-x86_64-apple-darwin.tar.gz"
+    if [[ "$os" = "macos-arm" ]]; then
+      echo -e "Sorry, no ${BLUE}bat${NC} release available for Apple Silicon at the moment."
+      read -erp "Install x86 version? (y/n) " -n 1
+      if [ "$REPLY" != "y" ]; then
+        echo -e "Ok! Please run ${BROWN}cargo install bat${NC} instead."
+        exit 0
+      fi
+    fi
   elif [[ "$os" = "termux" ]]; then
     echo -e "Please run ${BROWN}apt upgrade bat${NC} instead."
     exit 0
@@ -143,6 +156,9 @@ function update_bombadillo() {
 
   if [[ "$os" = "macos" ]]; then
     filename="bombadillo-""$latest_version""_osx_64.zip"
+  elif [[ "$os" = "macos-arm" ]]; then
+    echo -e "Sorry, no ${BLUE}bombadillo${NC} release available for Apple Silicon at the moment."
+    exit 0
   elif [[ "$os" = "termux" ]] || [[ "$os" = "raspberry" ]]; then
     filename="bombadillo-""$latest_version""_linux_arm.zip"
   elif [[ "$os" = "linux" ]]; then
@@ -167,8 +183,16 @@ function update_delta() {
     get_confirmation "$local_version" "$latest_version"
   fi
 
-  if [[ "$os" = "macos" ]]; then
+  if [[ "$os" =~ ^macos.* ]]; then
     filename="delta-$latest_version-x86_64-apple-darwin.tar.gz"
+    if [[ "$os" = "macos-arm" ]]; then
+      echo -e "Sorry, no ${BLUE}delta${NC} release available for Apple Silicon at the moment."
+      read -erp "Install x86 version? (y/n) " -n 1
+      if [ "$REPLY" != "y" ]; then
+        echo -e "Ok! Please run ${BROWN}cargo install delta${NC} instead."
+        exit 0
+      fi
+    fi
   elif [[ "$os" = "termux" ]]; then
     echo -e "Please run ${BROWN}apt upgrade git-delta${NC} instead."
     exit 0
@@ -195,8 +219,12 @@ function update_fzf() {
     get_confirmation "$local_version" "$latest_version"
   fi
 
-  if [[ "$os" = "macos" ]]; then
-    filename="fzf-$latest_version-darwin_amd64.zip"
+  if [[ "$os" =~ ^macos.* ]]; then
+    if [[ "$os" = "macos" ]]; then
+      filename="fzf-$latest_version-darwin_amd64.zip"
+    else
+      filename="fzf-$latest_version-darwin_arm64.zip"
+    fi
     echo -e "Downloading ${BLUE}fzf${NC} $latest_version ($filename)"
     curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/fzf.zip
     unzip -qqo ~/tmp/fzf.zip -d ~/tmp
@@ -204,11 +232,11 @@ function update_fzf() {
     echo -e "Please run ${BROWN}apt upgrade fzf${NC} instead."
     exit 0
   elif [[ "$os" = "linux" ]] || [[ "$os" = "raspberry" ]]; then
-      if [[ "$os" = "raspberry" ]]; then
-        filename="fzf-$latest_version-linux_armv7.tar.gz"
-      else
-        filename="fzf-$latest_version-linux_amd64.tar.gz"
-      fi
+    if [[ "$os" = "raspberry" ]]; then
+      filename="fzf-$latest_version-linux_armv7.tar.gz"
+    else
+      filename="fzf-$latest_version-linux_amd64.tar.gz"
+    fi
     echo -e "Downloading ${BLUE}fzf${NC} $latest_version ($filename)"
     curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/fzf.tgz
     tar xzf ~/tmp/fzf.tgz --directory ~/tmp # --strip 1 # Not needed?
@@ -229,6 +257,8 @@ function update_grit() {
 
   if [[ "$os" = "macos" ]]; then
     filename="grit_${latest_version}_darwin_amd64.tar.gz"
+  elif [[ "$os" = "macos-arm" ]]; then
+    filename="grit_${latest_version}_darwin_arm64.tar.gz"
   elif [[ "$os" = "termux" ]]; then
     filename="grit_${latest_version}_linux_arm7.tar.gz"
   elif [[ "$os" = "raspberry" ]]; then
@@ -288,7 +318,7 @@ function update_micro() {
 
   local clean_version
   clean_version=$(echo "$latest_version" | tr -d 'v')
-  if [[ "$os" = "macos" ]]; then
+  if [[ "$os" =~ ^macos.* ]]; then
     filename="micro-$clean_version-osx.tar.gz"
   elif [[ "$os" = "termux" ]]; then
     echo -e "Please run ${BROWN}apt upgrade micro${NC} instead."
@@ -324,6 +354,8 @@ function update_starship() {
 
   if [[ "$os" = "macos" ]]; then
     filename="starship-x86_64-apple-darwin.tar.gz"
+  elif [[ "$os" = "macos-arm" ]]; then
+    filename="starship-aarch64-apple-darwin.tar.gz"
   elif [[ "$os" = "termux" ]]; then
     echo -e "Please run ${BROWN}apt upgrade starship${NC} instead."
     exit 0
@@ -367,7 +399,7 @@ function update_zola() {
     get_confirmation "$local_version" "$latest_version"
   fi
 
-  if [[ "$os" = "macos" ]]; then
+  if [[ "$os" =~ ^macos.* ]]; then
     filename="zola-$latest_version-x86_64-apple-darwin.tar.gz"
   elif [[ "$os" = "termux" ]] || [[ "$os" = "raspberry" ]]; then
     echo -e "Sorry, ${BLUE}zola${NC} is not available for $os."
