@@ -442,11 +442,11 @@ function cdp() {
       printf "Usage:\n${BOLD}cdp${RESET} <project_name>\n"
       printf "\tFinds project folder, enters it and activates the corresponding ${BOLD}virtualenv${RESET}).\n"
       return 1
-    # else
-    #   if [ "$#" = "0" ]; then
-    #     # Deactivate if run without arguments inside pyenv virtualenv
-    #     exists pyenv && pyenv deactivate
-    #   fi
+    else
+      if [ "$#" = "0" ]; then
+        # Deactivate if run without arguments inside pyenv virtualenv
+        exists pyenv && pyenv deactivate
+      fi
     fi
     return
   fi
@@ -467,16 +467,16 @@ function cdp() {
         # if exists nvm && [ -e "$folder/.nvmrc" ]; then
         #   nvm use
         # fi
-        # if exists pyenv && [ -e "$folder/.python-version" ]; then
-        #   pyenv deactivate --quiet
-        #   pyenv activate
-        #   . $HOME/.bash_prompt
-        #   echo -e "Project ${YELLOW}$1${RESET} activated."
-        # else
-        #   if exists pyenv; then
-        #     pyenv deactivate
-        #   fi
-        # fi
+        if exists pyenv && [ -e "$folder/.python-version" ]; then
+          pyenv deactivate --quiet
+          pyenv activate
+          # . $HOME/.bash_prompt
+          echo -e "Project ${YELLOW}$1${RESET} activated."
+        else
+          if exists pyenv; then
+            pyenv deactivate
+          fi
+        fi
         break
       fi
     done
