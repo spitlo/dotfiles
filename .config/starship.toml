@@ -1,7 +1,15 @@
-format='''${custom.tab}$directory$package$git_branch$git_status$nim$zig$nodejs$python
+format='''$fill $time$line_break${custom.tab}$directory$package$git_branch$git_status$nim$zig$nodejs$python
 $hostname$character
 '''
 add_newline = false
+
+[time]
+disabled = false
+format = '[\[ $time \]]($style) '
+time_format = "%T"
+
+[fill]
+symbol = "-"
 
 [character]
 success_symbol = "[➜](bold green) "

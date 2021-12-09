@@ -71,7 +71,7 @@ function output_timeline() {
 }
 
 if exists starship; then
-  starship_precmd_user_func="output_timeline"
+  # starship_precmd_user_func="output_timeline"
   eval "$(starship init bash)"
 else
   # Prompt variable:
