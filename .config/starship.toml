@@ -7,6 +7,7 @@ add_newline = false
 disabled = false
 format = '[\[ $time \]]($style) '
 time_format = "%T"
+style = "fg:3"
 
 [fill]
 symbol = "-"
