@@ -149,6 +149,20 @@ function get_tildegit_version() {
   echo "$latest_version"
 }
 
+function get_version_from_json() {
+  local version_key=${2:-"version"}
+  local latest_version
+  latest_version=$(
+    curl \
+      --silent \
+      --header "Accept: application/json" \
+      "$1" |
+    grep '"'"$version_key"'":' |
+    sed -E 's/.*"([^"]+)".*/\1/'
+  )
+  echo "$latest_version"
+}
+
 #    __  __          __      __          ____                 __  _
 #   / / / /___  ____/ /___ _/ /____     / __/_  ______  _____/ /_(_)___  ____  _____
 #  / / / / __ \/ __  / __ `/ __/ _ \   / /_/ / / / __ \/ ___/ __/ / __ \/ __ \/ ___/
@@ -456,12 +470,21 @@ function update_micro() {
 }
 
 function update_nb() {
+  local repo="xwmx/nb"
+  local latest_version
+  latest_version=$(get_version_from_json "https://raw.githubusercontent.com/xwmx/nb/master/package.json")
+
   # Only print versions when requested
   local arg=${1:-}
   if [[ "$arg" = "get_versions" ]]; then
-    print_heading "Command 'nb'"
-    echo -e "Can’t get ${BLUE}nb${NC} versions, skipping."
-    return
+    compare_versions nb "$latest_version"
+  fi
+
+  # Give user a chance to exit
+  if [ -z "$force" ]; then
+    local local_version
+    local_version=$(nb --version)
+    get_confirmation "$local_version" "$latest_version"
   fi
 
   curl -L https://raw.github.com/xwmx/nb/master/nb -o ~/tmp/nb
