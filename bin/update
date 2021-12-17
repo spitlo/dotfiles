@@ -478,6 +478,7 @@ function update_nb() {
   local arg=${1:-}
   if [[ "$arg" = "get_versions" ]]; then
     compare_versions nb "$latest_version"
+    return
   fi
 
   # Give user a chance to exit
@@ -613,6 +614,7 @@ if [ $# -eq 0 ]; then
 fi
 
 # Handle arguments
+update_argument=""
 for arg in "$@"; do
   if [ "$arg" = "--force" ] || [ "$arg" = "-f" ]; then
     force="yes"
@@ -625,6 +627,8 @@ for arg in "$@"; do
   elif [ "$arg" = "--list-updates" ] || [ "$arg" = "-u" ]; then
     list_updates
     exit 0
+  elif [ "$arg" = "--check" ] || [ "$arg" = "-c" ]; then
+    update_argument="get_versions"
   else
     cmd="$arg"
   fi
@@ -632,6 +636,6 @@ done
 
 # Handle command
 case " $COMMANDS " in
-  *" $cmd "*) update_"$cmd" ;;
+  *" $cmd "*) update_"$cmd" "$update_argument";;
   *) print_help ;;
 esac
