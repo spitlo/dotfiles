@@ -29,6 +29,7 @@ COMMANDS="\
   youtube-dl \
   zola \
 "
+COMMANDS="$(echo "$COMMANDS" | tr ' ' '\n' | sort -u | xargs)"
 USAGE="
 ${BROWN}Usage${NC}: $0 [command]
 Utility script to update a few smaller commands that live in my ~/bin dir.
@@ -54,21 +55,26 @@ force=""
 mkdir -p ~/tmp
 
 # Utility functions
-catch() {
+function catch() {
   if [[ "$1" = "127" ]]; then
     # 127 is "Command not found". If it’s not installed, version checking will throw an error.
     # Invite user to bypass version checking with the --force flag.
-    echo -e "Error updating ${BLUE}$command${NC}. Perhaps it’s not installed yet?"
-    echo -e "Try ${BROWN}update $command --force${NC} instead."
+    echo -e "Error updating ${BLUE}$cmd${NC}. Perhaps it’s not installed yet?"
+    echo -e "Try ${BROWN}update $cmd --force${NC} instead."
   fi
 }
 
-print_help() {
+function print_help() {
   echo -e "$USAGE"
   exit 0
 }
 
-get_github_version() {
+function exists() {
+  cmnd=${1:?"Please supply a command to look for."}
+  command -v "$cmnd" >/dev/null 2>&1 && { return 0; } || { return 1; }
+}
+
+function get_github_version() {
   local latest_version
   latest_version=$(
     curl \
@@ -81,7 +87,7 @@ get_github_version() {
   echo "$latest_version"
 }
 
-get_tildegit_version() {
+function get_tildegit_version() {
   # This needs jq because Gitea’s API doesn’t return JSON with linebreaks
   local latest_version
   latest_version=$(
@@ -96,9 +102,18 @@ get_tildegit_version() {
   echo "$latest_version"
 }
 
-function get_confirmation() {
+function print_heading() {
+  echo -e "\n$1"
+  printf %${#1}s'\n' ' ' | tr " " "="
+}
+
+function print_versions() {
   echo -e "${YELLOW}Local version${NC}: $1"
-  echo -e "${YELLOW}Latest version${NC}: $2"
+  echo -e "${YELLOW}Latest version${NC}: $2"  
+}
+
+function get_confirmation() {
+  print_versions "$1" "$2"
   read -erp "Continue? (y/n) " -n 1
   if [ "$REPLY" != "y" ]; then
     echo -e "\nOk, quitting!\n${BLUE}Bye!${NC}"
@@ -106,14 +121,44 @@ function get_confirmation() {
   fi
 }
 
+function compare_versions() {
+  local version_string
+  version_string=${3:-"--version"}
+  if exists "$1"; then
+    local_version=$("$1" "$version_string")
+    print_heading "Command '$1'"
+    print_versions "$local_version" "$2"
+    return
+  else
+    echo -e "\nCommand ${BLUE}$1${NC} is not installed yet."
+    return 0
+  fi
+}
+
+function list_updates() {
+  local cmd_list
+  declare -a cmd_list=( $COMMANDS  )
+  for cmd in "${cmd_list[@]}"; do
+    "update_$cmd" get_versions
+  done
+}
+
 # Update functions
 function update_bat() {
   local repo="sharkdp/bat"
   local latest_version
+  local local_version
   latest_version=$(get_github_version "$repo")
+
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    compare_versions bat "$latest_version"
+    return
+  fi
+  
   # Give user a chance to exit
   if [ -z "$force" ]; then
-    local local_version
     local_version=$(bat --version)
     get_confirmation "$local_version" "$latest_version"
   fi
@@ -147,6 +192,14 @@ function update_bombadillo() {
   local repo="sloum/bombadillo"
   local latest_version
   latest_version=$(get_tildegit_version "$repo")
+
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    compare_versions bombadillo "$latest_version" "-v"
+    return
+  fi
+  
   # Give user a chance to exit
   if [ -z "$force" ]; then
     local local_version
@@ -176,6 +229,14 @@ function update_delta() {
   local repo="dandavison/delta"
   local latest_version
   latest_version=$(get_github_version "$repo")
+
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    compare_versions delta "$latest_version"
+    return
+  fi
+  
   # Give user a chance to exit
   if [ -z "$force" ]; then
     local local_version
@@ -212,6 +273,14 @@ function update_fzf() {
   local repo="junegunn/fzf"
   local latest_version
   latest_version=$(get_github_version "$repo")
+
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    compare_versions fzf "$latest_version"
+    return
+  fi
+  
   # Give user a chance to exit
   if [ -z "$force" ]; then
     local local_version
@@ -248,6 +317,15 @@ function update_grit() {
   local repo="climech/grit"
   local latest_version
   latest_version=$(get_github_version "$repo")
+
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    print_heading "Command 'grit'"
+    echo -e "Can’t get ${BLUE}grit${NC} versions, skipping."
+    return
+  fi
+
   # Give user a chance to exit
   if [ -z "$force" ]; then
     local local_version
@@ -273,8 +351,14 @@ function update_grit() {
 }
 
 function update_gron() {
-  echo -e "${RED}SORRY!${NC} Downloading gron is not posible at the moment."
-  exit 1
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    return
+  fi
+
+  echo -e "${RED}SORRY!${NC} Downloading gron is not possible at the moment."
+  return
   # local latest_version
   # latest_version=$(get_github_version "tomnomnom/gron")
   # # Give user a chance to exit
@@ -299,6 +383,16 @@ function update_h2c() {
   local repo="curl/h2c"
   local latest_version
   latest_version=$(get_github_version "$repo")
+
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    print_heading "Command 'h2c'"
+    echo -e "${BLUE}h2c${NC} does not have a version flag."
+    echo -e "Latest version is: ${YELLOW}$latest_version${NC}"
+    return
+  fi
+
   # h2c has no version command, proceed with install
   echo -e "Downloading ${BLUE}h2c${NC} $latest_version"
   curl -L https://github.com/"$repo"/raw/"$latest_version"/h2c -o ~/bin/h2c
@@ -309,6 +403,14 @@ function update_micro() {
   local repo="zyedidia/micro"
   local latest_version
   latest_version=$(get_github_version "$repo")
+
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    compare_versions micro "$latest_version"
+    return
+  fi
+
   # Give user a chance to exit
   if [ -z "$force" ]; then
     local local_version
@@ -335,6 +437,14 @@ function update_micro() {
 }
 
 function update_nb() {
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    print_heading "Command 'nb'"
+    echo -e "Can’t get ${BLUE}nb${NC} versions, skipping."
+    return
+  fi
+
   curl -L https://raw.github.com/xwmx/nb/master/nb -o ~/tmp/nb
   mv ~/tmp/nb ~/bin/
   chmod u+x ~/bin/nb
@@ -345,10 +455,18 @@ function update_starship() {
   local repo="starship/starship"
   local latest_version
   latest_version=$(get_github_version "$repo")
+
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    compare_versions starship "$latest_version" "-V"
+    return
+  fi
+
   # Give user a chance to exit
   if [ -z "$force" ]; then
     local local_version
-    local_version=$(starship --version)
+    local_version=$(starship -V)
     get_confirmation "$local_version" "$latest_version"
   fi
 
@@ -371,18 +489,42 @@ function update_starship() {
 }
 
 function update_svtplay-dl() {
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    print_heading "Command 'svtplay-dl'"
+    echo -e "Can’t get ${BLUE}svtplay-dl${NC} versions, skipping."
+    return
+  fi
+
   echo -e "Downloading latest version of ${BLUE}svtplay-dl${NC}"
   wget https://svtplay-dl.se/download/latest/svtplay-dl -O ~/bin/svtplay-dl
   chmod u+x ~/bin/svtplay-dl
 }
 
 function update_wp-cli() {
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    print_heading "Command 'wp-cli'"
+    echo -e "Can’t get ${BLUE}wp-cli${NC} versions, skipping."
+    return
+  fi
+
   echo -e "Downloading latest version of ${BLUE}wp-cli${NC}"
   wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -O ~/bin/wp
   chmod u+x ~/bin/wp
 }
 
 function update_youtube-dl() {
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    print_heading "Command 'youtube-dl'"
+    echo -e "Can’t get ${BLUE}youtube-dl${NC} versions, skipping."
+    return
+  fi
+
   echo -e "Downloading latest version of ${BLUE}youtube-dl${NC}"
   wget https://yt-dl.org/downloads/latest/youtube-dl -O ~/bin/youtube-dl
   chmod u+x ~/bin/youtube-dl
@@ -392,6 +534,14 @@ function update_zola() {
   local repo="getzola/zola"
   local latest_version
   latest_version=$(get_github_version "$repo")
+
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    compare_versions zola "$latest_version"
+    return
+  fi
+
   # Give user a chance to exit
   if [ -z "$force" ]; then
     local local_version
@@ -428,13 +578,16 @@ for arg in "$@"; do
   elif [ "$arg" = "--list" ] || [ "$arg" = "-l" ]; then
     echo "$COMMANDS"
     exit 0
+  elif [ "$arg" = "--list-updates" ] || [ "$arg" = "-u" ]; then
+    list_updates
+    exit 0
   else
-    command="$arg"
+    cmd="$arg"
   fi
 done
 
 # Handle command
-case "$COMMANDS" in
-  *" $command "*) update_$command ;;
+case " $COMMANDS " in
+  *" $cmd "*) update_$cmd ;;
   *) print_help ;;
 esac
