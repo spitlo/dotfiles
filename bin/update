@@ -54,7 +54,12 @@ force=""
 
 mkdir -p ~/tmp
 
-# Utility functions
+#    __  ____  _ ___ __           ____                 __  _
+#   / / / / /_(_) (_) /___  __   / __/_  ______  _____/ /_(_)___  ____  _____
+#  / / / / __/ / / / __/ / / /  / /_/ / / / __ \/ ___/ __/ / __ \/ __ \/ ___/
+# / /_/ / /_/ / / / /_/ /_/ /  / __/ /_/ / / / / /__/ /_/ / /_/ / / / (__  )
+# \____/\__/_/_/_/\__/\__, /  /_/  \__,_/_/ /_/\___/\__/_/\____/_/ /_/____/
+#                    /____/
 function catch() {
   if [[ "$1" = "127" ]]; then
     # 127 is "Command not found". If it’s not installed, version checking will throw an error.
@@ -70,36 +75,9 @@ function print_help() {
 }
 
 function exists() {
-  cmnd=${1:?"Please supply a command to look for."}
-  command -v "$cmnd" >/dev/null 2>&1 && { return 0; } || { return 1; }
-}
-
-function get_github_version() {
-  local latest_version
-  latest_version=$(
-    curl \
-      --silent \
-      --header "Accept: application/vnd.github.v3+json" \
-      "https://api.github.com/repos/$1/releases/latest" |
-    grep '"tag_name":' |
-    sed -E 's/.*"([^"]+)".*/\1/'
-  )
-  echo "$latest_version"
-}
-
-function get_tildegit_version() {
-  # This needs jq because Gitea’s API doesn’t return JSON with linebreaks
-  local latest_version
-  latest_version=$(
-    curl \
-      --silent \
-      --header "Content-Type: application/json" \
-      "https://tildegit.org/api/v1/repos/$1/releases/?page=1&limit=1" |
-    jq . |
-    grep '"tag_name":' |
-    sed -E 's/.*"([^"]+)".*/\1/'
-  )
-  echo "$latest_version"
+  local cmd
+  cmd=${1:?"Please supply a command to look for."}
+  command -v "$cmd" >/dev/null 2>&1 && { return 0; } || { return 1; }
 }
 
 function print_heading() {
@@ -143,11 +121,44 @@ function list_updates() {
   done
 }
 
-# Update functions
+function get_github_version() {
+  local latest_version
+  latest_version=$(
+    curl \
+      --silent \
+      --header "Accept: application/vnd.github.v3+json" \
+      "https://api.github.com/repos/$1/releases/latest" |
+    grep '"tag_name":' |
+    sed -E 's/.*"([^"]+)".*/\1/'
+  )
+  echo "$latest_version"
+}
+
+function get_tildegit_version() {
+  # This needs jq because Gitea’s API doesn’t return JSON with linebreaks
+  local latest_version
+  latest_version=$(
+    curl \
+      --silent \
+      --header "Content-Type: application/json" \
+      "https://tildegit.org/api/v1/repos/$1/releases/?page=1&limit=1" |
+    jq . |
+    grep '"tag_name":' |
+    sed -E 's/.*"([^"]+)".*/\1/'
+  )
+  echo "$latest_version"
+}
+
+#    __  __          __      __          ____                 __  _
+#   / / / /___  ____/ /___ _/ /____     / __/_  ______  _____/ /_(_)___  ____  _____
+#  / / / / __ \/ __  / __ `/ __/ _ \   / /_/ / / / __ \/ ___/ __/ / __ \/ __ \/ ___/
+# / /_/ / /_/ / /_/ / /_/ / /_/  __/  / __/ /_/ / / / / /__/ /_/ / /_/ / / / (__  )
+# \____/ .___/\__,_/\__,_/\__/\___/  /_/  \__,_/_/ /_/\___/\__/_/\____/_/ /_/____/
+#     /_/
 function update_bat() {
   local repo="sharkdp/bat"
+  local filename
   local latest_version
-  local local_version
   latest_version=$(get_github_version "$repo")
 
   # Only print versions when requested
@@ -159,6 +170,7 @@ function update_bat() {
   
   # Give user a chance to exit
   if [ -z "$force" ]; then
+    local local_version
     local_version=$(bat --version)
     get_confirmation "$local_version" "$latest_version"
   fi
@@ -190,6 +202,7 @@ function update_bat() {
 
 function update_bombadillo() {
   local repo="sloum/bombadillo"
+  local filename
   local latest_version
   latest_version=$(get_tildegit_version "$repo")
 
@@ -227,6 +240,7 @@ function update_bombadillo() {
 
 function update_delta() {
   local repo="dandavison/delta"
+  local filename
   local latest_version
   latest_version=$(get_github_version "$repo")
 
@@ -271,6 +285,7 @@ function update_delta() {
 
 function update_fzf() {
   local repo="junegunn/fzf"
+  local filename
   local latest_version
   latest_version=$(get_github_version "$repo")
 
@@ -315,6 +330,7 @@ function update_fzf() {
 
 function update_grit() {
   local repo="climech/grit"
+  local filename
   local latest_version
   latest_version=$(get_github_version "$repo")
 
@@ -359,8 +375,10 @@ function update_gron() {
 
   echo -e "${RED}SORRY!${NC} Downloading gron is not possible at the moment."
   return
+  # local repo="tomnomnom/gron"
+  # local filename
   # local latest_version
-  # latest_version=$(get_github_version "tomnomnom/gron")
+  # latest_version=$(get_github_version "$repo")
   # # Give user a chance to exit
   # if [ -z "$force" ]; then
   #   local local_version
@@ -373,7 +391,7 @@ function update_gron() {
   # elif [[ "$os" = "termux" ]]; then
   #   filename="gron-linux-arm64-$latest_version.tgz"
   # fi
-  # curl -L https://github.com/tomnomnom/gron/releases/download/"$latest_version"/"$filename" -o ~/tmp/gron.tgz
+  # curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/gron.tgz
   # tar xzf ~/tmp/gron.tgz
   # mv ~/tmp/gron ~/bin/
 }
@@ -401,6 +419,7 @@ function update_h2c() {
 
 function update_micro() {
   local repo="zyedidia/micro"
+  local filename
   local latest_version
   latest_version=$(get_github_version "$repo")
 
@@ -453,6 +472,7 @@ function update_nb() {
 
 function update_starship() {
   local repo="starship/starship"
+  local filename
   local latest_version
   latest_version=$(get_github_version "$repo")
 
@@ -532,6 +552,7 @@ function update_youtube-dl() {
 
 function update_zola() {
   local repo="getzola/zola"
+  local filename
   local latest_version
   latest_version=$(get_github_version "$repo")
 
@@ -588,6 +609,6 @@ done
 
 # Handle command
 case " $COMMANDS " in
-  *" $cmd "*) update_$cmd ;;
+  *" $cmd "*) update_"$cmd" ;;
   *) print_help ;;
 esac
