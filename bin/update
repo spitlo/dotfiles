@@ -381,33 +381,39 @@ function update_grit() {
 }
 
 function update_gron() {
+  local repo="tomnomnom/gron"
+  local filename
+  local latest_version
+  latest_version=$(get_version_from_json "https://api.github.com/repos/$repo/tags?per_page=1&page=1" "name")
+
   # Only print versions when requested
   local arg=${1:-}
   if [[ "$arg" = "get_versions" ]]; then
+    compare_versions gron "$latest_version"
     return
   fi
 
-  echo -e "${RED}SORRY!${NC} Downloading gron is not possible at the moment."
-  return
-  # local repo="tomnomnom/gron"
-  # local filename
-  # local latest_version
-  # latest_version=$(get_github_version "$repo")
-  # # Give user a chance to exit
-  # if [ -z "$force" ]; then
-  #   local local_version
-  #   local_version=$(gron --version)
-  #   get_confirmation "$local_version" "$latest_version"
-  # fi
+  # Give user a chance to exit
+  if [ -z "$force" ]; then
+    local local_version
+    local_version=$(gron --version)
+    get_confirmation "$local_version" "$latest_version"
+  fi
 
-  # if [[ "$os" = "macos" ]]; then
-  #   filename="gron-darwin-amd64-$latest_version.tgz"
-  # elif [[ "$os" = "termux" ]]; then
-  #   filename="gron-linux-arm64-$latest_version.tgz"
-  # fi
-  # curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/gron.tgz
-  # tar xzf ~/tmp/gron.tgz
-  # mv ~/tmp/gron ~/bin/
+  local clean_version
+  clean_version=$(echo "$latest_version" | tr -d 'v')
+  if [[ "$os" =~ ^macos.* ]]; then
+    filename="gron-darwin-amd64-$clean_version.tgz"
+  elif [[ "$os" = "termux" ]]; then
+    filename="gron-linux-arm64-$clean_version.tgz"
+  elif [[ "$os" = "raspberry" ]]; then
+    filename="gron-linux-arm-$clean_version.tgz"
+  elif [[ "$os" = "linux" ]]; then
+    filename="gron-linux-amd64-$clean_version.tgz"
+  fi
+  curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/gron.tgz
+  tar xzf ~/tmp/gron.tgz --directory ~/tmp
+  mv ~/tmp/gron ~/bin/
 }
 
 function update_h2c() {
@@ -533,8 +539,9 @@ function update_starship() {
 }
 
 function update_svtplay-dl() {
+  local repo="spaam/svtplay-dl"
   local latest_version
-  latest_version=$(get_version_from_json "https://api.github.com/repos/spaam/svtplay-dl/tags?per_page=1&page=1" "name")
+  latest_version=$(get_version_from_json "https://api.github.com/repos/$repo/tags?per_page=1&page=1" "name")
 
   # Only print versions when requested
   local arg=${1:-}
@@ -570,13 +577,6 @@ function update_wp-cli() {
 }
 
 function update_youtube-dl() {
-  # # Only print versions when requested
-  # local arg=${1:-}
-  # if [[ "$arg" = "get_versions" ]]; then
-  #   print_heading "Command 'youtube-dl'"
-  #   echo -e "Can’t get ${BLUE}youtube-dl${NC} versions, skipping."
-  #   return
-  # fi
   local repo="ytdl-org/youtube-dl"
   local latest_version
   latest_version=$(get_github_version "$repo")
