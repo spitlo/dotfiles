@@ -263,11 +263,16 @@ function update_bombadillo() {
     get_confirmation "$local_version" "$latest_version"
   fi
 
-  if [[ "$os" = "macos" ]]; then
+  if [[ "$os" =~ ^macos.* ]]; then
     filename="bombadillo-""$latest_version""_osx_64.zip"
-  elif [[ "$os" = "macos-arm" ]]; then
-    echo -e "Sorry, no ${BLUE}bombadillo${NC} release available for Apple Silicon at the moment."
-    exit 0
+    if [[ "$os" = "macos-arm" ]]; then
+      echo -e "Sorry, no ${BLUE}bombadillo${NC} release available for Apple Silicon at the moment."
+      read -erp "Install x86 version? (y/n) " -n 1
+      if [ "$REPLY" != "y" ]; then
+        echo -e "Ok, bye!"
+        exit 0
+      fi
+    fi
   elif [[ "$os" = "termux" ]] || [[ "$os" = "raspberry" ]]; then
     filename="bombadillo-""$latest_version""_linux_arm.zip"
   elif [[ "$os" = "linux" ]]; then
