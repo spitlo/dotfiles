@@ -533,12 +533,21 @@ function update_starship() {
 }
 
 function update_svtplay-dl() {
+  local latest_version
+  latest_version=$(get_version_from_json "https://api.github.com/repos/spaam/svtplay-dl/tags?per_page=1&page=1" "name")
+
   # Only print versions when requested
   local arg=${1:-}
   if [[ "$arg" = "get_versions" ]]; then
-    print_heading "Command 'svtplay-dl'"
-    echo -e "Can’t get ${BLUE}svtplay-dl${NC} versions, skipping."
+    compare_versions svtplay-dl "$latest_version"
     return
+  fi
+
+  # Give user a chance to exit
+  if [ -z "$force" ]; then
+    local local_version
+    local_version=$(svtplay-dl --version)
+    get_confirmation "$local_version" "$latest_version"
   fi
 
   echo -e "Downloading latest version of ${BLUE}svtplay-dl${NC}"
