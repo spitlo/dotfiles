@@ -103,7 +103,8 @@ function compare_versions() {
   local version_string
   version_string=${3:-"--version"}
   if exists "$1"; then
-    local_version=$("$1" "$version_string")
+    # Grit outputs version to STDERR for some reason, so read output from that as well
+    local_version=$("$1" "$version_string" 2>&1)
     print_heading "Command '$1'"
     print_versions "$local_version" "$2"
     return
@@ -115,6 +116,7 @@ function compare_versions() {
 
 function list_updates() {
   local cmd_list
+  # shellcheck disable=SC2206
   declare -a cmd_list=( $COMMANDS  )
   for cmd in "${cmd_list[@]}"; do
     "update_$cmd" get_versions
@@ -385,15 +387,14 @@ function update_grit() {
   # Only print versions when requested
   local arg=${1:-}
   if [[ "$arg" = "get_versions" ]]; then
-    print_heading "Command 'grit'"
-    echo -e "Can’t get ${BLUE}grit${NC} versions, skipping."
+    compare_versions grit "$latest_version"
     return
   fi
 
   # Give user a chance to exit
   if [ -z "$force" ]; then
     local local_version
-    local_version=$(grit --version)
+    local_version=$(grit --version 2>&1)
     get_confirmation "$local_version" "$latest_version"
   fi
 
