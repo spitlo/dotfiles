@@ -93,7 +93,7 @@ function print_versions() {
 function get_confirmation() {
   print_versions "$1" "$2"
   read -erp "Continue? (y/n) " -n 1
-  if [ "$REPLY" != "y" ]; then
+  if [[ "$REPLY" != "y" ]]; then
     echo -e "\nOk, quitting!\n${BLUE}Bye!${NC}"
     exit 0
   fi
@@ -214,7 +214,7 @@ function update_bat() {
   fi
   
   # Give user a chance to exit
-  if [ -z "$force" ]; then
+  if [[ -z "$force" ]]; then
     local local_version
     local_version=$(bat --version)
     get_confirmation "$local_version" "$latest_version"
@@ -225,14 +225,14 @@ function update_bat() {
     if [[ "$os" = "macos-arm" ]]; then
       echo -e "Sorry, no ${BLUE}bat${NC} release available for Apple Silicon at the moment."
       read -erp "Install x86 version? (y/n) " -n 1
-      if [ "$REPLY" != "y" ]; then
+      if [[ "$REPLY" != "y" ]]; then
         echo -e "Ok! Please run ${BROWN}cargo install bat${NC} instead."
         exit 0
       fi
     fi
   elif [[ "$os" = "termux" ]]; then
     read -erp "Run ${BROWN}pkg install bat${NC} instead? (y/n) " -n 1
-    if [ "$REPLY" = "y" ]; then
+    if [[ "$REPLY" = "y" ]]; then
       pkg install bat
     fi
     exit 0
@@ -262,7 +262,7 @@ function update_bombadillo() {
   fi
   
   # Give user a chance to exit
-  if [ -z "$force" ]; then
+  if [[ -z "$force" ]]; then
     local local_version
     local_version=$(bombadillo -v)
     get_confirmation "$local_version" "$latest_version"
@@ -273,7 +273,7 @@ function update_bombadillo() {
     if [[ "$os" = "macos-arm" ]]; then
       echo -e "Sorry, no ${BLUE}bombadillo${NC} release available for Apple Silicon at the moment."
       read -erp "Install x86 version? (y/n) " -n 1
-      if [ "$REPLY" != "y" ]; then
+      if [[ "$REPLY" != "y" ]]; then
         echo -e "Ok, bye!"
         exit 0
       fi
@@ -305,7 +305,7 @@ function update_delta() {
   fi
   
   # Give user a chance to exit
-  if [ -z "$force" ]; then
+  if [[ -z "$force" ]]; then
     local local_version
     local_version=$(delta --version)
     get_confirmation "$local_version" "$latest_version"
@@ -316,14 +316,14 @@ function update_delta() {
     if [[ "$os" = "macos-arm" ]]; then
       echo -e "Sorry, no ${BLUE}delta${NC} release available for Apple Silicon at the moment."
       read -erp "Install x86 version? (y/n) " -n 1
-      if [ "$REPLY" != "y" ]; then
+      if [[ "$REPLY" != "y" ]]; then
         echo -e "Ok! Please run ${BROWN}cargo install delta${NC} instead."
         exit 0
       fi
     fi
   elif [[ "$os" = "termux" ]]; then
     read -erp "Run ${BROWN}pkg install git-delta${NC} instead? (y/n) " -n 1
-    if [ "$REPLY" = "y" ]; then
+    if [[ "$REPLY" = "y" ]]; then
       pkg install git-delta
     fi
     exit 0
@@ -353,7 +353,7 @@ function update_fzf() {
   fi
   
   # Give user a chance to exit
-  if [ -z "$force" ]; then
+  if [[ -z "$force" ]]; then
     local local_version
     local_version=$(fzf --version)
     get_confirmation "$local_version" "$latest_version"
@@ -370,7 +370,7 @@ function update_fzf() {
     unzip -qqo ~/tmp/fzf.zip -d ~/tmp
   elif [[ "$os" = "termux" ]]; then
     read -erp "Run ${BROWN}pkg install fzf${NC} instead? (y/n) " -n 1
-    if [ "$REPLY" = "y" ]; then
+    if [[ "$REPLY" = "y" ]]; then
       pkg install fzf
     fi
     exit 0
@@ -401,7 +401,7 @@ function update_grit() {
   fi
 
   # Give user a chance to exit
-  if [ -z "$force" ]; then
+  if [[ -z "$force" ]]; then
     local local_version
     local_version=$(grit --version 2>&1)
     get_confirmation "$local_version" "$latest_version"
@@ -438,7 +438,7 @@ function update_gron() {
   fi
 
   # Give user a chance to exit
-  if [ -z "$force" ]; then
+  if [[ -z "$force" ]]; then
     local local_version
     local_version=$(gron --version)
     get_confirmation "$local_version" "$latest_version"
@@ -495,7 +495,7 @@ function update_micro() {
   fi
 
   # Give user a chance to exit
-  if [ -z "$force" ]; then
+  if [[ -z "$force" ]]; then
     local local_version
     local_version=$(micro --version)
     get_confirmation "$local_version" "$latest_version"
@@ -507,7 +507,7 @@ function update_micro() {
     filename="micro-$clean_version-osx.tar.gz"
   elif [[ "$os" = "termux" ]]; then
     read -erp "Run ${BROWN}pkg install micro${NC} instead? (y/n) " -n 1
-    if [ "$REPLY" = "y" ]; then
+    if [[ "$REPLY" = "y" ]]; then
       pkg install micro
     fi
     exit 0
@@ -535,7 +535,7 @@ function update_nb() {
   fi
 
   # Give user a chance to exit
-  if [ -z "$force" ]; then
+  if [[ -z "$force" ]]; then
     local local_version
     local_version=$(nb --version)
     get_confirmation "$local_version" "$latest_version"
@@ -561,7 +561,7 @@ function update_starship() {
   fi
 
   # Give user a chance to exit
-  if [ -z "$force" ]; then
+  if [[ -z "$force" ]]; then
     local local_version
     local_version=$(starship -V)
     get_confirmation "$local_version" "$latest_version"
@@ -573,7 +573,7 @@ function update_starship() {
     filename="starship-aarch64-apple-darwin.tar.gz"
   elif [[ "$os" = "termux" ]]; then
     read -erp "Run ${BROWN}pkg install starship${NC} instead? (y/n) " -n 1
-    if [ "$REPLY" = "y" ]; then
+    if [[ "$REPLY" = "y" ]]; then
       pkg install starship
     fi
     exit 0
@@ -601,7 +601,7 @@ function update_svtplay-dl() {
   fi
 
   # Give user a chance to exit
-  if [ -z "$force" ]; then
+  if [[ -z "$force" ]]; then
     local local_version
     local_version=$(svtplay-dl --version)
     get_confirmation "$local_version" "$latest_version"
@@ -639,7 +639,7 @@ function update_youtube-dl() {
   fi
 
   # Give user a chance to exit
-  if [ -z "$force" ]; then
+  if [[ -z "$force" ]]; then
     local local_version
     local_version=$(youtube-dl --version)
     get_confirmation "$local_version" "$latest_version"
@@ -664,7 +664,7 @@ function update_zola() {
   fi
 
   # Give user a chance to exit
-  if [ -z "$force" ]; then
+  if [[ -z "$force" ]]; then
     local local_version
     local_version=$(zola --version)
     get_confirmation "$local_version" "$latest_version"
@@ -685,25 +685,25 @@ function update_zola() {
 }
 
 # If user supplied no arguments, print help and exit
-if [ $# -eq 0 ]; then
+if [[ $# = 0 ]]; then
   print_help
 fi
 
 # Handle arguments
 update_argument=""
 for arg in "$@"; do
-  if [ "$arg" = "--force" ] || [ "$arg" = "-f" ]; then
+  if [[ "$arg" = "--force" ]] || [[ "$arg" = "-f" ]]; then
     force="yes"
-  elif [ "$arg" = "--help" ] || [ "$arg" = "-h" ]; then
+  elif [[ "$arg" = "--help" ]] || [[ "$arg" = "-h" ]]; then
     echo -e "$USAGE"
     exit 0
-  elif [ "$arg" = "--list" ] || [ "$arg" = "-l" ]; then
+  elif [[ "$arg" = "--list" ]] || [[ "$arg" = "-l" ]]; then
     echo "$COMMANDS"
     exit 0
-  elif [ "$arg" = "--list-updates" ] || [ "$arg" = "-u" ]; then
+  elif [[ "$arg" = "--list-updates" ]] || [[ "$arg" = "-u" ]]; then
     list_updates
     exit 0
-  elif [ "$arg" = "--check" ] || [ "$arg" = "-c" ]; then
+  elif [[ "$arg" = "--check" ]] || [[ "$arg" = "-c" ]]; then
     update_argument="get_versions"
   else
     cmd="$arg"
