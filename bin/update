@@ -21,6 +21,7 @@ COMMANDS="\
   grit \
   gron \
   h2c \
+  jq \
   micro \
   nb \
   starship \
@@ -138,8 +139,8 @@ function download() {
   elif exists wget; then
     wget --quiet --no-verbose --show-progress "$1" --output-document "$2"
   else
-    echo -e "${RED}Error!${NC}"
-    echo -e "You need ${BLUE}curl${NC} or ${BLUE}wget${NC} to use ${BLUE}update${NC}."
+    echo -e "${RED}Error!${NC}" 1>&2
+    echo -e "You need ${BLUE}curl${NC} or ${BLUE}wget${NC} to use ${BLUE}update${NC}." 1>&2
     exit 1
   fi
 }
@@ -155,8 +156,8 @@ function get_json_data() {
       wget --quiet --no-verbose --header "$2" --output-document - "$1"
     )
   else
-    echo -e "${RED}Error!${NC}"
-    echo -e "You need ${BLUE}curl${NC} or ${BLUE}wget${NC} to use ${BLUE}update${NC}."
+    echo -e "${RED}Error!${NC}" 1>&2
+    echo -e "You need ${BLUE}curl${NC} or ${BLUE}wget${NC} to use ${BLUE}update${NC}." 1>&2
     exit 1
   fi
   echo "$json_data"
@@ -174,14 +175,21 @@ function get_github_version() {
 
 function get_tildegit_version() {
   # This needs jq because Gitea’s API doesn’t return JSON with linebreaks
-  local latest_version
-  latest_version=$(
-    get_json_data "https://tildegit.org/api/v1/repos/$1/releases/?page=1&limit=1" "Content-Type: application/json" |
-    jq . |
-    grep '"tag_name":' |
-    sed -E 's/.*"([^"]+)".*/\1/'
-  )
-  echo "$latest_version"
+  if exists jq; then
+    local latest_version
+    latest_version=$(
+      get_json_data "https://tildegit.org/api/v1/repos/$1/releases/?page=1&limit=1" "Content-Type: application/json" |
+      jq . |
+      grep '"tag_name":' |
+      sed -E 's/.*"([^"]+)".*/\1/'
+    )
+    echo "$latest_version"
+  else
+    echo -e "${RED}Error!${NC}" 1>&2
+    echo -e "You need ${BLUE}jq${NC} to update this command. You can install it with:" 1>&2
+    echo -e "${BROWN}update --force jq${NC}" 1>&2
+    exit 1
+  fi
 }
 
 function get_version_from_json() {
@@ -232,7 +240,7 @@ function update_bat() {
       fi
     fi
   elif [[ "$os" = "termux" ]]; then
-    read -erp "Run ${BROWN}pkg install bat${NC} instead? (y/n) " -n 1
+    read -erp "Run ${BROWN}pkg install bat${NC}? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
       pkg install bat
     fi
@@ -323,7 +331,7 @@ function update_delta() {
       fi
     fi
   elif [[ "$os" = "termux" ]]; then
-    read -erp "Run ${BROWN}pkg install git-delta${NC} instead? (y/n) " -n 1
+    read -erp "Run ${BROWN}pkg install git-delta${NC}? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
       pkg install git-delta
     fi
@@ -370,7 +378,7 @@ function update_fzf() {
     download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/fzf.zip"
     unzip -qqo ~/tmp/fzf.zip -d ~/tmp
   elif [[ "$os" = "termux" ]]; then
-    read -erp "Run ${BROWN}pkg install fzf${NC} instead? (y/n) " -n 1
+    read -erp "Run ${BROWN}pkg install fzf${NC}? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
       pkg install fzf
     fi
@@ -482,6 +490,48 @@ function update_h2c() {
   chmod u+x ~/bin/h2c
 }
 
+function update_jq() {
+  local repo="stedolan/jq"
+  local filename
+  local latest_version
+  latest_version=$(get_github_version "$repo")
+
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    compare_versions jq "$latest_version"
+    return
+  fi
+
+  # Give user a chance to exit
+  if [[ -z "$force" ]]; then
+    local local_version
+    local_version=$(jq --version)
+    get_confirmation "$local_version" "$latest_version"
+  fi
+
+  if [[ "$os" =~ ^macos.* ]]; then
+    filename="jq-osx-amd64"
+  elif [[ "$os" = "termux" ]]; then
+    read -erp "Run ${BROWN}pkg install micro${NC}? (y/n) " -n 1
+    if [[ "$REPLY" = "y" ]]; then
+      pkg install micro
+    fi
+    exit 0
+  elif [[ "$os" = "raspberry" ]]; then
+    read -erp "Run ${BROWN}sudo apt install jq${NC}? (y/n) " -n 1
+    if [[ "$REPLY" = "y" ]]; then
+      sudo apt install jq
+    fi
+    exit 0
+  elif [[ "$os" = "linux" ]]; then
+    filename="jq-linux64"
+  fi
+  echo -e "Downloading ${BLUE}jq${NC} $latest_version ($filename)"
+  download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/jq"
+  mv ~/tmp/jq ~/bin/ && chmod u+x ~/bin/jq
+}
+
 function update_micro() {
   local repo="zyedidia/micro"
   local filename
@@ -507,7 +557,7 @@ function update_micro() {
   if [[ "$os" =~ ^macos.* ]]; then
     filename="micro-$clean_version-osx.tar.gz"
   elif [[ "$os" = "termux" ]]; then
-    read -erp "Run ${BROWN}pkg install micro${NC} instead? (y/n) " -n 1
+    read -erp "Run ${BROWN}pkg install micro${NC}? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
       pkg install micro
     fi
@@ -573,7 +623,7 @@ function update_starship() {
   elif [[ "$os" = "macos-arm" ]]; then
     filename="starship-aarch64-apple-darwin.tar.gz"
   elif [[ "$os" = "termux" ]]; then
-    read -erp "Run ${BROWN}pkg install starship${NC} instead? (y/n) " -n 1
+    read -erp "Run ${BROWN}pkg install starship${NC}? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
       pkg install starship
     fi
