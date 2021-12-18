@@ -30,12 +30,21 @@ COMMANDS="\
   zola \
 "
 COMMANDS="$(echo "$COMMANDS" | tr ' ' '\n' | sort -u | xargs)"
-USAGE="
-${BROWN}Usage${NC}: $0 [command]
+USAGE="${BROWN}Usage${NC}: $0 [command] [flags]
+
 Utility script to update a few smaller commands that live in my ~/bin dir.
-Available commands to update: ${GREEN}
-${COMMANDS}
-${NC}(Actually, updating gron doesn’t work at the moment since it only does prereleases which are not visible in the Github API)"
+
+${BROWN}Commands${NC}:
+${GREEN}${COMMANDS}
+${NC}(These commands are tab completable using the 'update' bash completion script)
+
+${BROWN}Options${NC}:
+  --force, -f         Don’t check for versions, update or install command.
+  --help, -h          Show this text.
+  --list, -l          Show a list of commands we can update.
+  --list-updates, -u  Show installed and latest version of all commands.
+  --check, -c         Show installed and latest version of a specific command.
+"
 
 os="linux"
 if [[ "$OSTYPE" =~ ^darwin ]]; then
@@ -139,19 +148,11 @@ function get_json_data() {
   local json_data
   if exists curl; then
     json_data=$(
-      curl \
-        --silent \
-        --header "$2" \
-        "$1"
+      curl --silent --header "$2" "$1"
     )
   elif exists wget; then
     json_data=$(
-      wget \
-        --quiet \
-        --no-verbose \
-        --header "$2" \
-        --output-document - \
-        "$1"
+      wget --quiet --no-verbose --header "$2" --output-document - "$1"
     )
   else
     echo -e "${RED}Error!${NC}"
