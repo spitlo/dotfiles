@@ -33,4 +33,4 @@ $ pkg install ncurses-utils
 - [x] Add possibility to override version check to `update` command (good for first time installs)
 - [x] Make `update` work on Rasberry Pi 400
 - [ ] Add support for SHA256 checksum to `update` (Some [inspiration](https://github.com/client9/shlib/blob/master/hash_sha256.sh))
-- [ ] Run `apt update` automatically in termux
+- [x] Run ~~`apt update`~~ `pkg install` automatically in termux

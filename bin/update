@@ -231,7 +231,10 @@ function update_bat() {
       fi
     fi
   elif [[ "$os" = "termux" ]]; then
-    echo -e "Please run ${BROWN}pkg install bat${NC} instead."
+    read -erp "Run ${BROWN}pkg install bat${NC} instead? (y/n) " -n 1
+    if [ "$REPLY" = "y" ]; then
+      pkg install bat
+    fi
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
     filename="bat-$latest_version-arm-unknown-linux-gnueabihf.tar.gz"
@@ -319,7 +322,10 @@ function update_delta() {
       fi
     fi
   elif [[ "$os" = "termux" ]]; then
-    echo -e "Please run ${BROWN}pkg install git-delta${NC} instead."
+    read -erp "Run ${BROWN}pkg install git-delta${NC} instead? (y/n) " -n 1
+    if [ "$REPLY" = "y" ]; then
+      pkg install git-delta
+    fi
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
     filename="delta-$latest_version-arm-unknown-linux-gnueabihf.tar.gz"
@@ -363,7 +369,10 @@ function update_fzf() {
     download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/fzf.zip"
     unzip -qqo ~/tmp/fzf.zip -d ~/tmp
   elif [[ "$os" = "termux" ]]; then
-    echo -e "Please run ${BROWN}pkg install fzf${NC} instead."
+    read -erp "Run ${BROWN}pkg install fzf${NC} instead? (y/n) " -n 1
+    if [ "$REPLY" = "y" ]; then
+      pkg install fzf
+    fi
     exit 0
   elif [[ "$os" = "linux" ]] || [[ "$os" = "raspberry" ]]; then
     if [[ "$os" = "raspberry" ]]; then
@@ -497,7 +506,10 @@ function update_micro() {
   if [[ "$os" =~ ^macos.* ]]; then
     filename="micro-$clean_version-osx.tar.gz"
   elif [[ "$os" = "termux" ]]; then
-    echo -e "Please run ${BROWN}pkg install micro${NC} instead."
+    read -erp "Run ${BROWN}pkg install micro${NC} instead? (y/n) " -n 1
+    if [ "$REPLY" = "y" ]; then
+      pkg install micro
+    fi
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
     filename="micro-$clean_version-linux-arm.tar.gz"
@@ -560,7 +572,10 @@ function update_starship() {
   elif [[ "$os" = "macos-arm" ]]; then
     filename="starship-aarch64-apple-darwin.tar.gz"
   elif [[ "$os" = "termux" ]]; then
-    echo -e "Please run ${BROWN}pkg install starship${NC} instead."
+    read -erp "Run ${BROWN}pkg install starship${NC} instead? (y/n) " -n 1
+    if [ "$REPLY" = "y" ]; then
+      pkg install starship
+    fi
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
     filename="starship-arm-unknown-linux-musleabihf.tar.gz"
