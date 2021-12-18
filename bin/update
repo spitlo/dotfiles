@@ -592,10 +592,18 @@ function update_nb() {
     get_confirmation "$local_version" "$latest_version"
   fi
 
+  echo -e "Downloading ${BLUE}nb${NC} $latest_version"
   download https://raw.github.com/xwmx/nb/master/nb "$HOME/tmp/nb"
   mv ~/tmp/nb ~/bin/
   chmod u+x ~/bin/nb
-  nb completions install --download
+  echo -e "Downloading tab completions for ${BLUE}nb${NC}"
+  if [[ -d "$HOME/.bash_completions" ]]; then
+    download https://raw.github.com/xwmx/nb/master/etc/nb-completion.bash "$HOME/tmp/nb-completion"
+    mv ~/tmp/nb-completion ~/.bash_completions/nb
+    source ~/.bash_completions/nb
+  else
+    nb completions install --download
+  fi
 }
 
 function update_starship() {
