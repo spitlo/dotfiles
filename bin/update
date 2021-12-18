@@ -231,7 +231,7 @@ function update_bat() {
       fi
     fi
   elif [[ "$os" = "termux" ]]; then
-    echo -e "Please run ${BROWN}apt upgrade bat${NC} instead."
+    echo -e "Please run ${BROWN}pkg install bat${NC} instead."
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
     filename="bat-$latest_version-arm-unknown-linux-gnueabihf.tar.gz"
@@ -319,7 +319,7 @@ function update_delta() {
       fi
     fi
   elif [[ "$os" = "termux" ]]; then
-    echo -e "Please run ${BROWN}apt upgrade git-delta${NC} instead."
+    echo -e "Please run ${BROWN}pkg install git-delta${NC} instead."
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
     filename="delta-$latest_version-arm-unknown-linux-gnueabihf.tar.gz"
@@ -363,7 +363,7 @@ function update_fzf() {
     download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/fzf.zip"
     unzip -qqo ~/tmp/fzf.zip -d ~/tmp
   elif [[ "$os" = "termux" ]]; then
-    echo -e "Please run ${BROWN}apt upgrade fzf${NC} instead."
+    echo -e "Please run ${BROWN}pkg install fzf${NC} instead."
     exit 0
   elif [[ "$os" = "linux" ]] || [[ "$os" = "raspberry" ]]; then
     if [[ "$os" = "raspberry" ]]; then
@@ -497,7 +497,7 @@ function update_micro() {
   if [[ "$os" =~ ^macos.* ]]; then
     filename="micro-$clean_version-osx.tar.gz"
   elif [[ "$os" = "termux" ]]; then
-    echo -e "Please run ${BROWN}apt upgrade micro${NC} instead."
+    echo -e "Please run ${BROWN}pkg install micro${NC} instead."
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
     filename="micro-$clean_version-linux-arm.tar.gz"
@@ -560,7 +560,7 @@ function update_starship() {
   elif [[ "$os" = "macos-arm" ]]; then
     filename="starship-aarch64-apple-darwin.tar.gz"
   elif [[ "$os" = "termux" ]]; then
-    echo -e "Please run ${BROWN}apt upgrade starship${NC} instead."
+    echo -e "Please run ${BROWN}pkg install starship${NC} instead."
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
     filename="starship-arm-unknown-linux-musleabihf.tar.gz"
