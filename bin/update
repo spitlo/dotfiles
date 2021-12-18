@@ -240,7 +240,7 @@ function update_bat() {
       fi
     fi
   elif [[ "$os" = "termux" ]]; then
-    read -erp "Run ${BROWN}pkg install bat${NC}? (y/n) " -n 1
+    read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
       pkg install bat
     fi
@@ -331,7 +331,7 @@ function update_delta() {
       fi
     fi
   elif [[ "$os" = "termux" ]]; then
-    read -erp "Run ${BROWN}pkg install git-delta${NC}? (y/n) " -n 1
+    read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
       pkg install git-delta
     fi
@@ -378,7 +378,7 @@ function update_fzf() {
     download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/fzf.zip"
     unzip -qqo ~/tmp/fzf.zip -d ~/tmp
   elif [[ "$os" = "termux" ]]; then
-    read -erp "Run ${BROWN}pkg install fzf${NC}? (y/n) " -n 1
+    read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
       pkg install fzf
     fi
@@ -513,13 +513,13 @@ function update_jq() {
   if [[ "$os" =~ ^macos.* ]]; then
     filename="jq-osx-amd64"
   elif [[ "$os" = "termux" ]]; then
-    read -erp "Run ${BROWN}pkg install micro${NC}? (y/n) " -n 1
+    read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
       pkg install micro
     fi
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
-    read -erp "Run ${BROWN}sudo apt install jq${NC}? (y/n) " -n 1
+    read -erp "Install with apt? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
       sudo apt install jq
     fi
@@ -557,7 +557,7 @@ function update_micro() {
   if [[ "$os" =~ ^macos.* ]]; then
     filename="micro-$clean_version-osx.tar.gz"
   elif [[ "$os" = "termux" ]]; then
-    read -erp "Run ${BROWN}pkg install micro${NC}? (y/n) " -n 1
+    read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
       pkg install micro
     fi
@@ -623,7 +623,7 @@ function update_starship() {
   elif [[ "$os" = "macos-arm" ]]; then
     filename="starship-aarch64-apple-darwin.tar.gz"
   elif [[ "$os" = "termux" ]]; then
-    read -erp "Run ${BROWN}pkg install starship${NC}? (y/n) " -n 1
+    read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
       pkg install starship
     fi
