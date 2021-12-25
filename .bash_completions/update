@@ -1,5 +1,8 @@
 COMMANDS=$(update --list)
 
+# Add flags
+COMMANDS="$COMMANDS --force --help --list --list-updates --check"
+
 _update() {
   local cur=${COMP_WORDS[COMP_CWORD]}
   COMPREPLY=( $(compgen -W "$COMMANDS" -- $cur) )

@@ -787,7 +787,8 @@ if [[ $# = 0 ]]; then
   print_help
 fi
 
-# Handle arguments
+# Handle arguments.
+# Remember to add new ones to .bash_completions/update
 update_argument=""
 for arg in "$@"; do
   if [[ "$arg" = "--force" ]] || [[ "$arg" = "-f" ]]; then
