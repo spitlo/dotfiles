@@ -790,6 +790,7 @@ fi
 # Handle arguments.
 # Remember to add new ones to .bash_completions/update
 update_argument=""
+cmds=""
 for arg in "$@"; do
   if [[ "$arg" = "--force" ]] || [[ "$arg" = "-f" ]]; then
     force="yes"
@@ -805,12 +806,16 @@ for arg in "$@"; do
   elif [[ "$arg" = "--check" ]] || [[ "$arg" = "-c" ]]; then
     update_argument="get_versions"
   else
-    cmd="$arg"
+    cmds="$cmds $arg"
   fi
 done
 
-# Handle command
-case " $COMMANDS " in
-  *" $cmd "*) update_"$cmd" "$update_argument";;
-  *) print_help ;;
-esac
+# Handle commands
+# shellcheck disable=SC2206
+declare -a cmd_list=( $cmds  )
+for cmd in "${cmd_list[@]}"; do
+  case " $COMMANDS " in
+    *" $cmd "*) update_"$cmd" "$update_argument";;
+    *) print_help ;;
+  esac
+done
