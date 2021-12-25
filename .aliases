@@ -41,6 +41,9 @@
   # List only directories
   alias lsd='ls -l | grep "^d"'
 
+  # Something like `la` above but with `exa`
+  alias xa="exa --long --time-style long-iso --all --all --git --header --group-directories-first --classify --group"
+
   # `cat` with beautiful colors. Use bat if available.
   command -v bat >/dev/null 2>&1 && { alias c=bat; } || { alias c='pygmentize -O style=monokai,linenos=1 -f console256 -g'; }
 
