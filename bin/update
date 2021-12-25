@@ -625,6 +625,7 @@ function update_micro() {
 
 function update_navi() {
   local repo="denisidoro/navi"
+  local filename
   local latest_version
   latest_version=$(get_github_version "$repo")
 
@@ -642,7 +643,7 @@ function update_navi() {
     get_confirmation "$local_version" "$latest_version"
   fi
 
-  if [[ "$os" = "macos" ]]; then
+  if [[ "$os" =~ ^macos.* ]]; then
     filename="navi-$latest_version-x86_64-apple-darwin.tar.gz"
   elif [[ "$os" = "termux" ]]; then
     read -erp "Install with pkg? (y/n) " -n 1
