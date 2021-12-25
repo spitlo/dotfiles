@@ -596,7 +596,10 @@ function update_navi() {
   if [[ "$os" = "macos" ]]; then
     filename="navi-$latest_version-x86_64-apple-darwin.tar.gz"
   elif [[ "$os" = "termux" ]]; then
-    echo -e "Please run ${BROWN}apt upgrade navi${NC} instead."
+    read -erp "Install with pkg? (y/n) " -n 1
+    if [[ "$REPLY" = "y" ]]; then
+      pkg install navi
+    fi
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
     filename="navi-$latest_version-arm-unknown-linux-musleabihf.tar.gz"
