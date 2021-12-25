@@ -464,13 +464,13 @@ function cdp() {
         # touch ../.keepontop
         clear
         echo -e "Found project folder: $folder."
-        if exists nvm && [ -e "$folder/.nvmrc" ]; then
-          nvm use
-        fi
+        # if exists nvm && [ -e "$folder/.nvmrc" ]; then
+        #   nvm use
+        # fi
         if exists pyenv && [ -e "$folder/.python-version" ]; then
           pyenv deactivate --quiet
           pyenv activate
-          . $HOME/.bash_prompt
+          # . $HOME/.bash_prompt
           echo -e "Project ${YELLOW}$1${RESET} activated."
         else
           if exists pyenv; then

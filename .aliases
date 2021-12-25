@@ -116,7 +116,6 @@
   alias ns="npm search"
   alias ni="npm install"
   alias g="git"
-  alias v="vim"
   alias s="subl"
   alias o="open ."
   alias cls="clear"
