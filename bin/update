@@ -22,6 +22,7 @@ COMMANDS="\
   gron \
   h2c \
   micro \
+  navi \
   nb \
   starship \
   svtplay-dl \
@@ -302,6 +303,33 @@ function update_micro() {
   curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/micro.tgz
   tar xzf ~/tmp/micro.tgz --directory ~/tmp --strip 1
   mv ~/tmp/micro ~/bin/
+}
+
+function update_navi() {
+  local repo="denisidoro/navi"
+  local latest_version
+  latest_version=$(get_github_version "$repo")
+  # Give user a chance to exit
+  if [ -z "$force" ]; then
+    local local_version
+    local_version=$(navi --version)
+    get_confirmation "$local_version" "$latest_version"
+  fi
+
+  if [[ "$os" = "macos" ]]; then
+    filename="navi-$latest_version-x86_64-apple-darwin.tar.gz"
+  elif [[ "$os" = "termux" ]]; then
+    echo -e "Please run ${BROWN}apt upgrade navi${NC} instead."
+    exit 0
+  elif [[ "$os" = "raspberry" ]]; then
+    filename="navi-$latest_version-arm-unknown-linux-musleabihf.tar.gz"
+  elif [[ "$os" = "linux" ]]; then
+    filename="navi-$latest_version-x86_64-unknown-linux-gnu.tar.gz"
+  fi
+  echo -e "Downloading ${BLUE}navi${NC} $latest_version ($filename)"
+  curl -L https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" -o ~/tmp/navi.tgz
+  tar xzf ~/tmp/navi.tgz --directory ~/tmp
+  mv ~/tmp/navi ~/bin/
 }
 
 function update_nb() {
