@@ -38,6 +38,7 @@ $EDITOR ~/.extras
 
 ## Todo
 
+- [ ] When batch updating with `update`, print command name before confirmation
 - [ ] Add support for SHA256 checksum to `update` (Some [inspiration](https://github.com/client9/shlib/blob/master/hash_sha256.sh))
 - [ ] Consider moving `update` to its own repo
 - [x] Add possibility to override version check to `update` command (good for first time installs)
