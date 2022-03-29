@@ -99,7 +99,7 @@ function print_heading() {
 
 function print_versions() {
   echo -e "${YELLOW}Local version${NC}: $1"
-  echo -e "${YELLOW}Latest version${NC}: $2"  
+  echo -e "${YELLOW}Latest version${NC}: $2"
 }
 
 function get_confirmation() {
@@ -137,7 +137,7 @@ function list_updates() {
 
 function download() {
   if exists curl; then
-    curl --location --progress-bar "$1" --output "$2"
+    curl --location --fail-with-body --progress-bar "$1" --output "$2"
   elif exists wget; then
     wget --quiet --no-verbose --show-progress "$1" --output-document "$2"
   else
@@ -223,7 +223,7 @@ function update_bat() {
     compare_versions bat "$latest_version"
     return
   fi
-  
+
   # Give user a chance to exit
   if [[ -z "$force" ]]; then
     local local_version
@@ -271,7 +271,7 @@ function update_bombadillo() {
     compare_versions bombadillo "$latest_version" "-v"
     return
   fi
-  
+
   # Give user a chance to exit
   if [[ -z "$force" ]]; then
     local local_version
@@ -314,7 +314,7 @@ function update_delta() {
     compare_versions delta "$latest_version"
     return
   fi
-  
+
   # Give user a chance to exit
   if [[ -z "$force" ]]; then
     local local_version
@@ -362,7 +362,7 @@ function update_exa() {
     compare_versions exa "$latest_version"
     return
   fi
-  
+
   # Give user a chance to exit
   if [[ -z "$force" ]]; then
     local local_version
@@ -410,7 +410,7 @@ function update_fzf() {
     compare_versions fzf "$latest_version"
     return
   fi
-  
+
   # Give user a chance to exit
   if [[ -z "$force" ]]; then
     local local_version
