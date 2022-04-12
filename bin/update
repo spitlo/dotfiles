@@ -565,9 +565,10 @@ function update_jq() {
   elif [[ "$os" = "termux" ]]; then
     read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
-      pkg install micro
+      pkg install jq
+      exit 0
     fi
-    exit 0
+    exit 1
   elif [[ "$os" = "raspberry" ]]; then
     read -erp "Install with apt? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
@@ -610,8 +611,9 @@ function update_micro() {
     read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
       pkg install micro
+      exit 0
     fi
-    exit 0
+    exit 1
   elif [[ "$os" = "raspberry" ]]; then
     filename="micro-$clean_version-linux-arm.tar.gz"
   elif [[ "$os" = "linux" ]]; then
@@ -649,8 +651,9 @@ function update_navi() {
     read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
       pkg install navi
+      exit 0
     fi
-    exit 0
+    exit 1
   elif [[ "$os" = "raspberry" ]]; then
     filename="navi-$latest_version-arm-unknown-linux-musleabihf.tar.gz"
   elif [[ "$os" = "linux" ]]; then
@@ -723,8 +726,9 @@ function update_starship() {
     read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
       pkg install starship
+      exit 0
     fi
-    exit 0
+    exit 1
   elif [[ "$os" = "raspberry" ]]; then
     filename="starship-arm-unknown-linux-musleabihf.tar.gz"
   elif [[ "$os" = "linux" ]]; then
