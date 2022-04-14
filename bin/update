@@ -14,6 +14,7 @@ GREEN='\033[1;32m'
 NC='\033[0m'
 RED='\033[0;31m'
 COMMANDS="\
+  ascii-image-converter \
   bat \
   bombadillo \
   delta \
@@ -211,6 +212,45 @@ function get_version_from_json() {
 # / /_/ / /_/ / /_/ / /_/ / /_/  __/  / __/ /_/ / / / / /__/ /_/ / /_/ / / / (__  )
 # \____/ .___/\__,_/\__,_/\__/\___/  /_/  \__,_/_/ /_/\___/\__/_/\____/_/ /_/____/
 #     /_/
+function update_ascii-image-converter() {
+  local repo="TheZoraiz/ascii-image-converter"
+  local filename
+  local latest_version
+  latest_version=$(get_github_version "$repo")
+
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    compare_versions ascii-image-converter "$latest_version"
+    return
+  fi
+
+  # Give user a chance to exit
+  if [[ -z "$force" ]]; then
+    local local_version
+    local_version=$(ascii-image-converter --version)
+    get_confirmation "$local_version" "$latest_version"
+  fi
+
+  if [[ "$os" =~ ^macos.* ]]; then
+    filename="ascii-image-converter_macOS_amd64_64bit.tar.gz"
+    if [[ "$os" = "macos-arm" ]]; then
+      filename="ascii-image-converter_macOS_arm64_64bit.tar.gz"
+    fi
+  elif [[ "$os" = "termux" ]]; then
+    filename="ascii-image-converter_Linux_armv6_32bit.tar.gz"
+  elif [[ "$os" = "raspberry" ]]; then
+    filename="ascii-image-converter_Linux_armv6_32bit.tar.gz"
+  elif [[ "$os" = "linux" ]]; then
+    filename="ascii-image-converter_Linux_amd64_64bit.tar.gz"
+  fi
+  echo -e "Downloading ${BLUE}ascii-image-converter${NC} $latest_version ($filename)"
+  download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/ascii-image-converter.tgz"
+  # --strip 1 makes sure we only get the files and not an extra container directory
+  tar xzf ~/tmp/ascii-image-converter.tgz --directory ~/tmp --strip 1
+  mv ~/tmp/ascii-image-converter ~/bin/
+}
+
 function update_bat() {
   local repo="sharkdp/bat"
   local filename
