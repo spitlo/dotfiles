@@ -24,6 +24,7 @@ COMMANDS="\
   grit \
   gron \
   h2c \
+  hyperfine \
   jq \
   micro \
   navi \
@@ -629,6 +630,54 @@ function update_h2c() {
   echo -e "Downloading ${BLUE}h2c${NC} $latest_version"
   download https://github.com/"$repo"/raw/"$latest_version"/h2c "$HOME/bin/h2c"
   chmod u+x ~/bin/h2c
+}
+
+function update_hyperfine() {
+  local repo="sharkdp/hyperfine"
+  local filename
+  local latest_version
+  latest_version=$(get_github_version "$repo")
+
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    compare_versions hyperfine "$latest_version"
+    return
+  fi
+
+  # Give user a chance to exit
+  if [[ -z "$force" ]]; then
+    local local_version
+    local_version=$(hyperfine --version)
+    get_confirmation "$local_version" "$latest_version"
+  fi
+
+  if [[ "$os" =~ ^macos.* ]]; then
+    filename="hyperfine-$latest_version-x86_64-apple-darwin.tar.gz"
+    if [[ "$os" = "macos-arm" ]]; then
+      echo -e "Sorry, no ${BLUE}hyperfine${NC} release available for Apple Silicon at the moment."
+      read -erp "Install x86 version? (y/n) " -n 1
+      if [[ "$REPLY" != "y" ]]; then
+        echo -e "Ok! Please run ${BROWN}cargo install hyperfine${NC} instead."
+        exit 0
+      fi
+    fi
+  elif [[ "$os" = "termux" ]]; then
+    read -erp "Install with pkg? (y/n) " -n 1
+    if [[ "$REPLY" = "y" ]]; then
+      pkg install hyperfine
+    fi
+    exit 0
+  elif [[ "$os" = "raspberry" ]]; then
+    filename="hyperfine-$latest_version-arm-unknown-linux-gnueabihf.tar.gz"
+  elif [[ "$os" = "linux" ]]; then
+    filename="hyperfine-$latest_version-x86_64-unknown-linux-gnu.tar.gz"
+  fi
+  echo -e "Downloading ${BLUE}hyperfine${NC} $latest_version ($filename)"
+  download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/hyperfine.tgz"
+  # --strip 1 makes sure we only get the files and not an extra container directory
+  tar xzf ~/tmp/hyperfine.tgz --directory ~/tmp --strip 1
+  mv ~/tmp/hyperfine ~/bin/
 }
 
 function update_jq() {
