@@ -30,7 +30,7 @@ format = " [$symbol($version )]($style)"
 symbol = "nim "
 
 [nodejs]
-disabled = true
+disabled = false
 format = " [$symbol($version )]($style)"
 symbol = "node "
 
