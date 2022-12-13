@@ -50,3 +50,7 @@ set convert-meta off
 # Skip words with Alt + L/R Arrows
 "\e\e[D": backward-word
 "\e\e[C": forward-word
+
+# Enable color highlighting for completion
+set colored-stats on
+set colored-completion-prefix on
