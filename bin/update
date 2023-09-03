@@ -6,7 +6,7 @@ trap 'catch $?' EXIT
 # Binenv does about the same as this script: https://github.com/devops-works/binenv
 # Commands we might want to support (partially from the binenv list,
 # https://github.com/devops-works/binenv/blob/develop/DISTRIBUTIONS.md):
-# ~bat~, ~fzf~, ~zola~, ~croc~, git-extras, tunnelto, ungoogled-chromium
+# ~bat~, ~fzf~, ~zola~, ~croc~, aria2, git-extras, tunnelto, ungoogled-chromium
 
 # Constants
 BLUE='\033[1;34m'
