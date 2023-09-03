@@ -32,6 +32,7 @@ COMMANDS="\
   nb \
   starship \
   svtplay-dl \
+  vale \
   wp-cli \
   youtube-dl \
   zola \
@@ -903,6 +904,52 @@ function update_svtplay-dl() {
   echo -e "Downloading latest version of ${BLUE}svtplay-dl${NC}"
   download https://svtplay-dl.se/download/latest/svtplay-dl "$HOME/bin/svtplay-dl"
   chmod u+x ~/bin/svtplay-dl
+}
+
+function update_vale() {
+  local repo="errata-ai/vale"
+  local filename
+  local latest_version
+  latest_version=$(get_github_version "$repo")
+
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    compare_versions vale "$latest_version"
+    return
+  fi
+
+  # Give user a chance to exit
+  if [[ -z "$force" ]]; then
+    local local_version
+    local_version=$(vale --version)
+    get_confirmation "$local_version" "$latest_version"
+  fi
+
+  local clean_version
+  clean_version=$(echo "$latest_version" | tr -d 'v')
+
+  if [[ "$os" =~ ^macos.* ]]; then
+    filename="vale_""$clean_version""_macOS_64.tar.gz"
+    if [[ "$os" = "macos-arm" ]]; then
+      filename="vale_""$clean_version""_macOS_arm64.tar.gz"
+    fi
+    echo $filename
+  elif [[ "$os" = "termux" ]]; then
+    read -erp "Install with pkg? (y/n) " -n 1
+    if [[ "$REPLY" = "y" ]]; then
+      pkg install vale
+    fi
+    exit 0
+  elif [[ "$os" = "raspberry" ]]; then
+    filename="vale_""$clean_version""_Linux_arm64.tar.gz"
+  elif [[ "$os" = "linux" ]]; then
+    filename="vale_""$clean_version""_Linux_64.tar.gz"
+  fi
+  echo -e "Downloading ${BLUE}vale${NC} $latest_version ($filename)"
+  download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/vale.tgz"
+  tar xzf ~/tmp/vale.tgz --directory ~/tmp
+  mv ~/tmp/vale ~/bin/
 }
 
 function update_wp-cli() {
