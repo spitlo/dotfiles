@@ -385,7 +385,6 @@ function update_croc() {
   elif [[ "$os" = "raspberry" ]]; then
     filename="croc_${latest_version}_Linux-ARM.tar.gz"
   elif [[ "$os" = "linux" ]]; then
-    #  croc_v10.0.11_Linux-64bit.tar.gz 
     filename="croc_${latest_version}_Linux-64bit.tar.gz"
   fi
   echo -e "Downloading ${BLUE}croc${NC} $latest_version ($filename)"
@@ -529,7 +528,6 @@ function update_fzf() {
     if [[ "$os" = "raspberry" ]]; then
       filename="fzf-$clean_version-linux_armv7.tar.gz"
     else
-      #  fzf-0.55.0-linux_amd64.tar.gz 
       filename="fzf-$clean_version-linux_amd64.tar.gz"
     fi
   fi
