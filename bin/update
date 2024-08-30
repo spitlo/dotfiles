@@ -369,7 +369,7 @@ function update_croc() {
   clean_version=$(echo "$latest_version" | tr -d 'v')
 
   if [[ "$os" =~ ^macos.* ]]; then
-    filename="croc_${clean_version}_macOS-64bit.tar.gz"
+    filename="croc_${latest_version}_macOS-64bit.tar.gz"
     if [[ "$os" = "macos-arm" ]]; then
       echo -e "Sorry, no ${BLUE}croc${NC} release available for Apple Silicon at the moment."
       read -erp "Install x86 version? (y/n) " -n 1
@@ -385,9 +385,10 @@ function update_croc() {
     fi
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
-    filename="croc_${clean_version}_Linux-ARM.tar.gz"
+    filename="croc_${latest_version}_Linux-ARM.tar.gz"
   elif [[ "$os" = "linux" ]]; then
-    filename="croc_${clean_version}_Linux-64bit.tar.gz"
+    #  croc_v10.0.11_Linux-64bit.tar.gz 
+    filename="croc_${latest_version}_Linux-64bit.tar.gz"
   fi
   echo -e "Downloading ${BLUE}croc${NC} $latest_version ($filename)"
   download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/croc.tgz"
