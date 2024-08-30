@@ -971,14 +971,14 @@ function update_yt-dlp() {
   # Only print versions when requested
   local arg=${1:-}
   if [[ "$arg" = "get_versions" ]]; then
-    compare_versions "$HOME/bin/ytdl" "$latest_version"
+    compare_versions yt-dlp "$latest_version"
     return
   fi
 
   # Give user a chance to exit
   if [[ -z "$force" ]]; then
     local local_version
-    local_version=$("$HOME/bin/yt-dlp" --version)
+    local_version=$(yt-dlp --version)
     get_confirmation "$local_version" "$latest_version"
   fi
 
