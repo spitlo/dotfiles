@@ -366,11 +366,8 @@ function update_croc() {
     get_confirmation "$local_version" "$latest_version"
   fi
 
-  local clean_version
-  clean_version=$(echo "$latest_version" | tr -d 'v')
-
   if [[ "$os" =~ ^macos.* ]]; then
-    filename="croc_${clean_version}_macOS-64bit.tar.gz"
+    filename="croc_${latest_version}_macOS-64bit.tar.gz"
     if [[ "$os" = "macos-arm" ]]; then
       echo -e "Sorry, no ${BLUE}croc${NC} release available for Apple Silicon at the moment."
       read -erp "Install x86 version? (y/n) " -n 1
@@ -386,9 +383,10 @@ function update_croc() {
     fi
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
-    filename="croc_${clean_version}_Linux-ARM.tar.gz"
+    filename="croc_${latest_version}_Linux-ARM.tar.gz"
   elif [[ "$os" = "linux" ]]; then
-    filename="croc_${clean_version}_Linux-64bit.tar.gz"
+    #  croc_v10.0.11_Linux-64bit.tar.gz 
+    filename="croc_${latest_version}_Linux-64bit.tar.gz"
   fi
   echo -e "Downloading ${BLUE}croc${NC} $latest_version ($filename)"
   download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/croc.tgz"
@@ -512,11 +510,14 @@ function update_fzf() {
     get_confirmation "$local_version" "$latest_version"
   fi
 
+  local clean_version
+  clean_version=$(echo "$latest_version" | tr -d 'v')
+
   if [[ "$os" =~ ^macos.* ]]; then
     if [[ "$os" = "macos" ]]; then
-      filename="fzf-$latest_version-darwin_amd64.zip"
+      filename="fzf-$clean_version-darwin_amd64.zip"
     else
-      filename="fzf-$latest_version-darwin_arm64.zip"
+      filename="fzf-$clean_version-darwin_arm64.zip"
     fi
     echo -e "Downloading ${BLUE}fzf${NC} $latest_version ($filename)"
     download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/fzf.zip"
@@ -529,9 +530,10 @@ function update_fzf() {
     exit 0
   elif [[ "$os" = "linux" ]] || [[ "$os" = "raspberry" ]]; then
     if [[ "$os" = "raspberry" ]]; then
-      filename="fzf-$latest_version-linux_armv7.tar.gz"
+      filename="fzf-$clean_version-linux_armv7.tar.gz"
     else
-      filename="fzf-$latest_version-linux_amd64.tar.gz"
+      #  fzf-0.55.0-linux_amd64.tar.gz 
+      filename="fzf-$clean_version-linux_amd64.tar.gz"
     fi
     echo -e "Downloading ${BLUE}fzf${NC} $latest_version ($filename)"
     download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/fzf.tgz"
