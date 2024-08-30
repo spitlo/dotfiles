@@ -515,13 +515,10 @@ function update_fzf() {
 
   if [[ "$os" =~ ^macos.* ]]; then
     if [[ "$os" = "macos" ]]; then
-      filename="fzf-$clean_version-darwin_amd64.zip"
+      filename="fzf-$clean_version-darwin_amd64.tar.gz"
     else
-      filename="fzf-$clean_version-darwin_arm64.zip"
+      filename="fzf-$clean_version-darwin_arm64.tar.gz"
     fi
-    echo -e "Downloading ${BLUE}fzf${NC} $latest_version ($filename)"
-    download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/fzf.zip"
-    unzip -qqo ~/tmp/fzf.zip -d ~/tmp
   elif [[ "$os" = "termux" ]]; then
     read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
@@ -535,10 +532,10 @@ function update_fzf() {
       #  fzf-0.55.0-linux_amd64.tar.gz 
       filename="fzf-$clean_version-linux_amd64.tar.gz"
     fi
-    echo -e "Downloading ${BLUE}fzf${NC} $latest_version ($filename)"
-    download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/fzf.tgz"
-    tar xzf ~/tmp/fzf.tgz --directory ~/tmp # --strip 1 # Not needed?
   fi
+  echo -e "Downloading ${BLUE}fzf${NC} $latest_version ($filename)"
+  download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/fzf.tgz"
+  tar xzf ~/tmp/fzf.tgz --directory ~/tmp # --strip 1 # Not needed?
   mv ~/tmp/fzf ~/bin/
 }
 
