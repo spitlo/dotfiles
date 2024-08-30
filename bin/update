@@ -156,7 +156,7 @@ function get_json_data() {
   local json_data
   if exists curl; then
     json_data=$(
-      curl --silent --header "$2" "$1"
+      curl --location --silent --header "$2" "$1"
     )
   elif exists wget; then
     json_data=$(
