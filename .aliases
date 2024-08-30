@@ -120,6 +120,7 @@
   alias ni="npm install"
   alias g="git"
   alias s="subl"
+  alias ytdl="yt-dlp"
   alias o="open ."
   alias cls="clear"
   alias markdown="$HOME/bin/Markdown/Markdown.pl"

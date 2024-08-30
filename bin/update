@@ -985,7 +985,6 @@ function update_yt-dlp() {
   echo -e "Downloading latest version of ${BLUE}yt-dlp${NC}"
   download https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp "$HOME/bin/yt-dlp"
   chmod a+rx "$HOME/bin/yt-dlp"
-  alias ytdl="$HOME/bin/yt-dlp"
 }
 
 function update_zola() {
