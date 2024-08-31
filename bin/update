@@ -941,7 +941,7 @@ function update_vale() {
   elif [[ "$os" = "raspberry" ]]; then
     filename="vale_""$clean_version""_Linux_arm64.tar.gz"
   elif [[ "$os" = "linux" ]]; then
-    filename="vale_""$clean_version""_Linux_64.tar.gz"
+    filename="vale_""$clean_version""_Linux_64-bit.tar.gz"
   fi
   echo -e "Downloading ${BLUE}vale${NC} $latest_version ($filename)"
   download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/vale.tgz"
