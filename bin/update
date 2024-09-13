@@ -288,7 +288,7 @@ function update_bat() {
   elif [[ "$os" = "termux" ]]; then
     read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
-      pkg install bat
+      pkg install bat -y
     fi
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
@@ -379,7 +379,7 @@ function update_croc() {
   elif [[ "$os" = "termux" ]]; then
     read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
-      pkg install croc
+      pkg install croc -y
     fi
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
@@ -421,7 +421,7 @@ function update_delta() {
   elif [[ "$os" = "termux" ]]; then
     read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
-      pkg install git-delta
+      pkg install git-delta -y
     fi
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
@@ -476,7 +476,7 @@ function update_eza() {
   elif [[ "$os" = "termux" ]]; then
     read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
-      pkg install eza
+      pkg install eza -y
     fi
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
@@ -526,7 +526,7 @@ function update_fzf() {
   elif [[ "$os" = "termux" ]]; then
     read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
-      pkg install fzf
+      pkg install fzf -y
     fi
     exit 0
   elif [[ "$os" = "linux" ]] || [[ "$os" = "raspberry" ]]; then
@@ -669,7 +669,7 @@ function update_hyperfine() {
   elif [[ "$os" = "termux" ]]; then
     read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
-      pkg install hyperfine
+      pkg install hyperfine -y
     fi
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
@@ -709,7 +709,7 @@ function update_jq() {
   elif [[ "$os" = "termux" ]]; then
     read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
-      pkg install jq
+      pkg install jq -y
       exit 0
     fi
     exit 1
@@ -754,7 +754,7 @@ function update_micro() {
   elif [[ "$os" = "termux" ]]; then
     read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
-      pkg install micro
+      pkg install micro -y
       exit 0
     fi
     exit 1
@@ -794,7 +794,7 @@ function update_navi() {
   elif [[ "$os" = "termux" ]]; then
     read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
-      pkg install navi
+      pkg install navi -y
       exit 0
     fi
     exit 1
@@ -869,7 +869,7 @@ function update_starship() {
   elif [[ "$os" = "termux" ]]; then
     read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
-      pkg install starship
+      pkg install starship -y
       exit 0
     fi
     exit 1
@@ -940,7 +940,7 @@ function update_vale() {
   elif [[ "$os" = "termux" ]]; then
     read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
-      pkg install vale
+      pkg install vale -y
     fi
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
