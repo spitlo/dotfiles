@@ -20,7 +20,7 @@ COMMANDS="\
   bombadillo \
   croc \
   delta \
-  exa \
+  eza \
   fzf \
   grit \
   gron \
@@ -436,12 +436,8 @@ function update_delta() {
   mv ~/tmp/delta ~/bin/
 }
 
-function update_exa() {
-  # This is no longer supported. Consider switching to eza.
-  # No binaries for mac yet, though. See issue:
-  # Workaround is to use binaries from cargo-quickinstall. Feasible?
-  # Example: https://github.com/cargo-bins/cargo-quickinstall/releases/tag/eza-0.19.3
-  local repo="ogham/exa"
+function update_eza() {
+  local repo="eza-community/eza"
   local filename
   local latest_version
   latest_version=$(get_github_version "$repo")
@@ -449,43 +445,53 @@ function update_exa() {
   # Only print versions when requested
   local arg=${1:-}
   if [[ "$arg" = "get_versions" ]]; then
-    compare_versions exa "$latest_version"
+    compare_versions eza "$latest_version"
     return
   fi
 
   # Give user a chance to exit
   if [[ -z "$force" ]]; then
     local local_version
-    local_version=$(exa --version)
+    local_version=$(eza --version)
     get_confirmation "$local_version" "$latest_version"
   fi
 
+  local clean_version
+  clean_version=$(echo "$latest_version" | tr -d 'v')
+
+  local completions_url
+  completions_url="https://github.com/$repo/releases/download/$latest_version/completions-$clean_version.tar.gz"
+
   if [[ "$os" =~ ^macos.* ]]; then
-    filename="exa-macos-x86_64-$latest_version.zip"
+    # No binaries for mac yet, though. See issue:
+    # https://github.com/eza-community/eza/issues/228
+    # Workaround for now is to use binaries from cargo-quickinstall
+    # Example: https://github.com/cargo-bins/cargo-quickinstall/releases/tag/eza-0.19.3
+    repo="cargo-bins/cargo-quickinstall"
+    latest_version="eza-$clean_version"
+    filename="$latest_version-x86_64-apple-darwin.tar.gz"
     if [[ "$os" = "macos-arm" ]]; then
-      echo -e "Sorry, no ${BLUE}exa${NC} release available for Apple Silicon at the moment."
-      read -erp "Install x86 version? (y/n) " -n 1
-      if [[ "$REPLY" != "y" ]]; then
-        echo -e "Ok! Please run ${BROWN}cargo install exa${NC} instead."
-        exit 0
-      fi
+      filename="$latest_version-aarch64-apple-darwin.tar.gz"
     fi
   elif [[ "$os" = "termux" ]]; then
     read -erp "Install with pkg? (y/n) " -n 1
     if [[ "$REPLY" = "y" ]]; then
-      pkg install exa
+      pkg install eza
     fi
     exit 0
   elif [[ "$os" = "raspberry" ]]; then
-    filename="exa-linux-armv7-$latest_version.zip"
+    filename="eza_arm-unknown-linux-gnueabihf.tar.gz"
   elif [[ "$os" = "linux" ]]; then
-    filename="exa-linux-x86_64-$latest_version.zip"
+    filename="eza_x86_64-unknown-linux-gnu.tar.gz"
   fi
-  echo -e "Downloading ${BLUE}exa${NC} $latest_version ($filename)"
-  download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/exa.zip"
-  unzip -qqo ~/tmp/exa.zip -d ~/tmp
-  mv ~/tmp/bin/exa ~/bin/
-  mv ~/tmp/completions/exa.bash ~/.bash_completions/exa
+  echo -e "Downloading ${BLUE}eza${NC} $latest_version ($filename)"
+  download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/eza.tgz"
+  echo -e "Downloading bash completions for ${BLUE}eza${NC} $latest_version"
+  download $completions_url "$HOME/tmp/eza_completions.tgz"
+  tar xzf ~/tmp/eza.tgz --directory ~/tmp
+  tar xzf ~/tmp/eza_completions.tgz --directory ~/tmp
+  mv ~/tmp/eza ~/bin/
+  mv ~/tmp/target/completions-$clean_version/eza ~/.bash_completions/
 }
 
 function update_fzf() {
