@@ -437,6 +437,10 @@ function update_delta() {
 }
 
 function update_exa() {
+  # This is no longer supported. Consider switching to eza.
+  # No binaries for mac yet, though. See issue:
+  # Workaround is to use binaries from cargo-quickinstall. Feasible?
+  # Example: https://github.com/cargo-bins/cargo-quickinstall/releases/tag/eza-0.19.3
   local repo="ogham/exa"
   local filename
   local latest_version
