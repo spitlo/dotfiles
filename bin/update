@@ -660,12 +660,7 @@ function update_hyperfine() {
   if [[ "$os" =~ ^macos.* ]]; then
     filename="hyperfine-$latest_version-x86_64-apple-darwin.tar.gz"
     if [[ "$os" = "macos-arm" ]]; then
-      echo -e "Sorry, no ${BLUE}hyperfine${NC} release available for Apple Silicon at the moment."
-      read -erp "Install x86 version? (y/n) " -n 1
-      if [[ "$REPLY" != "y" ]]; then
-        echo -e "Ok! Please run ${BROWN}cargo install hyperfine${NC} instead."
-        exit 0
-      fi
+      filename="hyperfine-$latest_version-aarch64-apple-darwin.tar.gz"
     fi
   elif [[ "$os" = "termux" ]]; then
     read -erp "Install with pkg? (y/n) " -n 1
