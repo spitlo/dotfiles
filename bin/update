@@ -370,12 +370,7 @@ function update_croc() {
   if [[ "$os" =~ ^macos.* ]]; then
     filename="croc_${latest_version}_macOS-64bit.tar.gz"
     if [[ "$os" = "macos-arm" ]]; then
-      echo -e "Sorry, no ${BLUE}croc${NC} release available for Apple Silicon at the moment."
-      read -erp "Install x86 version? (y/n) " -n 1
-      if [[ "$REPLY" != "y" ]]; then
-        echo -e "Ok! Please run ${BROWN}cargo install croc${NC} instead."
-        exit 0
-      fi
+      filename="croc_${latest_version}_macOS-ARM64.tar.gz"
     fi
   elif [[ "$os" = "termux" ]]; then
     read -erp "Install with pkg? (y/n) " -n 1
