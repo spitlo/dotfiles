@@ -28,6 +28,7 @@ COMMANDS="\
   hyperfine \
   jq \
   micro \
+  mise \
   navi \
   nb \
   starship \
@@ -758,6 +759,59 @@ function update_micro() {
   download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/micro.tgz"
   tar xzf ~/tmp/micro.tgz --directory ~/tmp --strip 1
   mv ~/tmp/micro ~/bin/
+}
+
+function update_mise() {
+  local repo="jdx/mise"
+  local filename
+  local latest_version
+  latest_version=$(get_github_version "$repo")
+
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    compare_versions mise "$latest_version"
+    return
+  fi
+
+  # Give user a chance to exit
+  if [[ -z "$force" ]]; then
+    local local_version
+    local_version=$(mise --version)
+    get_confirmation "$local_version" "$latest_version"
+  fi
+
+# https://github.com/jdx/mise/releases/download/v2024.12.5/mise-v2024.12.5-macos-arm64.tar.gz
+  if [[ "$os" =~ ^macos.* ]]; then
+    filename="mise-$latest_version-macos-arm64.tar.gz"
+    if [[ "$os" = "macos-arm" ]]; then
+      filename="mise-$latest_version-macos-arm64.tar.gz"
+    fi
+  elif [[ "$os" = "termux" ]]; then
+    #  https://github.com/jdx/mise/issues/1969
+    # read -erp "Install with pkg? (y/n) " -n 1
+    # if [[ "$REPLY" = "y" ]]; then
+    #   pkg install mise -y
+    # fi
+    exit 1
+  elif [[ "$os" = "raspberry" ]]; then
+    #  https://github.com/jdx/mise/issues/2035
+    # filename="mise-$latest_version-arm-unknown-linux-gnueabihf.tar.gz"
+    exit 1
+  elif [[ "$os" = "linux" ]]; then
+    filename="mise-$latest_version-linux-x64.tar.gz"
+  fi
+  echo -e "Downloading ${BLUE}mise${NC} $latest_version ($filename)"
+  download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/mise.tgz"
+  tar xzf ~/tmp/mise.tgz --directory ~/tmp
+  mv ~/tmp/mise/bin/mise ~/bin/
+  # Now check if ~/.extras has the activate line, otherwise do:
+  # echo 'eval "$(~/bin/mise activate bash)"' >> ~/.extras
+  # Set up autocompletion
+  if [[ -d "$HOME/.bash_completions" ]]; then
+    mise use -g usage
+    mise completion bash > "$HOME/.bash_completions/mise"
+  fi
 }
 
 function update_navi() {
