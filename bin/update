@@ -22,6 +22,7 @@ COMMANDS="\
   delta \
   eza \
   fzf \
+  gifski \
   grit \
   gron \
   h2c \
@@ -537,6 +538,49 @@ function update_fzf() {
   download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/fzf.tgz"
   tar xzf ~/tmp/fzf.tgz --directory ~/tmp # --strip 1 # Not needed?
   mv ~/tmp/fzf ~/bin/
+}
+
+function update_gifski() {
+  local repo="ImageOptim/gifski"
+  local filename
+  local latest_version
+  latest_version=$(get_github_version "$repo")
+
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    compare_versions gifski "$latest_version"
+    return
+  fi
+
+  # Give user a chance to exit
+  if [[ -z "$force" ]]; then
+    local local_version
+    local_version=$(gifski --version)
+    get_confirmation "$local_version" "$latest_version"
+  fi
+
+  local clean_version
+  clean_version=$(echo "$latest_version" | tr -d 'v')
+
+  filename="gifski-$clean_version.tar.xz"
+  echo -e "Downloading ${BLUE}gifski${NC} $latest_version ($filename)"
+  download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/gifski.tar.xz"
+  mkdir -p "$HOME/tmp/gifski"
+  tar Jxvf ~/tmp/gifski.tar.xz --directory ~/tmp/gifski
+
+  if [[ "$os" =~ ^macos.* ]]; then
+    mv ~/tmp/gifski/mac/gifski ~/bin/
+  elif [[ "$os" = "termux" ]]; then
+    read -erp "Install with pkg? (y/n) " -n 1
+    if [[ "$REPLY" = "y" ]]; then
+      pkg install gifski -y
+    fi
+    exit 0
+  elif [[ "$os" = "linux" ]] || [[ "$os" = "raspberry" ]]; then
+    mv ~/tmp/gifski/linux/gifski ~/bin/
+  fi
+  chmod u+x ~/bin/gifski
 }
 
 function update_grit() {
