@@ -563,6 +563,15 @@ function update_gifski() {
   local clean_version
   clean_version=$(echo "$latest_version" | tr -d 'v')
 
+  # Exit early on Termux
+  if [[ "$os" = "termux" ]]; then
+    read -erp "Install with pkg? (y/n) " -n 1
+    if [[ "$REPLY" = "y" ]]; then
+      pkg install gifski -y
+    fi
+    exit 0
+  fi
+
   filename="gifski-$clean_version.tar.xz"
   echo -e "Downloading ${BLUE}gifski${NC} $latest_version ($filename)"
   download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/gifski.tar.xz"
@@ -571,12 +580,6 @@ function update_gifski() {
 
   if [[ "$os" =~ ^macos.* ]]; then
     mv ~/tmp/gifski/mac/gifski ~/bin/
-  elif [[ "$os" = "termux" ]]; then
-    read -erp "Install with pkg? (y/n) " -n 1
-    if [[ "$REPLY" = "y" ]]; then
-      pkg install gifski -y
-    fi
-    exit 0
   elif [[ "$os" = "linux" ]] || [[ "$os" = "raspberry" ]]; then
     mv ~/tmp/gifski/linux/gifski ~/bin/
   fi
