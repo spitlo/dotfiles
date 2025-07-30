@@ -21,6 +21,7 @@ COMMANDS="\
   croc \
   delta \
   eza \
+  f2 \
   fzf \
   gifski \
   grit \
@@ -490,6 +491,57 @@ function update_eza() {
   tar xzf ~/tmp/eza_completions.tgz --directory ~/tmp
   mv ~/tmp/eza ~/bin/
   mv ~/tmp/target/completions-$clean_version/eza ~/.bash_completions/
+}
+
+function update_f2() {
+  local repo="ayoisaiah/f2"
+  local filename
+  local latest_version
+  latest_version=$(get_github_version "$repo")
+
+  # Only print versions when requested
+  local arg=${1:-}
+  if [[ "$arg" = "get_versions" ]]; then
+    compare_versions f2 "$latest_version"
+    return
+  fi
+
+  # Give user a chance to exit
+  if [[ -z "$force" ]]; then
+    local local_version
+    local_version=$(f2 --version)
+    get_confirmation "$local_version" "$latest_version"
+  fi
+
+  local clean_version
+  clean_version=$(echo "$latest_version" | tr -d 'v')
+
+  if [[ "$os" =~ ^macos.* ]]; then
+    if [[ "$os" = "macos" ]]; then
+      filename="f2_""$clean_version""_darwin_amd64.tar.gz"
+    else
+      filename="f2_""$clean_version""_darwin_arm64.tar.gz"
+    fi
+  elif [[ "$os" = "termux" ]]; then
+    # read -erp "Install with pkg? (y/n) " -n 1
+    # if [[ "$REPLY" = "y" ]]; then
+    #   pkg install f2 -y
+    # fi
+    echo "Sorry... Not available at the moment."
+    exit 1
+  elif [[ "$os" = "linux" ]]; then
+    # filename="f2_""$clean_version""_linux_amd64.tar.gz"
+    echo "Sorry... Not available at the moment."
+    exit 1
+  elif [[ "$os" = "raspberry" ]]; then
+    # filename="f2_""$clean_version""_linux_armv7.tar.gz"
+    echo "Sorry... Not available at the moment."
+    exit 1
+  fi
+  echo -e "Downloading ${BLUE}f2${NC} $latest_version ($filename)"
+  download https://github.com/"$repo"/releases/download/"$latest_version"/"$filename" "$HOME/tmp/f2.tgz"
+  tar xzf ~/tmp/f2.tgz --directory ~/tmp # --strip 1 # Not needed?
+  mv ~/tmp/f2 ~/bin/
 }
 
 function update_fzf() {
