@@ -831,5 +831,5 @@ function qksh() {
   if exists qrencode; then
     qrencode -o - -t UTF8 "https://${TUNNELTO_QS_SD}.tunn.dev"
   fi
-  (trap 'kill 0' SIGINT; copyparty -lo /dev/null -q -e2dsa -v ./:/:r & tunnelto --port 3923 --subdomain $TUNNELTO_QS_SD)
+  (trap 'kill 0' SIGINT; copyparty -q -e2dsa -v ./:/:r & tunnelto --port 3923 --subdomain $TUNNELTO_QS_SD)
 }
