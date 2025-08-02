@@ -62,3 +62,9 @@
 #alias firefox="open -a Firefox"
 #alias chrome="open -a Chromium"
 #alias brave="open -a 'Brave Browser'"
+
+# Mise-en-place
+#eval "$(~/bin/mise activate bash)"
+
+# Tunnelto.dev subdomains
+export TUNNELTO_QS_SD=""

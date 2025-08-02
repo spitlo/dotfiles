@@ -825,3 +825,11 @@ function prlink() {
   pr_url="${github_url}/compare/${main_branch}...${branch_name}"
   echo "$pr_url"
 }
+
+ # Share the current folder read-only with copyparty and tunnelto
+function qksh() {
+  if exists qrencode; then
+    qrencode -o - -t UTF8 "https://${TUNNELTO_QS_SD}.tunn.dev"
+  fi
+  (trap 'kill 0' SIGINT; copyparty -lo /dev/null -q -e2dsa -v ./:/:r & tunnelto --port 3923 --subdomain $TUNNELTO_QS_SD)
+}
