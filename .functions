@@ -830,6 +830,7 @@ function prlink() {
 function qksh() {
   if exists qrencode; then
     qrencode -o - -t UTF8 "https://${TUNNELTO_QS_SD}.tunn.dev"
+    echo
   fi
-  (trap 'kill 0' SIGINT; copyparty -q -e2dsa -v ./:/:r & tunnelto --port 3923 --subdomain $TUNNELTO_QS_SD)
+  (trap 'kill 0' SIGINT; 2>/dev/null 1>&2 copyparty -q -e2dsa -v ./:/:r & tunnelto --port 3923 --subdomain $TUNNELTO_QS_SD)
 }
