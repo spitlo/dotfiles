@@ -30,9 +30,8 @@ fi
 
 ffmpeg=$(which ffmpeg)
 ffprobe=$(which ffprobe)
-VCODEC="libx264"
+
 ABRATE="128k"
-ASAMPLING="48k"
 TEMP_DIR=$(mktemp -d /tmp/ffmpeg.XXXXXXXXX)
 LOGFILE="${TEMP_DIR}/pass-log-file"
 TMPFILE="${TEMP_DIR}/ffmpeg-pass-1"
@@ -43,19 +42,11 @@ LOUDNORM="-af loudnorm=I=-16:TP=-1:LRA=13"
 LOUDNORM_PARAMS=":print_format=json"
 LOUDNORM_OFF=0
 
-# if [[ ! ${VBRATE} ]]; then
-#   echo 'ERROR. undefined --bitrate opt'
-#   exit
-# fi
-# if [[ ! ${VSCALE} ]]; then
-#   echo 'ERROR. undefined --scale opt'
-#   exit
-# fi
 if [[ ! ${RESULT_FILENAME_PATH} ]]; then
-  # echo 'ERROR. undefined --output opt'
+  echo 'ERROR. undefined --output opt'
   # Write to tmp dir, then move back, overwriting original file
   # (Also create a backup file?)
-  exit
+  # exit
 fi
 
 # get probe error and exit if exists
@@ -67,11 +58,12 @@ if [[ ${probe_errors} -gt 0 ]]; then
 fi
 
 # get file info
-finfo=$($ffprobe -v error -select_streams v:0 -show_entries format=bit_rate,duration -show_entries stream=width,height -of default=noprint_wrappers=1 ${input_file} | tr -s '\n' ',')
-width=$(echo $finfo | cut -f1 -d ',' | cut -f2 -d'=')
-height=$(echo $finfo | cut -f2 -d ',' | cut -f2 -d'=')
-bitrate=$(echo $finfo | cut -f4 -d ',' | cut -f2 -d'=')
-duration=$(echo $finfo | cut -f3 -d ',' | cut -f2 -d'=')
+finfo=$($ffprobe -v error -select_streams v:0 -show_entries format=bit_rate,duration -show_entries stream=width,height,codec_name -of default=noprint_wrappers=1 ${input_file} | tr -s '\n' ',')
+codec=$(echo $finfo | cut -f1 -d ',' | cut -f2 -d'=')
+width=$(echo $finfo | cut -f2 -d ',' | cut -f2 -d'=')
+height=$(echo $finfo | cut -f3 -d ',' | cut -f2 -d'=')
+duration=$(echo $finfo | cut -f4 -d ',' | cut -f2 -d'=')
+bitrate=$(echo $finfo | cut -f5 -d ',' | cut -f2 -d'=')
 size=$(du -h ${input_file} | cut -f1)
 
 if [[ ${DEBUG} -eq 1 ]]; then
@@ -108,10 +100,8 @@ else
 fi
 
 # generate command
-SCALE="scale=${VSCALE}"
-BITRATE="${VBRATE}k"
 start=$(date +%s)
-COMMAND="-hide_banner -passlogfile ${LOGFILE} -bufsize 4M -movflags +faststart"
+COMMAND="-hide_banner -c:v ${codec}  -b:v ${bitrate} -bufsize 4M -b:a ${ABRATE} -passlogfile ${LOGFILE} -bufsize 4M -movflags +faststart"
 
 if [[ ${DEBUG} -eq 1 ]]; then
   echo "DEBUG. output filename: ${RESULT_FILENAME_PATH}"
