@@ -1124,8 +1124,8 @@ function update_tldr() {
 
   if [[ -d "$HOME/.bash_completions" ]]; then
     echo -e "Downloading tab completions for ${BLUE}tldr${NC}"
-    download https://github.com/"$repo"/releases/download/"$latest_version"/completions_bash "$HOME/tmp/ompletions_tealdeer"
-    mv ~/tmp/ompletions_tealdeer ~/.bash_completions/tldr
+    download https://github.com/"$repo"/releases/download/"$latest_version"/completions_bash "$HOME/tmp/completions_tealdeer"
+    mv ~/tmp/completions_tealdeer ~/.bash_completions/tldr
     source ~/.bash_completions/tldr
   fi
 }
